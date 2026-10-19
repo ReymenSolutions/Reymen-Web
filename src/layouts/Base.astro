@@ -11,7 +11,7 @@ const canonical = `${SITE.url}${path}`;
 const ld = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  logo: `${SITE.url}/icon-512-v3.png`,
+  logo: `${SITE.url}/icon-512-v4.png`,
   name: SITE.name,
   url: SITE.url,
   email: SITE.email,
@@ -33,14 +33,14 @@ const ld = {
     <meta property="og:url" content={canonical} />
     <meta property="og:locale" content="es_MX" />
     <meta name="theme-color" content="#0b1220" />
-    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192-v3.png" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon-v3.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192-v4.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon-v4.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <meta name="application-name" content="Reymen Solutions" />
     <meta name="apple-mobile-web-app-title" content="Reymen Solutions" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta property="og:site_name" content="Reymen Solutions" />
-    <meta property="og:image" content={`${SITE.url}/icon-512-v3.png`} />
+    <meta property="og:image" content={`${SITE.url}/icon-512-v4.png`} />
     <script type="application/ld+json" set:html={JSON.stringify(ld)} />
     {SITE.plausibleDomain && <script defer data-domain={SITE.plausibleDomain} src="https://plausible.io/js/script.js"></script>}
   </head>
