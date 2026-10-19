@@ -1,0 +1,62 @@
+---
+import { SITE } from "../config";
+---
+<button id="chat-fab" type="button" aria-expanded="false" aria-controls="chat-box">💬 Pregúntanos</button>
+<div id="chat-box" role="dialog" aria-label="Chat con el asistente de Reymen" data-api={`${SITE.apiUrl}/api/public/chat`}>
+  <div id="chat-head"><span>Asistente de Reymen</span><button type="button" id="chat-close" aria-label="Cerrar chat" style="background:none;border:0;color:inherit;cursor:pointer;font-size:1.2rem">✕</button></div>
+  <div id="chat-log" aria-live="polite"></div>
+  <form id="chat-form" autocomplete="off">
+    <input id="chat-input" maxlength="500" placeholder="Escribe tu pregunta…" aria-label="Tu mensaje" />
+    <button class="btn primary" type="submit" style="padding:8px 14px">Enviar</button>
+  </form>
+</div>
+
+<script>
+  const fab = document.getElementById("chat-fab")!;
+  const box = document.getElementById("chat-box")!;
+  const log = document.getElementById("chat-log")!;
+  const form = document.getElementById("chat-form") as HTMLFormElement;
+  const input = document.getElementById("chat-input") as HTMLInputElement;
+  const api = box.dataset.api!;
+  let sid = "";
+  try { sid = sessionStorage.getItem("reymen-chat") ?? ""; } catch {}
+  if (!sid) {
+    sid = (crypto.randomUUID?.() ?? String(Date.now()) + Math.random().toString(36).slice(2)).replace(/[^A-Za-z0-9_-]/g, "").padEnd(16, "x").slice(0, 40);
+    try { sessionStorage.setItem("reymen-chat", sid); } catch {}
+  }
+  const add = (text: string, who: "bot" | "me") => {
+    const b = document.createElement("div");
+    b.className = `bubble ${who}`;
+    b.textContent = text;
+    log.appendChild(b);
+    log.scrollTop = log.scrollHeight;
+    return b;
+  };
+  let greeted = false;
+  let handedOff = false;
+  const open = (v: boolean) => {
+    box.classList.toggle("open", v);
+    fab.setAttribute("aria-expanded", String(v));
+    if (v) { input.focus(); if (!greeted) { greeted = true; add("¡Hola! Soy el asistente de Reymen. Cuéntame de tu negocio y te explico cómo podemos ayudarte.", "bot"); } }
+  };
+  fab.addEventListener("click", () => open(!box.classList.contains("open")));
+  document.getElementById("chat-close")!.addEventListener("click", () => open(false));
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const text = input.value.trim();
+    if (!text || handedOff) return;
+    input.value = "";
+    add(text, "me");
+    const wait = add("…", "bot");
+    try {
+      const res = await fetch(api, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ sessionId: sid, message: text }) });
+      if (!res.ok) throw new Error(String(res.status));
+      const data = await res.json();
+      if (data.handoff) { handedOff = true; wait.textContent = data.notice ?? "Una persona del equipo te contactará."; input.disabled = true; location.hash = "contacto"; }
+      else wait.textContent = data.reply;
+    } catch {
+      wait.textContent = "Ahora mismo no puedo responder. Déjanos tus datos en el formulario y te escribimos.";
+    }
+    log.scrollTop = log.scrollHeight;
+  });
+</script>

@@ -1,0 +1,24 @@
+---
+import Base from "../layouts/Base.astro";
+import { SITE } from "../config";
+---
+<Base title="Aviso de privacidad · Reymen" description="Cómo Reymen trata tus datos personales." path="/privacidad">
+  <section><div class="wrap" style="max-width:780px">
+    <h1>Aviso de privacidad</h1>
+    <p class="muted">Versión {SITE.privacyVersion}. Borrador pendiente de revisión legal antes de su publicación definitiva.</p>
+    <h2>Quién es el responsable</h2>
+    <p>{SITE.name} es responsable del tratamiento de tus datos personales. Contacto: <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.</p>
+    <h2>Qué datos recabamos</h2>
+    <p>Nombre, WhatsApp o correo, nombre y tipo de tu negocio y el mensaje que nos escribas en el formulario o en el chat del sitio.</p>
+    <h2>Para qué los usamos</h2>
+    <p>Para contactarte con información y propuestas de nuestros servicios, agendar una demo y dar seguimiento a tu solicitud. No vendemos tus datos.</p>
+    <h2>Chat con asistente de IA</h2>
+    <p>Los mensajes del chat los procesa un asistente de inteligencia artificial y pueden ser revisados por nuestro equipo para atenderte.</p>
+    <h2>Con quién los compartimos</h2>
+    <p>Con proveedores que nos ayudan a operar el servicio (alojamiento, correo y mensajería), bajo obligaciones de confidencialidad.</p>
+    <h2>Tus derechos</h2>
+    <p>Puedes acceder, rectificar, cancelar u oponerte al uso de tus datos (derechos ARCO) escribiendo a <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.</p>
+    <h2>Cambios</h2>
+    <p>Si este aviso cambia, publicaremos la nueva versión en esta página.</p>
+  </div></section>
+</Base>

@@ -1,0 +1,15 @@
+# Sitio público de Reymen. Se publica detrás del nginx-proxy que ya corre en la VPS (red externa proxy-net),
+# igual que ReymenApp: el proxy toma VIRTUAL_HOST / LETSENCRYPT_HOST de este contenedor.
+services:
+  web:
+    build: .
+    container_name: reymen-web
+    restart: unless-stopped
+    environment:
+      VIRTUAL_HOST: reymen.mx,www.reymen.mx
+      LETSENCRYPT_HOST: reymen.mx,www.reymen.mx
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL:-contact@reymen.mx}
+    networks: [proxy-net]
+networks:
+  proxy-net:
+    external: true

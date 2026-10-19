@@ -1,0 +1,9 @@
+---
+import { SITE, whatsappLink } from "../config";
+const wa = whatsappLink();
+const demo = SITE.calendlyUrl || "#contacto";
+---
+<div class="row">
+  <a class="btn primary" href={demo} {...(SITE.calendlyUrl ? { target: "_blank", rel: "noopener" } : {})}>Agenda una demo</a>
+  {wa ? <a class="btn wa" href={wa} rel="noopener">Escríbenos por WhatsApp</a> : <a class="btn ghost" href="#contacto">Déjanos tus datos</a>}
+</div>

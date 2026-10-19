@@ -1,0 +1,15 @@
+---
+import { SITE, whatsappLink } from "../config";
+const wa = whatsappLink();
+---
+<footer>
+  <div class="wrap">
+    <div>© {new Date().getFullYear()} {SITE.name}. Hecho en México.</div>
+    <div>
+      <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+      {wa && <a href={wa} rel="noopener">WhatsApp</a>}
+      <a href="/privacidad">Aviso de privacidad</a>
+      <a href={SITE.appUrl} rel="noopener">Entrar a la plataforma</a>
+    </div>
+  </div>
+</footer>
