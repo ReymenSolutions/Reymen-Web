@@ -37,7 +37,7 @@ import { SITE } from "../config";
   const open = (v: boolean) => {
     box.classList.toggle("open", v);
     fab.setAttribute("aria-expanded", String(v));
-    if (v) { input.focus(); if (!greeted) { greeted = true; add("¡Hola! Soy el asistente de Reymen. Cuéntame de tu negocio y te explico cómo podemos ayudarte.", "bot"); } }
+    if (v) { (window as unknown as { plausible?: (n: string) => void }).plausible?.("Chat Abierto"); input.focus(); if (!greeted) { greeted = true; add("¡Hola! Soy el asistente de Reymen. Cuéntame de tu negocio y te explico cómo podemos ayudarte.", "bot"); } }
   };
   fab.addEventListener("click", () => open(!box.classList.contains("open")));
   document.getElementById("chat-close")!.addEventListener("click", () => open(false));

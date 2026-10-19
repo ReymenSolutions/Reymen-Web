@@ -9,8 +9,8 @@ Sitio público de Reymen (reymen.mx), hecho con [Astro](https://astro.build) (sa
 ## Pendientes de configuración (`src/config.ts`)
 - `calendlyUrl`: enlace de Calendly. Vacío = «Agenda una demo» lleva al formulario.
 - `whatsapp`: número de ventas (ej. `5215512345678`). Vacío = no aparece el botón.
-- `plausibleDomain`: analítica sin cookies (opcional).
-- Aviso de privacidad (`/privacidad`): borrador, requiere revisión legal.
+- `plausibleDomain`: ya apunta a reymen.mx; hay que dar de alta el sitio en plausible.io. `googleSiteVerification`: código de Search Console.
+- Aviso de privacidad (`/privacidad`): texto completo; falta el domicilio legal (`legalAddress`) y la revisión de un abogado.
 - Los casos de éxito se publicarán solo con clientes reales y con su permiso.
 
 ## Desarrollo
