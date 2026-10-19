@@ -4,6 +4,7 @@ import Cta from "../components/Cta.astro";
 import Faq from "../components/Faq.astro";
 import LeadForm from "../components/LeadForm.astro";
 import Plans from "../components/Plans.astro";
+import Shot from "../components/Shot.astro";
 import { SITE } from "../config";
 
 const faq = [
@@ -25,16 +26,7 @@ const faq = [
         <Cta />
         <p class="muted" style="margin-top:14px"><a href="/restaurantes">¿Tienes un restaurante o cafetería? Mira cómo funciona →</a></p>
       </div>
-      <div class="mock" aria-label="Vista ilustrativa de la plataforma">
-        <div class="bar"><i></i><i></i><i></i></div>
-        <div class="body">
-          <div class="kv"><span>Ventas de hoy</span><b>$18,420</b></div>
-          <div class="kv"><span>Mesa 4 · cocina</span><span class="pill w">En preparación</span></div>
-          <div class="kv"><span>Insumo: leche entera</span><span class="pill w">Por agotarse</span></div>
-          <div class="kv"><span>Cliente frecuente: Ana</span><span class="pill">+1 sello</span></div>
-          <div class="kv"><span>WhatsApp · reserva viernes</span><span class="pill b">Respondido por IA</span></div>
-        </div>
-      </div>
+      <Shot name="lealtad" alt="Panel de lealtad de la plataforma Reymen con clientes inscritos, visitas, importes y recompensas" width={1500} height={900} eager />
     </div>
   </section>
 
@@ -50,6 +42,10 @@ const faq = [
         <div class="card"><div class="icon">👥</div><h3>CRM y seguimiento</h3><p>Cada cliente y cada conversación en un solo historial, con recordatorios para no perder ventas.</p></div>
         <div class="card"><div class="icon">💬</div><h3>Bandeja de mensajes</h3><p>WhatsApp, web y más canales en una sola bandeja para todo tu equipo.</p></div>
         <div class="card"><div class="icon">📈</div><h3>Reportes claros</h3><p>Ventas, ticket promedio, productos estrella y qué campañas traen clientes de vuelta.</p></div>
+      </div>
+      <div class="grid g2" style="margin-top:36px">
+        <Shot name="inventario" alt="Inventario con alertas de stock bajo, costos por insumo y ajustes de existencias" width={1500} height={900} />
+        <Shot name="pipeline" alt="Pipeline de ventas en tablero con oportunidades por etapa" width={1500} height={570} />
       </div>
     </div>
   </section>
@@ -67,16 +63,7 @@ const faq = [
           <li>Todo queda en tu bandeja, con historial</li>
         </ul>
       </div>
-      <div class="mock" aria-label="Conversación de ejemplo">
-        <div class="bar"><i></i><i></i><i></i></div>
-        <div class="body">
-          <div class="bubble me" style="align-self:flex-end">¿Abren hoy domingo? ¿Tienen mesa para 4?</div>
-          <div class="bubble bot">¡Hola! Sí, abrimos de 9:00 a 20:00. ¿A qué hora te gustaría? Te paso con el equipo para confirmar tu mesa.</div>
-          <div class="bubble me" style="align-self:flex-end">A las 2 pm</div>
-          <div class="bubble bot">Anotado. Una persona te confirmará en unos minutos 🙌</div>
-          <span class="muted" style="font-size:.78rem">Ejemplo ilustrativo</span>
-        </div>
-      </div>
+      <Shot name="inbox" alt="Bandeja de mensajes de Reymen con una conversación de WhatsApp respondida por el Agente IA" width={1500} height={900} />
     </div>
   </section>
 
