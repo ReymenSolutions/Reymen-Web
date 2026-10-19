@@ -1,0 +1,141 @@
+---
+import Base from "../layouts/Base.astro";
+import Cta from "../components/Cta.astro";
+import Faq from "../components/Faq.astro";
+import LeadForm from "../components/LeadForm.astro";
+import Plans from "../components/Plans.astro";
+import { SITE } from "../config";
+
+const faq = [
+  { q: "¿Cuánto tarda en estar funcionando?", a: "Depende del alcance. Una operación sencilla (POS, menú e inventario básico) puede arrancar en pocos días; las integraciones y automatizaciones a medida se acuerdan en la demo." },
+  { q: "¿Necesito cambiar todo lo que uso hoy?", a: "No. Empezamos por lo que más duele (ventas, WhatsApp, seguimiento) y conectamos el resto después. Te ayudamos a migrar clientes y menú." },
+  { q: "¿Qué pasa si se cae internet?", a: "El punto de venta está pensado para no detener tu servicio: las ventas no dependen de los módulos de inventario ni de las automatizaciones." },
+  { q: "¿El asistente de IA puede equivocarse?", a: "Responde solo con las reglas y la información que tú autorizas. Si duda, si el cliente pide a una persona o toca un tema delicado, te pasa la conversación en lugar de inventar." },
+  { q: "¿Mis datos y los de mis clientes están seguros?", a: "Cada negocio tiene sus datos aislados, con permisos por rol, sesiones controladas y respaldos cifrados fuera del servidor, con pruebas periódicas de restauración." },
+  { q: "¿Cuánto cuesta?", a: "Depende de los módulos y el tamaño de tu operación. En la demo te damos una propuesta clara, sin letras chiquitas." },
+];
+---
+<Base title="Reymen · POS, lealtad y asistentes de IA para tu negocio" description="Punto de venta, inventario, programa de lealtad y asistentes de IA por WhatsApp en una sola plataforma. Para restaurantes, cafeterías y negocios locales en México." path="">
+  <section class="hero">
+    <div class="wrap grid g2" style="align-items:center">
+      <div>
+        <div class="eyebrow">Plataforma para negocios locales</div>
+        <h1>Vende más, pierde menos y <span class="grad">contesta a todos</span>, sin trabajo extra.</h1>
+        <p class="lead">Punto de venta, inventario, lealtad de clientes y asistentes de IA por WhatsApp, conectados en una sola plataforma. Empezamos por restaurantes y cafeterías.</p>
+        <Cta />
+        <p class="muted" style="margin-top:14px"><a href="/restaurantes">¿Tienes un restaurante o cafetería? Mira cómo funciona →</a></p>
+      </div>
+      <div class="mock" aria-label="Vista ilustrativa de la plataforma">
+        <div class="bar"><i></i><i></i><i></i></div>
+        <div class="body">
+          <div class="kv"><span>Ventas de hoy</span><b>$18,420</b></div>
+          <div class="kv"><span>Mesa 4 · cocina</span><span class="pill w">En preparación</span></div>
+          <div class="kv"><span>Insumo: leche entera</span><span class="pill w">Por agotarse</span></div>
+          <div class="kv"><span>Cliente frecuente: Ana</span><span class="pill">+1 sello</span></div>
+          <div class="kv"><span>WhatsApp · reserva viernes</span><span class="pill b">Respondido por IA</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="producto">
+    <div class="wrap">
+      <div class="eyebrow">Producto</div>
+      <h2>Todo tu negocio en un solo lugar</h2>
+      <p class="lead">Menos pestañas, menos hojas de cálculo y menos olvidos.</p>
+      <div class="grid g3" style="margin-top:28px">
+        <div class="card"><div class="icon">🧾</div><h3>Punto de venta</h3><p>Mesas, cocina, cobro dividido, tickets y corte de caja. Funciona rápido en tableta o celular.</p></div>
+        <div class="card"><div class="icon">📦</div><h3>Inventario y costos</h3><p>Recetas que descuentan insumos solas, avisos de agotado y costo por platillo. Nunca bloquea una venta.</p></div>
+        <div class="card"><div class="icon">⭐</div><h3>Lealtad con tarjeta digital</h3><p>Sellos y recompensas en la tarjeta del cliente, con cumpleaños y avisos para que regrese.</p></div>
+        <div class="card"><div class="icon">👥</div><h3>CRM y seguimiento</h3><p>Cada cliente y cada conversación en un solo historial, con recordatorios para no perder ventas.</p></div>
+        <div class="card"><div class="icon">💬</div><h3>Bandeja de mensajes</h3><p>WhatsApp, web y más canales en una sola bandeja para todo tu equipo.</p></div>
+        <div class="card"><div class="icon">📈</div><h3>Reportes claros</h3><p>Ventas, ticket promedio, productos estrella y qué campañas traen clientes de vuelta.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="ia" class="alt">
+    <div class="wrap grid g2" style="align-items:center">
+      <div>
+        <div class="eyebrow">Asistentes de IA</div>
+        <h2>Atiende por WhatsApp las 24 horas, con tus reglas</h2>
+        <p class="lead">El asistente responde preguntas frecuentes, toma datos y agenda, siguiendo el manual que tú escribes. Si no está seguro, pasa la conversación a una persona.</p>
+        <ul class="ticks">
+          <li>Aprende de tu menú, horarios y políticas</li>
+          <li>Tú decides: solo sugerir respuestas o contestar solo</li>
+          <li>Límites de consumo para que nunca haya sorpresas</li>
+          <li>Todo queda en tu bandeja, con historial</li>
+        </ul>
+      </div>
+      <div class="mock" aria-label="Conversación de ejemplo">
+        <div class="bar"><i></i><i></i><i></i></div>
+        <div class="body">
+          <div class="bubble me" style="align-self:flex-end">¿Abren hoy domingo? ¿Tienen mesa para 4?</div>
+          <div class="bubble bot">¡Hola! Sí, abrimos de 9:00 a 20:00. ¿A qué hora te gustaría? Te paso con el equipo para confirmar tu mesa.</div>
+          <div class="bubble me" style="align-self:flex-end">A las 2 pm</div>
+          <div class="bubble bot">Anotado. Una persona te confirmará en unos minutos 🙌</div>
+          <span class="muted" style="font-size:.78rem">Ejemplo ilustrativo</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="como-funciona">
+    <div class="wrap">
+      <div class="eyebrow">Cómo trabajamos</div>
+      <h2>De la demo a tu primera venta</h2>
+      <div class="grid g3 steps" style="margin-top:28px">
+        <div class="card"><h3>Conversamos</h3><p>Entendemos tu operación y qué te quita más tiempo o dinero hoy.</p></div>
+        <div class="card"><h3>Configuramos</h3><p>Cargamos tu menú, usuarios, inventario y conectamos WhatsApp y lealtad.</p></div>
+        <div class="card"><h3>Acompañamos</h3><p>Capacitamos a tu equipo y medimos resultados desde la primera semana.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="negocios" class="alt">
+    <div class="wrap">
+      <div class="eyebrow">Para cada negocio</div>
+      <h2>Empezamos con restaurantes; sirve para más</h2>
+      <div class="grid g4" style="margin-top:28px">
+        <a class="card" href="/restaurantes" style="text-decoration:none"><div class="icon">🍽️</div><h3>Restaurantes y cafeterías</h3><p>POS, cocina, inventario y lealtad. Ya disponible.</p></a>
+        <div class="card"><div class="icon">🛍️</div><h3>Comercio</h3><p>Catálogo, clientes frecuentes y seguimiento por WhatsApp.</p></div>
+        <div class="card"><div class="icon">🩺</div><h3>Servicios y clínicas</h3><p>Citas, recordatorios y menos ausencias.</p></div>
+        <div class="card"><div class="icon">🏠</div><h3>Inmobiliarias</h3><p>Fichas públicas de propiedades y captura de prospectos.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="seguridad">
+    <div class="wrap">
+      <div class="eyebrow">Confianza</div>
+      <h2>Tus datos y los de tus clientes, en buenas manos</h2>
+      <div class="grid g3" style="margin-top:28px">
+        <div class="card"><h3>Datos aislados por negocio</h3><p>Nadie ve la información de otro cliente. Permisos por rol dentro de tu equipo.</p></div>
+        <div class="card"><h3>Respaldos cifrados</h3><p>Copias diarias cifradas fuera del servidor y pruebas periódicas de restauración.</p></div>
+        <div class="card"><h3>IA con límites</h3><p>El asistente sigue tus reglas, escala lo delicado a una persona y tiene tope de consumo.</p></div>
+      </div>
+      <p class="muted" style="margin-top:20px">Cumplimos con el aviso de privacidad y pedimos tu consentimiento antes de contactarte. <a href="/privacidad">Leer aviso</a>.</p>
+    </div>
+  </section>
+
+  {SITE.showPrices && <Plans />}
+
+  <section id="faq" class="alt">
+    <div class="wrap" style="max-width:820px">
+      <h2>Preguntas frecuentes</h2>
+      <Faq items={faq} />
+    </div>
+  </section>
+
+  <section id="contacto">
+    <div class="wrap grid g2">
+      <div>
+        <div class="eyebrow">Hablemos</div>
+        <h2>Cuéntanos de tu negocio</h2>
+        <p class="lead">Te respondemos por WhatsApp o correo con una propuesta clara. Sin compromiso.</p>
+        <p class="muted">También puedes escribir a <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.</p>
+      </div>
+      <div class="card"><LeadForm /></div>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,26 @@
+---
+// Precios dinámicos del catálogo (Admin → Planes). No se usa mientras SITE.showPrices sea false.
+import { SITE } from "../config";
+---
+<section id="precios">
+  <div class="wrap">
+    <h2>Planes</h2>
+    <div id="plans" class="grid g3" data-api={`${SITE.apiUrl}/api/public/plans`}></div>
+  </div>
+</section>
+<script>
+  const el = document.getElementById("plans");
+  if (el) {
+    fetch(el.dataset.api!).then((r) => (r.ok ? r.json() : Promise.reject())).then((d) => {
+      for (const p of d.plans) {
+        const c = document.createElement("div");
+        c.className = "card";
+        const h = document.createElement("h3"); h.textContent = p.name;
+        const pr = document.createElement("div"); pr.className = "stat"; pr.textContent = p.priceMxn == null ? "A tu medida" : `$${Number(p.priceMxn).toLocaleString("es-MX")} MXN/mes`;
+        const ul = document.createElement("ul"); ul.className = "ticks";
+        for (const f of p.features) { const li = document.createElement("li"); li.textContent = f; ul.appendChild(li); }
+        c.append(h, pr, ul); el.appendChild(c);
+      }
+    }).catch(() => { el.closest("section")?.remove(); });
+  }
+</script>

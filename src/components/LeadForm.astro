@@ -1,0 +1,59 @@
+---
+import { SITE } from "../config";
+interface Props { vertical?: string }
+const { vertical = "" } = Astro.props;
+---
+<form class="lead" id="lead-form" novalidate data-api={`${SITE.apiUrl}/api/public/leads`} data-source={vertical ? `web-${vertical}` : "web"}>
+  <label for="lf-name">Tu nombre</label>
+  <input id="lf-name" name="name" autocomplete="name" required minlength="2" maxlength="120" />
+  <label for="lf-contact">WhatsApp o correo</label>
+  <input id="lf-contact" name="contact" autocomplete="off" required maxlength="200" placeholder="55 1234 5678 o tu@correo.com" />
+  <label for="lf-business">Tu negocio</label>
+  <input id="lf-business" name="business" maxlength="120" placeholder="Ej. Café Sol" />
+  <label for="lf-vertical">Tipo de negocio</label>
+  <select id="lf-vertical" name="vertical">
+    <option value="restaurantes" selected={vertical === "restaurantes"}>Restaurante / cafetería</option>
+    <option value="comercio">Comercio / tienda</option>
+    <option value="servicios">Servicios / clínica / estética</option>
+    <option value="inmobiliaria">Inmobiliaria</option>
+    <option value="otro">Otro</option>
+  </select>
+  <label for="lf-message">¿Qué quieres resolver? (opcional)</label>
+  <textarea id="lf-message" name="message" rows="3" maxlength="1000"></textarea>
+  <div class="hp" aria-hidden="true"><label>No llenar<input name="website" tabindex="-1" autocomplete="off" /></label></div>
+  <label class="check"><input type="checkbox" name="consent" required /> <span>Acepto que Reymen use mis datos para contactarme, según el <a href="/privacidad" target="_blank">aviso de privacidad</a>.</span></label>
+  <div style="margin-top:18px"><button class="btn primary" type="submit">Quiero mi plan</button></div>
+  <div id="lead-msg" role="status" aria-live="polite"></div>
+</form>
+
+<script>
+  const form = document.getElementById("lead-form") as HTMLFormElement | null;
+  if (form) {
+    const box = document.getElementById("lead-msg")!;
+    const show = (text: string, ok: boolean) => { box.innerHTML = `<div class="msg ${ok ? "ok" : "err"}"></div>`; box.firstElementChild!.textContent = text; };
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      if (!form.checkValidity()) { show("Revisa tu nombre, tu contacto y acepta el aviso de privacidad.", false); return; }
+      const btn = form.querySelector("button")!;
+      btn.disabled = true;
+      try {
+        const res = await fetch(form.dataset.api!, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: fd.get("name"), contact: fd.get("contact"), business: fd.get("business") || undefined,
+            vertical: fd.get("vertical") || undefined, message: fd.get("message") || undefined,
+            consent: fd.get("consent") === "on", website: fd.get("website") || undefined, source: form.dataset.source,
+          }),
+        });
+        if (res.ok) { window.location.href = "/gracias"; return; }
+        if (res.status === 429) show("Ya recibimos varios envíos. Intenta de nuevo más tarde o escríbenos a contact@reymen.mx.", false);
+        else if (res.status === 400) show("Revisa que tu WhatsApp o correo sean válidos.", false);
+        else show("No pudimos enviar tu mensaje. Escríbenos a contact@reymen.mx.", false);
+      } catch {
+        show("Sin conexión. Intenta de nuevo o escríbenos a contact@reymen.mx.", false);
+      } finally { btn.disabled = false; }
+    });
+  }
+</script>
