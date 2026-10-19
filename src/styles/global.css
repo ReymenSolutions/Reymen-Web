@@ -49,6 +49,11 @@ footer { border-top: 1px solid var(--line); padding: 36px 0; color: var(--muted)
 footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 footer a { margin-right: 16px; }
 /* Mock de pantalla (ilustrativo) */
+.shot { margin: 0; background: #0a1426; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; box-shadow: 0 24px 60px rgba(0,0,0,.4); }
+.shot .bar { display: flex; gap: 6px; padding: 10px 12px; background: #0d1a31; border-bottom: 1px solid var(--line); }
+.shot .bar i { width: 10px; height: 10px; border-radius: 50%; background: #2a3a5c; }
+.shot img { display: block; width: 100%; height: auto; }
+.shot figcaption { padding: 8px 12px; font-size: .8rem; color: var(--muted); background: #0d1a31; }
 .mock { background: #0a1426; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; box-shadow: 0 24px 60px rgba(0,0,0,.4); }
 .mock .bar { display: flex; gap: 6px; padding: 10px 12px; background: #0d1a31; border-bottom: 1px solid var(--line); }
 .mock .bar i { width: 10px; height: 10px; border-radius: 50%; background: #2a3a5c; }

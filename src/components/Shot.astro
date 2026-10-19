@@ -1,0 +1,10 @@
+---
+// Captura real del producto dentro de un marco de ventana. Los datos son de demostración (negocio ficticio).
+interface Props { name: "lealtad" | "inbox" | "inventario" | "pipeline"; alt: string; width: number; height: number; eager?: boolean; caption?: string }
+const { name, alt, width, height, eager = false, caption = "Captura de la plataforma · datos de demostración" } = Astro.props;
+---
+<figure class="shot">
+  <div class="bar" aria-hidden="true"><i></i><i></i><i></i></div>
+  <img src={`/capturas/${name}.webp`} alt={alt} width={width} height={height} loading={eager ? "eager" : "lazy"} decoding="async" />
+  <figcaption>{caption}</figcaption>
+</figure>
