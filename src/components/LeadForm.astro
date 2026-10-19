@@ -47,7 +47,12 @@ const { vertical = "" } = Astro.props;
             consent: fd.get("consent") === "on", website: fd.get("website") || undefined, source: form.dataset.source,
           }),
         });
-        if (res.ok) { window.location.href = "/gracias"; return; }
+        if (res.ok) {
+          const go = () => { window.location.href = "/gracias"; };
+          const pl = (window as unknown as { plausible?: (n: string, o?: unknown) => void }).plausible;
+          if (pl) { pl("Lead Enviado", { props: { vertical: String(fd.get("vertical") ?? "") }, callback: go }); setTimeout(go, 600); } else go();
+          return;
+        }
         if (res.status === 429) show("Ya recibimos varios envíos. Intenta de nuevo más tarde o escríbenos a contact@reymen.mx.", false);
         else if (res.status === 400) show("Revisa que tu WhatsApp o correo sean válidos.", false);
         else show("No pudimos enviar tu mensaje. Escríbenos a contact@reymen.mx.", false);

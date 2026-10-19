@@ -11,11 +11,17 @@ export const SITE = {
   /** ReymenApp (API pública y acceso de clientes). */
   appUrl: "https://app.reymen.mx",
   apiUrl: "https://app.reymen.mx",
-  /** Dominio registrado en Plausible (analítica sin cookies). Vacío = sin analítica. */
-  plausibleDomain: "",
+  /** Dominio dado de alta en Plausible (analítica sin cookies). Vacío = sin analítica. Requiere crear el sitio en plausible.io. */
+  plausibleDomain: "reymen.mx",
+  /** PENDIENTE: código de verificación de Google Search Console (solo el valor de «content»). Vacío = sin etiqueta. */
+  googleSiteVerification: "",
+  /** Aviso de privacidad: responsable y domicilio (la ley exige el domicilio). PENDIENTE: domicilio; vacío = no se muestra. */
+  legalName: "Reymen Solutions",
+  legalAddress: "",
   /** Los precios se muestran solo cuando se enciende (y PUBLIC_PLANS_ENABLED=true en ReymenApp). */
   showPrices: false,
   privacyVersion: "2026-10",
+  privacyUpdated: "19 de octubre de 2026",
 } as const;
 
 export const whatsappLink = (text = "Hola, quiero información de Reymen") =>
