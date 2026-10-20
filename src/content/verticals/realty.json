@@ -1,0 +1,111 @@
+{
+  "id": "realty",
+  "name": "Inmobiliarias",
+  "order": 2,
+  "route": "/realty",
+  "layout": "coming-soon",
+  "description": "Inventario de propiedades, prospectos y oportunidades para inmobiliarias, sobre Reymen App. En preparación.",
+  "publication": "draft",
+  "availability": "COMING_SOON",
+  "stages": {
+    "code": true,
+    "tests": true,
+    "deployed": false
+  },
+  "audience": "Inmobiliarias y asesores independientes en México.",
+  "products": [
+    "reymen-app"
+  ],
+  "features": [
+    {
+      "id": "propiedades",
+      "title": "Inventario de propiedades",
+      "text": "Propiedades con fotos, estado e historial, y una ficha pública por propiedad.",
+      "status": "planned",
+      "evidence": {
+        "code": [
+          "ReymenApp docs/realty.md",
+          "ReymenApp src/lib/realty/"
+        ],
+        "tests": true,
+        "production": false
+      }
+    },
+    {
+      "id": "prospectos",
+      "title": "Prospectos y lo que buscan",
+      "text": "Cada prospecto con operación, tipo, presupuesto y zonas de interés, sobre el CRM de Reymen.",
+      "status": "planned",
+      "evidence": {
+        "code": [
+          "ReymenApp docs/realty.md"
+        ],
+        "tests": true,
+        "production": false
+      }
+    },
+    {
+      "id": "matches",
+      "title": "Matches con puntaje explicado",
+      "text": "Cruce de prospectos y propiedades con un puntaje que se puede revisar.",
+      "status": "planned",
+      "evidence": {
+        "code": [
+          "ReymenApp src/lib/realty/match.ts"
+        ],
+        "tests": true,
+        "production": false
+      }
+    },
+    {
+      "id": "visitas",
+      "title": "Visitas ligadas a Citas",
+      "text": "Las visitas se agendan en la misma agenda de Reymen App.",
+      "status": "planned",
+      "evidence": {
+        "code": [
+          "ReymenApp docs/realty.md"
+        ],
+        "tests": true,
+        "production": false
+      }
+    },
+    {
+      "id": "mercado",
+      "title": "Demanda observada",
+      "text": "Lectura de la demanda de tus propios prospectos frente a tu inventario; no es dato de mercado externo.",
+      "status": "planned",
+      "evidence": {
+        "code": [
+          "ReymenApp src/lib/realty/market.ts"
+        ],
+        "tests": true,
+        "production": false
+      }
+    }
+  ],
+  "benefits": [],
+  "captures": [],
+  "demos": [],
+  "cta": {
+    "primary": {
+      "label": "Registrar mi interés",
+      "href": "/contacto?interes=realty"
+    }
+  },
+  "seo": {
+    "title": "Reymen para inmobiliarias · Próximamente",
+    "description": "Estamos preparando una solución para inmobiliarias dentro de Reymen App. Registra tu interés.",
+    "noindex": true
+  },
+  "interest": {
+    "text": "Estamos preparando una solución para inmobiliarias. Cuéntanos qué necesitas y te avisamos.",
+    "cta": "Registrar mi interés",
+    "glyph": "property"
+  },
+  "related": [
+    "restaurantes"
+  ],
+  "story": [],
+  "faq": []
+}

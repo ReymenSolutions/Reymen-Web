@@ -1,0 +1,110 @@
+---
+// Mapa del ecosistema: elige un recorrido y se ilumina por dónde pasa. Cada recorrido lleva su estado (Disponible, Beta, En desarrollo o
+// Concepto) para no presentar como funcionando lo que no lo está. En pantallas angostas el diagrama se sustituye por los pasos del recorrido.
+import { NODES, JOURNEYS } from "../data/ecosystem";
+import StatusBadge from "./StatusBadge.astro";
+const byId = Object.fromEntries(NODES.map((n) => [n.id, n]));
+const center = (id: string) => ({ x: byId[id].x + byId[id].w / 2, y: byId[id].y + byId[id].h / 2 });
+const segs = JOURNEYS.flatMap((j) => j.steps.slice(0, -1).map((s, i) => ({ j: j.id, d: `M${center(s.node).x} ${center(s.node).y} L${center(j.steps[i + 1].node).x} ${center(j.steps[i + 1].node).y}`, status: j.status })));
+const first = JOURNEYS[0];
+---
+<div class="map" data-map data-journey={first.id}>
+  <div class="picker" role="group" aria-label="Recorridos de ejemplo">
+    {JOURNEYS.map((j, k) => (
+      <div class="j">
+        <button type="button" class="pick" data-j={j.id} aria-pressed={k === 0 ? "true" : "false"}>
+          <span class="name">{j.title}</span>
+          <span class="meta"><StatusBadge status={j.status} /></span>
+        </button>
+        <div class="detail inline" data-detail={j.id} hidden={k !== 0}>
+        <p class="status"><StatusBadge status={j.status} /> {j.status === "concept" && <span>Ejemplo conceptual, no es parte del producto.</span>}{j.status === "planned" && <span>En desarrollo, todavía no disponible.</span>}</p>
+        <ol class="steps">{j.steps.map((s) => <li>{s.text}</li>)}</ol>
+        <p class="note">{j.note}</p>
+      </div>
+      </div>
+    ))}
+  </div>
+
+  <div class="panel">
+    <svg class="dg" viewBox="0 0 640 310" aria-hidden="true" focusable="false">
+      <rect class="app" x="240" y="30" width="394" height="260" rx="16" />
+      <text class="app-label" x="256" y="52">Reymen App</text>
+      <g>{segs.map((s) => <path class:list={["e", `s-${s.status}`, { on: s.j === first.id }]} data-j={s.j} d={s.d} />)}</g>
+      <g>
+        {NODES.map((n) => (
+          <g class:list={["n", { on: first.steps.some((st) => st.node === n.id) }]} data-n={n.id} transform={`translate(${n.x} ${n.y})`}>
+            <rect width={n.w} height={n.h} rx="10" />
+            <text x={n.w / 2} y={n.h / 2 + 5} text-anchor="middle">{n.label}</text>
+          </g>
+        ))}
+      </g>
+    </svg>
+
+    {JOURNEYS.map((j, k) => (
+      <div class="detail side" data-detail={j.id} hidden={k !== 0}>
+        <p class="status"><StatusBadge status={j.status} /> {j.status === "concept" && <span>Ejemplo conceptual, no es parte del producto.</span>}{j.status === "planned" && <span>En desarrollo, todavía no disponible.</span>}</p>
+        <ol class="steps">{j.steps.map((s) => <li>{s.text}</li>)}</ol>
+        <p class="note">{j.note}</p>
+      </div>
+    ))}
+  </div>
+</div>
+
+<script id="map-data" type="application/json" set:html={JSON.stringify(Object.fromEntries(JOURNEYS.map((j) => [j.id, j.steps.map((s) => s.node)])))} />
+
+<style>
+  .map { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(1.5rem, 4vw, 3.5rem); align-items: start; }
+  .picker { display: grid; border-top: 1px solid var(--night-line); }
+  .j { border-bottom: 1px solid var(--night-line); }
+  .pick { display: grid; gap: 0.35rem; justify-items: start; text-align: left; background: none; border: 0; padding: var(--s-4) 0 var(--s-4) var(--s-5); width: 100%; cursor: pointer; color: var(--on-night-soft); position: relative; transition: color var(--t-base) var(--ease); min-height: 3rem; }
+  .pick::before { content: ""; position: absolute; left: 0; top: -1px; bottom: -1px; width: 3px; background: var(--electric); transform: scaleY(0); transform-origin: top; transition: transform var(--t-base) var(--ease); }
+  .pick .name { font-weight: 650; font-stretch: 106%; font-size: var(--step-0); color: var(--on-night); line-height: 1.3; }
+  .pick:hover { color: var(--on-night); }
+  .pick:active { background: var(--glass); }
+  .pick[aria-pressed="true"]::before { transform: scaleY(1); }
+  .detail[hidden] { display: none; }
+  .detail.inline { display: none; padding: 0 0 var(--s-4) var(--s-5); gap: var(--s-3); }
+  .panel { background: var(--night-2); border: 1px solid var(--night-line); border-radius: var(--r-lg); padding: var(--s-5); box-shadow: var(--lift-night); display: grid; gap: var(--s-4); }
+  .dg { width: 100%; height: auto; overflow: visible; }
+  .app { fill: rgb(255 255 255 / 0.03); stroke: #2c3d86; stroke-width: 1.5; stroke-dasharray: 4 6; }
+  .app-label { fill: var(--on-night-soft); font: 600 12px var(--font); font-stretch: 106%; }
+  .e { fill: none; stroke: #4660d8; stroke-width: 2; opacity: 0.18; transition: opacity var(--t-base) var(--ease); }
+  .n rect { fill: #101e55; stroke: #2c3d86; stroke-width: 1.5; transition: fill var(--t-base) var(--ease), stroke var(--t-base) var(--ease); }
+  .n { opacity: 0.4; transition: opacity var(--t-base) var(--ease); }
+  .n text { fill: #eaf0ff; font: 650 13.5px var(--font); font-stretch: 106%; }
+  .e.on { opacity: 1; stroke: #8ea6ff; stroke-dasharray: 5 7; animation: flow 1.1s linear infinite; }
+  .e.on.s-concept { stroke-dasharray: 2 8; }
+  .e.on.s-planned { stroke: #ffb27d; }
+  .n.on { opacity: 1; }
+  .n.on rect { stroke: #8ea6ff; fill: #14266b; }
+  @keyframes flow { to { stroke-dashoffset: -24; } }
+  .status { margin: 0; display: flex; align-items: center; gap: var(--s-3); color: var(--on-night-soft); font-size: var(--step--1); }
+  .steps { display: grid; gap: var(--s-2); counter-reset: s; }
+  .steps li { counter-increment: s; display: grid; grid-template-columns: 1.6rem 1fr; gap: var(--s-2); color: var(--on-night); }
+  .steps li::before { content: counter(s); display: grid; place-items: center; width: 1.4rem; height: 1.4rem; border-radius: 50%; border: 1px solid var(--electric-soft); color: var(--electric-soft); font-size: 0.75rem; font-weight: 650; }
+  .note { margin: 0; color: var(--on-night-soft); font-size: var(--step--1); max-width: none; }
+  @media (max-width: 62rem) {
+    .map { grid-template-columns: 1fr; }
+    /* En pantallas angostas el detalle se abre justo debajo del recorrido elegido */
+    .detail.inline:not([hidden]) { display: grid; }
+    .detail.side { display: none; }
+  }
+  @media (max-width: 40rem) { .panel { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .e.on { animation: none; } }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-map]").forEach((root) => {
+    const data = JSON.parse(document.getElementById("map-data")!.textContent!) as Record<string, string[]>;
+    const picks = [...root.querySelectorAll<HTMLButtonElement>(".pick")];
+    const set = (id: string) => {
+      root.dataset.journey = id;
+      picks.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.j === id)));
+      root.querySelectorAll<HTMLElement>(".detail").forEach((d) => { d.hidden = d.dataset.detail !== id; });
+      root.querySelectorAll<SVGElement>(".e").forEach((e) => e.classList.toggle("on", e.dataset.j === id));
+      root.querySelectorAll<SVGElement>(".n").forEach((n) => n.classList.toggle("on", data[id].includes(n.dataset.n!)));
+    };
+    picks.forEach((b) => b.addEventListener("click", () => set(b.dataset.j!)));
+    set(root.dataset.journey!);
+  });
+</script>

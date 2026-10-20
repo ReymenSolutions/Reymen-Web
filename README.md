@@ -2,7 +2,7 @@
 
 Sitio público de Reymen (reymen.mx), hecho con [Astro](https://astro.build) (salida estática).
 
-- Inicio (`/`) y página para restaurantes y cafeterías (`/restaurantes`).
+- Inicio (`/`), `/productos`, `/contacto` y la solución para restaurantes (`/restaurantes`). Productos, verticales y servicios salen de `src/content/` (ver `docs/evolucion/05-catalogos.md`).
 - Formulario → `POST {apiUrl}/api/public/leads` (CRM de Reymen) y chat → `POST {apiUrl}/api/public/chat` (canal webchat del Inbox). Ver `docs/SITIO_WEB.md` en ReymenApp.
 - **Precios ocultos** por ahora (`showPrices: false` en `src/config.ts`). Para mostrarlos: `PUBLIC_PLANS_ENABLED=true` en ReymenApp y `showPrices: true`; se leen del catálogo (Admin → Planes).
 

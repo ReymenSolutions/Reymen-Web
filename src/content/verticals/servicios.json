@@ -1,0 +1,42 @@
+{
+  "id": "servicios",
+  "name": "Clínicas y servicios",
+  "order": 3,
+  "route": "/clinicas-y-servicios",
+  "layout": "coming-soon",
+  "description": "Citas y seguimiento de clientes en el CRM de Reymen, ajustados a cómo trabaja cada negocio.",
+  "publication": "draft",
+  "availability": "COMING_SOON",
+  "stages": {
+    "code": false,
+    "tests": false,
+    "deployed": false
+  },
+  "audience": "Clínicas, talleres y negocios de servicios.",
+  "products": [
+    "reymen-app"
+  ],
+  "features": [],
+  "benefits": [],
+  "captures": [],
+  "demos": [],
+  "cta": {
+    "primary": {
+      "label": "Platicar sobre mi negocio",
+      "href": "/contacto?interes=servicios"
+    }
+  },
+  "seo": {
+    "title": "Reymen para negocios de servicios · Próximamente",
+    "description": "Citas y seguimiento de clientes para clínicas y negocios de servicios.",
+    "noindex": true
+  },
+  "interest": {
+    "text": "Citas y seguimiento de clientes en el CRM de Reymen, ajustados a cómo trabajas.",
+    "cta": "Platicar sobre mi negocio",
+    "glyph": "clinic"
+  },
+  "related": [],
+  "story": [],
+  "faq": []
+}

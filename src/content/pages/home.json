@@ -1,0 +1,64 @@
+{
+  "hero": {
+    "title": "Software, agentes de IA y automatización, conectados en un solo ecosistema",
+    "lede": "Reymen Solutions diseña tecnología a la medida y productos propios para negocios en México. Nuestro primer ecosistema ya opera en restaurantes y cafeterías.",
+    "tagline": "Conecta. Automatiza. Crece."
+  },
+  "facts": [
+    {
+      "title": "Productos propios y a la medida",
+      "text": "Un ecosistema que ya funciona, y desarrollo para lo que no existe."
+    },
+    {
+      "title": "Pensado para México",
+      "text": "IVA desglosado, propinas y efectivo."
+    },
+    {
+      "title": "Tus datos son tuyos",
+      "text": "Cada negocio aislado y con respaldos diarios."
+    }
+  ],
+  "trust": [
+    {
+      "h": "Un negocio, sus datos",
+      "p": "Cada negocio está aislado de los demás y cada persona de tu equipo ve solo lo que su rol permite.",
+      "icon": "layers"
+    },
+    {
+      "h": "Respaldos que sí se prueban",
+      "p": "Copias diarias de la base de datos con rotación y pruebas de restauración programadas.",
+      "icon": "archive"
+    },
+    {
+      "h": "IA con reglas y límites",
+      "p": "El asistente sigue tus reglas, escala lo delicado a una persona y tiene un tope de consumo por negocio.",
+      "icon": "shield"
+    }
+  ],
+  "faq": [
+    {
+      "q": "¿Cuánto tarda en estar funcionando?",
+      "a": "Depende del alcance. Una operación sencilla (punto de venta, menú e inventario básico) puede arrancar en pocos días; las integraciones y automatizaciones a la medida se acuerdan en la demo."
+    },
+    {
+      "q": "¿Tengo que cambiar todo lo que uso hoy?",
+      "a": "No. Empezamos por lo que más te cuesta (ventas, atención a clientes o seguimiento) y conectamos el resto después. Te ayudamos a pasar tu información."
+    },
+    {
+      "q": "¿Desarrollan software, agentes de IA o automatizaciones a la medida?",
+      "a": "Sí. Además de nuestros productos, diseñamos y construimos agentes de IA, automatizaciones y aplicaciones web o móviles para la operación de cada negocio."
+    },
+    {
+      "q": "¿El asistente de IA puede equivocarse?",
+      "a": "Responde solo con las reglas y la información que tú autorizas. Si duda, si el cliente pide hablar con una persona o si el tema es delicado, te pasa la conversación en lugar de inventar."
+    },
+    {
+      "q": "¿Mis datos y los de mis clientes están seguros?",
+      "a": "Cada negocio tiene sus datos aislados, con permisos por rol y sesiones controladas. Hacemos respaldos diarios de la base de datos y tenemos pruebas de restauración programadas."
+    },
+    {
+      "q": "¿Cuánto cuesta?",
+      "a": "Depende de los módulos y del tamaño de tu operación. En la demo te damos una propuesta clara, sin letras chiquitas."
+    }
+  ]
+}

@@ -1,3 +1,3 @@
-// Rutas públicas del sitio: una sola lista que alimenta el sitemap. Las páginas que no deben indexarse (/gracias, /404) no están aquí.
-// Cuando una página nueva se publique, se agrega aquí (y, más adelante, saldrá de los datos de cada producto o vertical).
-export const PUBLIC_ROUTES = ["", "/restaurantes", "/privacidad"] as const;
+// Rutas fijas del sitio que se indexan. Las páginas de verticales y productos se agregan solas desde sus datos (ver sitemap.xml.ts):
+// una página `draft` no aparece, `unlisted` tampoco, y solo las `published` entran.
+export const STATIC_ROUTES = ["", "/productos", "/contacto", "/privacidad"] as const;

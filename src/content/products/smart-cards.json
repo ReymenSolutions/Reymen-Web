@@ -1,0 +1,61 @@
+{
+  "id": "smart-cards",
+  "name": "Smart Cards",
+  "order": 4,
+  "model": "connected",
+  "publication": "published",
+  "availability": "BETA",
+  "glyph": "card",
+  "page": {
+    "route": "/smart-cards",
+    "publication": "draft"
+  },
+  "tagline": "Tarjetas con enlace público y código QR, conectadas con Reymen App.",
+  "description": "Producto con su propio panel, unido a Reymen App con acceso único y estadísticas.",
+  "features": [
+    {
+      "id": "qr",
+      "title": "Enlace público y código QR",
+      "text": "Cada tarjeta tiene su dirección pública y su QR.",
+      "status": "beta",
+      "evidence": {
+        "code": [
+          "ReymenApp docs/DOCUMENTACION_TECNICA.md §12 (SMARTCARD_PUBLIC_URL)"
+        ],
+        "tests": true,
+        "production": false
+      }
+    },
+    {
+      "id": "estadisticas",
+      "title": "Escaneos y clics",
+      "text": "Estadísticas de uso por tarjeta dentro de Reymen App.",
+      "status": "beta",
+      "evidence": {
+        "code": [
+          "ReymenApp src/lib/smartcard-overview.ts",
+          "ReymenApp docs/smartcard-responsive-validation.md"
+        ],
+        "tests": true,
+        "production": false
+      }
+    },
+    {
+      "id": "contactos",
+      "title": "Contactos al CRM",
+      "text": "Lo que alguien deja en una tarjeta llega como contacto al CRM. El receptor está listo; el envío desde la tarjeta está pendiente.",
+      "status": "planned",
+      "evidence": {
+        "code": [
+          "ReymenApp docs/smartcard/CRM-LEADS.md"
+        ],
+        "tests": false,
+        "production": false
+      }
+    }
+  ],
+  "related": [
+    "reymen-app"
+  ],
+  "reviewNote": "Producto en otro repositorio (sin acceso). Confirmar disponibilidad real y funciones (NFC, tipos de tarjeta) antes de ampliar."
+}

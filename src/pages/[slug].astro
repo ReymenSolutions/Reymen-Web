@@ -1,0 +1,60 @@
+---
+// Página de una vertical en preparación («próximamente» o beta), generada desde src/content/verticals/*.json.
+// Solo se compila si su `publication` no es `draft`; con `unlisted` queda fuera del menú y del sitemap y con noindex.
+// Para activar una solución basta cambiar sus datos (publication, availability y stages); la estructura no se reconstruye.
+// Las verticales con composición propia (layout: custom, como /restaurantes) tienen su propio archivo.
+import Base from "../layouts/Base.astro";
+import Section from "../components/Section.astro";
+import Button from "../components/Button.astro";
+import StatusBadge from "../components/StatusBadge.astro";
+import Glyph from "../components/Glyph.astro";
+import { allVerticals, getProduct, assertCatalogIntegrity } from "../lib/catalog";
+
+export async function getStaticPaths() {
+  return (await allVerticals()).filter((v) => v.layout === "coming-soon" && v.publication !== "draft").map((v) => ({ params: { slug: v.route.slice(1) }, props: { id: v.id } }));
+}
+await assertCatalogIntegrity();
+const { id } = Astro.props;
+const v = (await allVerticals()).find((x) => x.id === id)!;
+const prods = await Promise.all(v.products.map((p) => getProduct(p)));
+const noindex = v.seo.noindex || v.publication === "unlisted";
+const glyph = (v.interest?.glyph ?? "software") as "software";
+---
+<Base title={v.seo.title} description={v.seo.description} path={v.route} noindex={noindex} crumbs={[{ name: v.name, path: v.route }]}>
+  <Section labelledby="v-title">
+    <div class="intro">
+      <Glyph name={glyph} size={36} class="g" />
+      <h1 id="v-title">{v.name} <StatusBadge status={v.availability} /></h1>
+      <p class="lede">{v.description}</p>
+      <p class="aud">Para: {v.audience}</p>
+      <div class="actions">
+        <Button href={v.cta.primary.href} event={`Interés ${v.id}`}>{v.cta.primary.label}</Button>
+        {v.cta.secondary && <Button href={v.cta.secondary.href} variant="ghost">{v.cta.secondary.label}</Button>}
+      </div>
+    </div>
+  </Section>
+  {v.features.length > 0 && (
+    <Section tone="white" labelledby="f-title">
+      <h2 id="f-title">Lo que estamos preparando<span class="dot">.</span></h2>
+      <p class="note">Todavía no está disponible. Estas son las funciones previstas; su estado puede cambiar.</p>
+      <ul class="features">
+        {v.features.map((f) => <li><h3>{f.title} <StatusBadge status={f.status} /></h3><p>{f.text}</p></li>)}
+      </ul>
+      {prods.length > 0 && <p class="note">Se administra desde {prods.map((p) => p.name).join(", ")}.</p>}
+    </Section>
+  )}
+</Base>
+
+<style>
+  .intro { display: grid; gap: var(--s-4); max-width: 46rem; justify-items: start; }
+  .g { color: var(--blue-ink); --glyph-node: var(--blue); }
+  h1 { font-size: var(--step-4); display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.9rem; }
+  .aud, .note { color: var(--ink-soft); }
+  .actions { display: flex; flex-wrap: wrap; gap: var(--s-3); }
+  h2 { margin-bottom: var(--s-3); }
+  .features { display: grid; margin-top: var(--s-5); }
+  .features li { padding: var(--s-4) 0; border-top: 1px solid var(--mist); }
+  h3 { font-size: var(--step-0); display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.6rem; margin-bottom: var(--s-1); }
+  .features p { color: var(--ink-soft); }
+  .note { margin-top: var(--s-4); }
+</style>

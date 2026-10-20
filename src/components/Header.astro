@@ -2,14 +2,14 @@
 import { SITE } from "../config";
 import Wordmark from "./Wordmark.astro";
 import Button from "./Button.astro";
+import { navGroups } from "../lib/catalog";
 interface Props { dark?: boolean }
 const { dark = false } = Astro.props;
+// Soluciones y Productos salen de los catálogos; Servicios y Seguridad son secciones de la home hasta que tengan página propia.
+const groups = await navGroups();
 const links = [
-  { href: "/restaurantes", label: "Restaurantes" },
   { href: "/#servicios", label: "Servicios" },
-  { href: "/#soluciones", label: "Soluciones" },
   { href: "/#seguridad", label: "Seguridad" },
-  { href: "/#preguntas", label: "Preguntas" },
 ];
 ---
 <header class="site-header" data-header data-dark={dark ? "true" : "false"}>
@@ -17,12 +17,33 @@ const links = [
     <Wordmark />
     <nav id="site-nav" class="nav" aria-label="Principal" data-nav>
       <ul>
+        {groups.map((g) => (
+          <li class="dd" data-dd>
+            <button type="button" class="dd-btn" aria-expanded="false" aria-controls={`dd-${g.id}`}>
+              {g.label}
+              <svg class="chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="m2.5 4.5 3.5 3.5 3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            </button>
+            <div class="dd-panel" id={`dd-${g.id}`}>
+              <ul>
+                {g.items.map((it) => (
+                  <li>
+                    <a href={it.href}>
+                      <span class="dd-name">{it.label}{it.badge && <span class="dd-badge">{it.badge}</span>}</span>
+                      <span class="dd-text">{it.text}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+              {g.footer && <a class="dd-foot" href={g.footer.href}>{g.footer.label}</a>}
+            </div>
+          </li>
+        ))}
         {links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
         <li class="enter"><a href={SITE.appUrl} rel="noopener">Entrar</a></li>
       </ul>
     </nav>
     <div class="actions">
-      <Button href="/#contacto" event="Header Demo" class="cta">Agendar demo</Button>
+      <Button href="/contacto" event="Header Demo" class="cta">Agendar demo</Button>
       <button class="menu" type="button" aria-expanded="false" aria-controls="site-nav" data-menu>
         <span class="visually-hidden">Menú</span>
         <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true" focusable="false"><path d="M3 7h16M3 15h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
@@ -64,21 +85,79 @@ const links = [
   }
   @media (max-width: 30rem) { .actions :global(.cta) { padding-inline: 0.9rem; } }
   @media (max-width: 22.5rem) { .bar { gap: var(--s-2); } .actions :global(.cta) { padding-inline: 0.7rem; font-size: 0.88rem; } .menu { width: 2.5rem; height: 2.5rem; } }
+  /* Desplegables: patrón de «disclosure» (botón con aria-expanded). Abren con clic o teclado; con puntero fino también al pasar el cursor. */
+  .nav .dd { position: relative; }
+  .dd-btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 0.8rem; background: none; border: 0; border-radius: var(--r-sm); cursor: pointer; font: inherit; font-size: 0.95rem; font-weight: 520; color: var(--ink-soft); transition: color var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease); }
+  .dd-btn:hover, .dd[data-open="true"] .dd-btn { color: var(--ink); background: color-mix(in srgb, var(--blue) 8%, transparent); }
+  .chev { transition: transform var(--t-base) var(--ease); }
+  .dd[data-open="true"] .chev { transform: rotate(180deg); }
+  .site-header[data-dark="true"]:not([data-scrolled="true"]) .dd-btn { color: var(--on-night-soft); }
+  .site-header[data-dark="true"]:not([data-scrolled="true"]) .dd-btn:hover, .site-header[data-dark="true"]:not([data-scrolled="true"]) .dd[data-open="true"] .dd-btn { color: var(--white); background: rgb(255 255 255 / 0.08); }
+  .dd-panel { display: none; position: absolute; top: calc(100% + 0.5rem); left: 50%; translate: -50% 0; z-index: 50; width: 21rem; padding: var(--s-2); background: var(--white); color: var(--ink); border: 1px solid var(--mist); border-radius: var(--r-lg); box-shadow: var(--lift); }
+  .dd[data-open="true"] .dd-panel { display: block; animation: dd-in var(--t-base) var(--ease); }
+  :global(html:not(.js)) .dd:hover .dd-panel, :global(html:not(.js)) .dd:focus-within .dd-panel { display: block; }
+  @keyframes dd-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+  .dd-panel ul { display: grid; gap: 2px; }
+  .nav .dd-panel a { display: grid; gap: 0.1rem; padding: 0.65rem 0.8rem; color: var(--ink); border-radius: var(--r-sm); }
+  .nav .dd-panel a:hover { background: color-mix(in srgb, var(--blue) 7%, transparent); color: var(--ink); }
+  .dd-name { display: flex; align-items: center; gap: 0.5rem; font-weight: 650; font-size: 0.95rem; }
+  .dd-badge { padding: 0.05rem 0.5rem; border: 1px solid var(--blue-ink); border-radius: 999px; color: var(--blue-ink); font-size: 0.7rem; font-weight: 650; }
+  .dd-text { color: var(--ink-soft); font-size: 0.85rem; line-height: 1.4; font-weight: 420; }
+  .nav .dd-panel .dd-foot { margin-top: var(--s-1); border-top: 1px solid var(--mist); border-radius: 0 0 var(--r-sm) var(--r-sm); font-weight: 650; font-size: 0.9rem; color: var(--blue-ink); padding: 0.7rem 0.8rem; }
+  /* El panel es siempre claro: sus enlaces no heredan el color de la barra sobre el hero oscuro */
+  @media (min-width: 62.01rem) {
+    .site-header .nav .dd-panel a, .site-header[data-dark="true"]:not([data-scrolled="true"]) .nav .dd-panel a { color: var(--ink); }
+    .site-header .nav .dd-panel a:hover, .site-header[data-dark="true"]:not([data-scrolled="true"]) .nav .dd-panel a:hover { color: var(--ink); background: color-mix(in srgb, var(--blue) 7%, transparent); }
+    .site-header .nav .dd-panel .dd-foot, .site-header[data-dark="true"]:not([data-scrolled="true"]) .nav .dd-panel .dd-foot { color: var(--blue-ink); }
+  }
+  @media (max-width: 62rem) {
+    .nav .dd { border-bottom: 1px solid var(--mist); }
+    .dd-btn { width: 100%; justify-content: space-between; padding: 0.95rem 0.25rem; font-size: 1.05rem; border-radius: 0; color: inherit; min-height: 3rem; }
+    .dd-panel { position: static; translate: none; width: auto; border: 0; box-shadow: none; background: transparent; padding: 0 0 var(--s-3) var(--s-3); }
+    .dd[data-open="true"] .dd-panel { animation: none; }
+    .nav .dd-panel a, .nav .dd-panel a:hover { color: inherit; padding: 0.7rem 0.25rem; border-bottom: 0; }
+    .dd-text { color: color-mix(in srgb, currentColor 65%, transparent); }
+    .dd-badge { color: inherit; border-color: currentColor; }
+    .nav .dd-panel .dd-foot { color: inherit; border-top: 0; text-decoration: underline; text-underline-offset: 0.25em; }
+    .site-header[data-dark="true"]:not([data-scrolled="true"]) .dd-btn { color: var(--on-night); }
+    .site-header[data-dark="true"]:not([data-scrolled="true"]) .nav[data-open="true"] .dd { border-bottom-color: var(--night-line); }
+  }
 </style>
 
 <script>
   const header = document.querySelector<HTMLElement>("[data-header]");
   const nav = document.querySelector<HTMLElement>("[data-nav]");
   const menu = document.querySelector<HTMLButtonElement>("[data-menu]");
+  const groups = [...document.querySelectorAll<HTMLElement>("[data-dd]")];
   if (header) {
     const onScroll = () => header.setAttribute("data-scrolled", String(window.scrollY > 8));
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
   }
+  const setGroup = (g: HTMLElement, open: boolean) => {
+    g.dataset.open = String(open);
+    g.querySelector(".dd-btn")!.setAttribute("aria-expanded", String(open));
+  };
+  const closeGroups = (except?: HTMLElement) => groups.forEach((g) => { if (g !== except) setGroup(g, false); });
+  groups.forEach((g) => {
+    const btn = g.querySelector<HTMLButtonElement>(".dd-btn")!;
+    btn.addEventListener("click", () => { const open = g.dataset.open !== "true"; closeGroups(g); setGroup(g, open); });
+    g.addEventListener("focusout", (e) => { if (!g.contains((e.relatedTarget as Node) ?? null)) setGroup(g, false); });
+    // Con puntero fino (escritorio) también se abre al pasar el cursor, con una pequeña espera para no parpadear.
+    let t = 0;
+    g.addEventListener("pointerenter", (e) => { if (e.pointerType !== "mouse" || !window.matchMedia("(min-width: 62.01rem)").matches) return; clearTimeout(t); t = window.setTimeout(() => { closeGroups(g); setGroup(g, true); }, 80); });
+    g.addEventListener("pointerleave", (e) => { if (e.pointerType !== "mouse") return; clearTimeout(t); t = window.setTimeout(() => setGroup(g, false), 140); });
+  });
+  document.addEventListener("click", (e) => { if (!(e.target as HTMLElement).closest("[data-dd]")) closeGroups(); });
   if (menu && nav) {
-    const set = (open: boolean) => { nav.dataset.open = String(open); menu.setAttribute("aria-expanded", String(open)); };
+    const set = (open: boolean) => { nav.dataset.open = String(open); menu.setAttribute("aria-expanded", String(open)); if (!open) closeGroups(); };
     menu.addEventListener("click", () => set(nav.dataset.open !== "true"));
     nav.addEventListener("click", (e) => { if ((e.target as HTMLElement).closest("a")) set(false); });
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && nav.dataset.open === "true") { set(false); menu.focus(); } });
+    document.addEventListener("keydown", (e) => {
+      if (e.key !== "Escape") return;
+      const open = groups.find((g) => g.dataset.open === "true");
+      if (open) { setGroup(open, false); open.querySelector<HTMLButtonElement>(".dd-btn")!.focus(); return; }
+      if (nav.dataset.open === "true") { set(false); menu.focus(); }
+    });
   }
 </script>

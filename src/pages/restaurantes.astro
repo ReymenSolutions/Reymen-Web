@@ -10,40 +10,24 @@ import Faq from "../components/Faq.astro";
 import ContactSection from "../components/ContactSection.astro";
 import { SITE } from "../config";
 
-const demo = SITE.calendlyUrl || "#contacto";
+import { getVertical, assertCatalogIntegrity } from "../lib/catalog";
 
-const story = [
-  { when: "Antes de abrir", h: "Tus insumos y tus costos, al día", p: "Revisas existencias y lo que está por agotarse. Cada platillo descuenta sus insumos al venderse.", img: "inventario", alt: "Inventario con alertas de stock bajo y costos por insumo", w: 1500, h2: 900, focus: [42, 55, 1.4] },
-  { when: "Llegan los clientes", h: "Mesas y cuentas abiertas", p: "Ves qué mesas están libres, cuáles llevan tiempo y cuánto suma cada cuenta.", img: "pos-mesas", alt: "Reymen POS con el plano de mesas, varias ocupadas con su total y estado de cocina", w: 2000, h2: 1250, focus: [40, 36, 1.4] },
-  { when: "Se toma la orden", h: "La orden, por mesa y por tiempos", p: "Menú por categorías, variantes y extras. Agregas al tiempo que corresponde y envías a cocina.", img: "pos-orden", alt: "Reymen POS con la cuenta de una mesa y el menú por categorías", w: 2000, h2: 1250, focus: [62, 45, 1.3] },
-  { when: "En cocina", h: "Cocina y barra, cada quien en su pantalla", p: "Cada producto llega a su estación, con el tiempo transcurrido y aviso cuando hay retraso.", img: "pos-cocina", alt: "Pantalla de cocina con tickets por mesa divididos entre cocina, barra y postres", w: 2000, h2: 1250, focus: [37.5, 40, 1.33] },
-  { when: "Se cobra", h: "Cobro con propina, cambio y cuentas divididas", p: "Efectivo, tarjeta o transferencia, propina sugerida y división de cuenta. Si se cae internet, sigues cobrando.", img: "pos-cobro", alt: "Cobro en efectivo con propina del 10 por ciento, monto recibido y cambio", w: 1300, h2: 1182, pos: "50% 45%" },
-  { when: "Mensajes de clientes", h: "Una bandeja para tus conversaciones", p: "Reúne los mensajes de tus clientes en Reymen App, con una respuesta sugerida por el Agente IA que tu equipo revisa y envía. Lo delicado lo atiende una persona. La conexión con WhatsApp está en desarrollo.", img: "inbox", alt: "Bandeja de mensajes de Reymen App con una conversación y una respuesta sugerida por el Agente IA", w: 1500, h2: 900, focus: [60, 55, 1.6] },
-  { when: "Después", h: "Clientes que regresan", p: "Sellos y recompensas en la tarjeta del cliente. Ves quién regresa, cuánto gasta y de qué zonas vienen.", img: "lealtad", alt: "Panel de lealtad con clientes inscritos, visitas, importes y recompensas", w: 1500, h2: 900, focus: [50, 62, 1.4] },
-];
-const items = [
-  { h: "Punto de venta con mesas y cocina", p: "Pantalla de cocina, cobro dividido, propinas y corte de caja. Rápido en tableta o celular, y sigue sin internet." },
-  { h: "Inventario con recetas", p: "Cada platillo descuenta sus insumos. Ves el costo por platillo, lo agotado y lo que está por agotarse." },
-  { h: "Pedidos de reparto", p: "Tus pedidos de plataformas de reparto junto a tus ventas, en una sola vista." },
-  { h: "Lealtad con tarjeta digital", p: "Sellos y recompensas en la tarjeta del cliente, con visitas registradas desde el punto de venta." },
-  { h: "Agente IA en tu bandeja", p: "Respuestas sugeridas con las reglas y la información de tu negocio, que tu equipo revisa antes de enviar. La conexión con WhatsApp está en desarrollo." },
-  { h: "Reportes del día", p: "Ventas por hora, producto estrella, ticket promedio y mermas, con el día de tu zona horaria." },
-];
-const faq = [
-  { q: "¿Sirve para una sucursal y para varias?", a: "Para ambas. Cada sucursal lleva su inventario y sus ventas, y tú ves el total o el detalle." },
-  { q: "¿Puedo imprimir tickets y comandas?", a: "Sí. Imprime tickets desde el navegador y en impresoras compatibles con Android. En la demo revisamos tu equipo." },
-  { q: "¿Se conecta con Uber Eats, Rappi o DiDi?", a: "Los pedidos de las plataformas de reparto pueden entrar a tu operación para verlos junto a tus ventas. Revisamos el detalle de cada plataforma en la demo." },
-  { q: "¿Qué pasa si el inventario no está al día?", a: "Nunca bloquea una venta. El sistema te avisa y tú ajustas las existencias cuando puedas." },
-  { q: "¿Cómo funciona la lealtad?", a: "Tus clientes guardan una tarjeta digital en su celular, acumulan sellos y canjean recompensas. Tú ves quién regresa y cuánto gasta." },
-];
+await assertCatalogIntegrity();
+// Textos, funciones, recorrido y preguntas viven en src/content/verticals/restaurantes.json; la composición visual es propia de esta página.
+const v = await getVertical("restaurantes");
+const demo = SITE.calendlyUrl || "#contacto";
+const story = v.story;
+const items = v.features.map((f) => ({ h: f.title, p: f.text, status: f.status }));
+const faq = v.faq;
+
 ---
-<Base darkHero title="Reymen para restaurantes y cafeterías · Punto de venta, inventario y lealtad" description="Punto de venta con mesas y cocina, inventario con recetas, programa de lealtad y asistente de IA en la bandeja para restaurantes y cafeterías en México." path="/restaurantes">
+<Base darkHero title={v.seo.title} description={v.seo.description} path={v.route} crumbs={[{ name: "Restaurantes", path: v.route }]}>
   <section class="hero tone-night" aria-labelledby="r-title">
     <Traces tone="ember" />
     <div class="container hero-grid">
       <div class="copy">
-        <h1 id="r-title">Tu cocina, tu caja y tus clientes en el mismo sistema<span class="dot-ember">.</span></h1>
-        <p class="lede">Cobra rápido, controla tus insumos sin hojas de cálculo y logra que tus clientes regresen, con un asistente de IA que te ayuda a atender a tus clientes.</p>
+        <h1 id="r-title">{v.hero!.title}<span class="dot-ember">.</span></h1>
+        <p class="lede">{v.hero!.lede}</p>
         <div class="cta-wrap"><div class="cta-row">
           <Button href={demo} size="lg" event="CTA Demo" external={!!SITE.calendlyUrl}>Agendar demo</Button>
           <Button href="#turno" variant="ghost" size="lg"><span class="l-full">Ver un turno completo</span><span class="l-short">Ver el turno</span></Button>
