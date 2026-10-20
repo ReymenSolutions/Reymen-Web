@@ -1,70 +1,71 @@
 ---
 import Base from "../layouts/Base.astro";
-import Cta from "../components/Cta.astro";
+import Section from "../components/Section.astro";
+import CtaGroup from "../components/CtaGroup.astro";
+import Window from "../components/Window.astro";
+import FeatureList from "../components/FeatureList.astro";
 import Faq from "../components/Faq.astro";
-import LeadForm from "../components/LeadForm.astro";
-import Shot from "../components/Shot.astro";
+import ContactSection from "../components/ContactSection.astro";
 
+const items = [
+  { h: "Punto de venta con mesas y cocina", p: "Pantalla de cocina, cobro dividido, propinas y corte de caja. Rápido en tableta o celular, y sigue sin internet." },
+  { h: "Inventario con recetas", p: "Cada platillo descuenta sus insumos. Ves el costo por platillo, lo agotado y lo que está por agotarse." },
+  { h: "Pedidos de reparto", p: "Tus pedidos de plataformas de reparto junto a tus ventas, en una sola vista." },
+  { h: "Lealtad con tarjeta digital", p: "Sellos y recompensas, cumpleaños y avisos automáticos para que vuelvan." },
+  { h: "WhatsApp con IA", p: "Horarios, menú y reservas contestados al instante, y a una persona lo que importa." },
+  { h: "Reportes del día", p: "Ventas por hora, producto estrella, ticket promedio y mermas, con el día de tu zona horaria." },
+];
 const faq = [
-  { q: "¿Funciona para una sola sucursal y para varias?", a: "Para ambas. Cada sucursal lleva su inventario y sus ventas, y tú ves el total o el detalle." },
-  { q: "¿Puedo imprimir tickets y comandas?", a: "Sí. Soportamos impresión de tickets desde el navegador y impresoras compatibles en Android; en la demo revisamos tu equipo." },
-  { q: "¿Se conecta con Uber Eats, Rappi o DiDi?", a: "Los pedidos de plataformas de reparto pueden entrar a tu operación para verlos junto a tus ventas. Revisamos el detalle de cada plataforma en la demo." },
+  { q: "¿Sirve para una sucursal y para varias?", a: "Para ambas. Cada sucursal lleva su inventario y sus ventas, y tú ves el total o el detalle." },
+  { q: "¿Puedo imprimir tickets y comandas?", a: "Sí. Imprime tickets desde el navegador y en impresoras compatibles con Android. En la demo revisamos tu equipo." },
+  { q: "¿Se conecta con Uber Eats, Rappi o DiDi?", a: "Los pedidos de las plataformas de reparto pueden entrar a tu operación para verlos junto a tus ventas. Revisamos el detalle de cada plataforma en la demo." },
   { q: "¿Qué pasa si el inventario no está al día?", a: "Nunca bloquea una venta. El sistema te avisa y tú ajustas las existencias cuando puedas." },
   { q: "¿Cómo funciona la lealtad?", a: "Tus clientes guardan una tarjeta digital en su celular, acumulan sellos y canjean recompensas. Tú ves quién regresa y cuánto gasta." },
 ];
 ---
-<Base title="Reymen para restaurantes y cafeterías · POS, inventario y lealtad" description="Punto de venta con mesas y cocina, inventario con recetas, programa de lealtad y asistente de WhatsApp para restaurantes y cafeterías en México." path="/restaurantes">
-  <section class="hero">
-    <div class="wrap grid g2" style="align-items:center">
-      <div>
-        <div class="eyebrow">Restaurantes y cafeterías</div>
-        <h1>Que tu cocina, tu caja y tus clientes <span class="grad">hablen entre sí</span>.</h1>
-        <p class="lead">Cobra rápido, controla tus insumos sin hojas de cálculo y haz que tus clientes regresen, con un asistente que contesta WhatsApp por ti.</p>
-        <Cta />
+<Base title="Reymen para restaurantes y cafeterías · Punto de venta, inventario y lealtad" description="Punto de venta con mesas y cocina, inventario con recetas, programa de lealtad y asistente de WhatsApp para restaurantes y cafeterías en México." path="/restaurantes">
+  <section class="hero tone-paper" aria-labelledby="r-title">
+    <div class="container hero-grid">
+      <div class="copy">
+        <h1 id="r-title">Tu cocina, tu caja y tus clientes en el mismo sistema<span class="dot-ember">.</span></h1>
+        <p class="lede">Cobra rápido, controla tus insumos sin hojas de cálculo y logra que tus clientes regresen, con un asistente que contesta tu WhatsApp.</p>
+        <CtaGroup />
       </div>
-      <Shot name="inventario" alt="Inventario de un restaurante con alertas de stock bajo y costos por insumo" width={1500} height={900} eager />
+      <Window name="inventario" label="Inventario" alt="Inventario de un restaurante con alertas de stock bajo y costos por insumo" width={1500} height={900} eager />
     </div>
   </section>
 
-  <section>
-    <div class="wrap">
-      <h2>Lo que resuelve en tu restaurante</h2>
-      <div class="grid g3" style="margin-top:28px">
-        <div class="card"><div class="icon">🧾</div><h3>POS con mesas y cocina</h3><p>Pantalla de cocina (KDS), cobro dividido, propinas y corte de caja. Rápido en tableta o celular.</p></div>
-        <div class="card"><div class="icon">🥬</div><h3>Inventario con recetas</h3><p>Cada platillo descuenta sus insumos solo. Ves costo por platillo, agotados y por agotarse.</p></div>
-        <div class="card"><div class="icon">🛵</div><h3>Pedidos de reparto</h3><p>Tus pedidos de plataformas junto a tus ventas, en una sola vista.</p></div>
-        <div class="card"><div class="icon">⭐</div><h3>Lealtad con tarjeta digital</h3><p>Sellos y recompensas, cumpleaños y avisos automáticos para que vuelvan.</p></div>
-        <div class="card"><div class="icon">💬</div><h3>WhatsApp con IA</h3><p>Horarios, menú, reservas: contesta al instante y pasa a una persona lo que importa.</p></div>
-        <div class="card"><div class="icon">📊</div><h3>Reportes del día</h3><p>Ventas por hora, producto estrella, ticket promedio y mermas, con el día de tu zona horaria.</p></div>
-      </div>
-    </div>
-  </section>
+  <Section tone="white" labelledby="r-resuelve">
+    <h2 id="r-resuelve" class="sec-title">Lo que resuelve en tu restaurante<span class="dot-ember">.</span></h2>
+    <FeatureList items={items} />
+  </Section>
 
-  <section class="alt">
-    <div class="wrap">
-      <h2>Así se ve en la operación</h2>
-      <div class="grid g2" style="margin-top:24px">
-        <Shot name="lealtad" alt="Panel de lealtad con clientes inscritos, visitas y recompensas" width={1500} height={900} />
-        <Shot name="inbox" alt="Bandeja de WhatsApp con respuestas del Agente IA" width={1500} height={900} />
-      </div>
+  <Section labelledby="r-op">
+    <h2 id="r-op" class="sec-title">Así se ve en la operación<span class="dot">.</span></h2>
+    <div class="pair">
+      <div class="item"><Window name="lealtad" label="Lealtad" alt="Panel de lealtad con clientes inscritos, visitas y recompensas" width={1500} height={900} /><p>Quién regresa, cuánto gasta y cuántas recompensas hay por canjear.</p></div>
+      <div class="item"><Window name="inbox" label="Inbox" alt="Bandeja de WhatsApp con respuestas del Agente IA" width={1500} height={900} /><p>Los mensajes de tus clientes en un lugar, con el agente respondiendo lo sencillo.</p></div>
     </div>
-  </section>
+  </Section>
 
-  <section>
-    <div class="wrap" style="max-width:820px">
-      <h2>Preguntas de restaurantes</h2>
+  <Section tone="white" labelledby="r-faq">
+    <div class="faq-grid">
+      <h2 id="r-faq">Preguntas de restaurantes<span class="dot">.</span></h2>
       <Faq items={faq} />
     </div>
-  </section>
+  </Section>
 
-  <section id="contacto">
-    <div class="wrap grid g2">
-      <div>
-        <div class="eyebrow">Demo para tu restaurante</div>
-        <h2>Veamos tu operación</h2>
-        <p class="lead">Cuéntanos cuántas sucursales tienes y qué te quita más tiempo. Te mostramos cómo se vería en tu negocio.</p>
-      </div>
-      <div class="card"><LeadForm vertical="restaurantes" /></div>
-    </div>
-  </section>
+  <ContactSection vertical="restaurantes" title="Veamos tu restaurante" lede="Cuéntanos cuántas sucursales tienes y qué te quita más tiempo. Te mostramos cómo se vería en tu negocio." />
 </Base>
+
+<style>
+  .hero { padding-block: clamp(2.5rem, 2rem + 4vw, 6rem) var(--section); }
+  .hero-grid { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: clamp(2rem, 4vw, 5rem); align-items: center; }
+  .copy { display: grid; gap: var(--s-6); justify-items: start; }
+  .sec-title { margin-bottom: var(--s-7); max-width: 44rem; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-7); }
+  .item p { margin-top: var(--s-3); color: var(--ink-soft); font-size: 0.97rem; }
+  .faq-grid { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: var(--s-8); align-items: start; }
+  .faq-grid h2 { position: sticky; top: 6rem; }
+  @media (max-width: 62rem) { .hero-grid, .pair, .faq-grid { grid-template-columns: 1fr; } .faq-grid h2 { position: static; } }
+</style>

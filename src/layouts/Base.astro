@@ -1,5 +1,7 @@
 ---
-import "../styles/global.css";
+import "@fontsource-variable/archivo/wdth.css";
+import "../styles/base.css";
+import fontLatin from "@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2?url";
 import { SITE } from "../config";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
@@ -32,7 +34,8 @@ const ld = {
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:locale" content="es_MX" />
-    <meta name="theme-color" content="#0b1220" />
+    <meta name="theme-color" content="#f5f7fc" />
+    <link rel="preload" href={fontLatin} as="font" type="font/woff2" crossorigin />
     <link rel="icon" type="image/png" sizes="192x192" href="/icon-192-v5.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon-v5.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
@@ -50,6 +53,7 @@ const ld = {
     <meta name="twitter:image" content={`${SITE.url}/og-image.png`} />
     {SITE.googleSiteVerification && <meta name="google-site-verification" content={SITE.googleSiteVerification} />}
     <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+    {SITE.plausibleDomain && <link rel="preconnect" href="https://plausible.io" />}
     {SITE.plausibleDomain && <script defer data-domain={SITE.plausibleDomain} src="https://plausible.io/js/script.tagged-events.js"></script>}
     {SITE.plausibleDomain && <script is:inline>window.plausible = window.plausible || function () { (window.plausible.q = window.plausible.q || []).push(arguments); };</script>}
   </head>

@@ -3,15 +3,15 @@ import Base from "../layouts/Base.astro";
 import { SITE } from "../config";
 ---
 <Base title="Aviso de privacidad · Reymen Solutions" description="Cómo Reymen Solutions recaba, usa y protege tus datos personales, y cómo ejercer tus derechos ARCO." path="/privacidad">
-  <section><div class="wrap" style="max-width:780px">
-    <h1>Aviso de privacidad</h1>
-    <p class="muted">Última actualización: {SITE.privacyUpdated} (versión {SITE.privacyVersion}).</p>
+  <section class="legal tone-paper"><div class="container prose">
+    <h1>Aviso de privacidad<span class="dot">.</span></h1>
+    <p class="updated">Última actualización: {SITE.privacyUpdated} (versión {SITE.privacyVersion}).</p>
 
     <h2>1. Quién es el responsable</h2>
     <p>{SITE.legalName} (en adelante, «Reymen») es responsable del tratamiento de tus datos personales, conforme a la Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP).{SITE.legalAddress && <> Domicilio: {SITE.legalAddress}.</>} Contacto de privacidad: <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.</p>
 
     <h2>2. Qué datos personales recabamos</h2>
-    <ul class="ticks">
+    <ul class="list">
       <li><b>Formulario de contacto:</b> nombre, WhatsApp o correo electrónico, nombre y tipo de tu negocio y el mensaje que decidas escribir.</li>
       <li><b>Chat del sitio:</b> los mensajes que escribas al asistente y un identificador de sesión anónimo.</li>
       <li><b>Datos técnicos:</b> dirección IP y datos básicos del navegador, usados únicamente para seguridad y para evitar abusos (por ejemplo, límites de envío).</li>
@@ -20,7 +20,7 @@ import { SITE } from "../config";
 
     <h2>3. Para qué los usamos</h2>
     <p><b>Finalidades necesarias</b> (sin ellas no podemos atenderte):</p>
-    <ul class="ticks">
+    <ul class="list">
       <li>Contactarte para responder tu solicitud y dar seguimiento.</li>
       <li>Agendar y realizar una demostración de nuestros servicios.</li>
       <li>Atender tu conversación en el chat del sitio.</li>
@@ -50,3 +50,15 @@ import { SITE } from "../config";
     <p>Si este aviso cambia, publicaremos la nueva versión en esta página con su fecha de actualización. Si tienes dudas o quejas, escríbenos; también puedes acudir a la autoridad en materia de protección de datos personales.</p>
   </div></section>
 </Base>
+
+<style>
+  .legal { padding-block: clamp(2.5rem, 2rem + 4vw, 6rem); }
+  .prose { max-width: 46rem; margin-inline: auto; display: grid; gap: var(--s-4); }
+  .prose :global(h1) { font-size: var(--step-4); margin-bottom: var(--s-2); }
+  .prose :global(h2) { font-size: var(--step-2); margin-top: var(--s-6); }
+  .prose :global(p), .prose :global(li) { color: var(--ink-soft); max-width: none; }
+  .prose :global(a) { color: var(--blue-ink); }
+  .updated { color: var(--ink-soft); font-size: var(--step--1); }
+  .list { display: grid; gap: var(--s-3); padding-left: var(--s-5); list-style: disc; }
+  .list li::marker { color: var(--blue); }
+</style>

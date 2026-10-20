@@ -1,0 +1,27 @@
+---
+import Section from "./Section.astro";
+import LeadForm from "./LeadForm.astro";
+import { SITE, whatsappLink } from "../config";
+interface Props { vertical?: string; title?: string; lede?: string }
+const { vertical = "", title = "Cuéntanos de tu negocio", lede = "Te respondemos por WhatsApp o correo con una propuesta clara. Sin compromiso." } = Astro.props;
+const wa = whatsappLink();
+---
+<Section id="contacto" tone="night" labelledby="contacto-title">
+  <div class="contact">
+    <div>
+      <h2 id="contacto-title">{title}<span class="dot">.</span></h2>
+      <p class="lede">{lede}</p>
+      <p class="direct">También puedes escribir a <a href={`mailto:${SITE.email}`}>{SITE.email}</a>{wa && <> o por <a href={wa} rel="noopener">WhatsApp</a></>}.</p>
+    </div>
+    <div class="form-surface"><LeadForm vertical={vertical} /></div>
+  </div>
+</Section>
+
+<style>
+  .contact { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: var(--s-8); align-items: start; }
+  .lede { margin-top: var(--s-4); }
+  .direct { margin-top: var(--s-5); color: var(--on-night-soft); }
+  .direct a { color: var(--on-night); }
+  .form-surface { background: var(--white); color: var(--ink); border-radius: var(--r-lg); padding: clamp(1.25rem, 1rem + 1.5vw, 2.25rem); box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.6); }
+  @media (max-width: 62rem) { .contact { grid-template-columns: 1fr; } }
+</style>

@@ -1,0 +1,16 @@
+---
+// Sección con ritmo vertical y tono. El tono «night» invierte colores y los componentes hijos lo heredan por .tone-night.
+interface Props { id?: string; tone?: "paper" | "white" | "night"; labelledby?: string; class?: string; flush?: boolean }
+const { id, tone = "paper", labelledby, class: extra = "", flush = false } = Astro.props;
+---
+<section id={id} class:list={["section", `tone-${tone}`, { flush }, extra]} aria-labelledby={labelledby}>
+  <div class="container"><slot /></div>
+</section>
+
+<style>
+  .section { padding-block: var(--section); }
+  .section.flush { padding-block: 0; }
+  .tone-paper { background: var(--paper); }
+  .tone-white { background: var(--white); border-block: 1px solid var(--mist); }
+  .tone-night { background: var(--night); color: var(--on-night); }
+</style>

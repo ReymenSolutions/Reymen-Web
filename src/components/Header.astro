@@ -1,17 +1,72 @@
 ---
 import { SITE } from "../config";
+import Wordmark from "./Wordmark.astro";
+import Button from "./Button.astro";
+const links = [
+  { href: "/#productos", label: "Productos" },
+  { href: "/#soluciones", label: "Soluciones" },
+  { href: "/#servicios", label: "Servicios" },
+  { href: "/#seguridad", label: "Seguridad" },
+  { href: "/#preguntas", label: "Preguntas" },
+];
 ---
-<header class="nav">
-  <div class="wrap">
-    <a class="logo" href="/">Reymen<b>.</b></a>
-    <nav aria-label="Principal">
-      <a href="/restaurantes">Restaurantes</a>
-      <a href="/#producto">Producto</a>
-      <a href="/#ia">Asistentes IA</a>
-      <a href="/#seguridad">Seguridad</a>
-      <a href="/#faq">Preguntas</a>
-      <a href={SITE.appUrl} rel="noopener">Entrar</a>
-      <a class="btn primary" href="/#contacto">Agenda una demo</a>
+<header class="site-header" data-header>
+  <div class="container bar">
+    <Wordmark />
+    <nav id="site-nav" class="nav" aria-label="Principal" data-nav>
+      <ul>
+        {links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+        <li class="enter"><a href={SITE.appUrl} rel="noopener">Entrar</a></li>
+      </ul>
     </nav>
+    <div class="actions">
+      <Button href="/#contacto" event="Header Demo" class="cta">Agendar demo</Button>
+      <button class="menu" type="button" aria-expanded="false" aria-controls="site-nav" data-menu>
+        <span class="visually-hidden">Menú</span>
+        <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true" focusable="false"><path d="M3 7h16M3 15h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
+      </button>
+    </div>
   </div>
 </header>
+
+<style>
+  .site-header { position: sticky; top: 0; z-index: 40; background: color-mix(in srgb, var(--paper) 86%, transparent); backdrop-filter: saturate(1.4) blur(14px); border-bottom: 1px solid transparent; transition: border-color var(--t-base) var(--ease); }
+  .site-header[data-scrolled="true"] { border-bottom-color: var(--mist); }
+  .bar { display: flex; align-items: center; gap: var(--s-6); height: 4.25rem; }
+  .nav { margin-inline: auto; }
+  .nav ul { display: flex; gap: var(--s-1); align-items: center; }
+  .nav a { display: block; padding: 0.5rem 0.8rem; border-radius: var(--r-sm); text-decoration: none; font-size: 0.95rem; font-weight: 520; color: var(--ink-soft); transition: color var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease); }
+  .nav a:hover { color: var(--ink); background: color-mix(in srgb, var(--blue) 8%, transparent); }
+  .nav .enter { margin-left: var(--s-3); }
+  .nav .enter a { color: var(--blue-ink); font-weight: 650; }
+  .actions { display: flex; align-items: center; gap: var(--s-2); }
+  .menu { display: none; width: 2.75rem; height: 2.75rem; place-items: center; background: none; border: 1.5px solid var(--mist); border-radius: var(--r-md); cursor: pointer; }
+  @media (max-width: 62rem) {
+    .menu { display: grid; }
+    .nav { display: none; position: absolute; inset: 4.25rem 0 auto 0; background: var(--paper); border-bottom: 1px solid var(--mist); padding: var(--s-3) var(--gutter) var(--s-5); margin: 0; }
+    .nav[data-open="true"] { display: block; }
+    .nav ul { flex-direction: column; align-items: stretch; gap: 0; }
+    .nav a { padding: 0.95rem 0.25rem; font-size: 1.05rem; border-bottom: 1px solid var(--mist); border-radius: 0; }
+    .nav .enter { margin: 0; }
+    .bar { gap: var(--s-3); }
+    .actions { margin-left: auto; }
+  }
+  @media (max-width: 30rem) { .actions :global(.cta) { padding-inline: 0.9rem; } }
+</style>
+
+<script>
+  const header = document.querySelector<HTMLElement>("[data-header]");
+  const nav = document.querySelector<HTMLElement>("[data-nav]");
+  const menu = document.querySelector<HTMLButtonElement>("[data-menu]");
+  if (header) {
+    const onScroll = () => header.setAttribute("data-scrolled", String(window.scrollY > 8));
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+  }
+  if (menu && nav) {
+    const set = (open: boolean) => { nav.dataset.open = String(open); menu.setAttribute("aria-expanded", String(open)); };
+    menu.addEventListener("click", () => set(nav.dataset.open !== "true"));
+    nav.addEventListener("click", (e) => { if ((e.target as HTMLElement).closest("a")) set(false); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && nav.dataset.open === "true") { set(false); menu.focus(); } });
+  }
+</script>

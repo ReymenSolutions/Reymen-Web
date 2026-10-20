@@ -1,0 +1,32 @@
+---
+// Botón o enlace con el mismo aspecto. Con `href` es <a>; sin él, <button>. `event` registra la acción en Plausible.
+interface Props {
+  href?: string; variant?: "primary" | "ghost" | "ember"; type?: "button" | "submit"; event?: string;
+  external?: boolean; size?: "md" | "lg"; class?: string;
+}
+const { href, variant = "primary", type = "button", event, external = false, size = "md", class: extra = "" } = Astro.props;
+const cls = ["btn", `btn-${variant}`, `btn-${size}`, event ? `plausible-event-name=${event.replace(/ /g, "+")}` : "", extra].filter(Boolean).join(" ");
+const Tag = href ? "a" : "button";
+---
+<Tag class={cls} href={href} type={href ? undefined : type} {...(external ? { target: "_blank", rel: "noopener" } : {})}>
+  <slot />
+</Tag>
+
+<style>
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: var(--s-2);
+    font-weight: 650; font-stretch: 104%; letter-spacing: -0.005em; text-decoration: none; cursor: pointer;
+    border: 1.5px solid transparent; border-radius: var(--r-md); line-height: 1.1; white-space: nowrap;
+    transition: background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease), transform var(--t-fast) var(--ease), box-shadow var(--t-base) var(--ease);
+  }
+  .btn-md { padding: 0.8rem 1.25rem; font-size: 0.95rem; }
+  .btn-lg { padding: 1rem 1.6rem; font-size: 1.05rem; }
+  .btn:active { transform: translateY(1px) scale(0.985); }
+  .btn-primary { background: var(--blue); color: var(--white); box-shadow: 0 1px 0 rgb(255 255 255 / 0.18) inset, 0 8px 20px -10px rgb(27 71 245 / 0.8); }
+  .btn-primary:hover { background: #1438d6; transform: translateY(-1px); box-shadow: 0 1px 0 rgb(255 255 255 / 0.18) inset, 0 12px 24px -10px rgb(27 71 245 / 0.9); }
+  .btn-ghost { background: transparent; color: inherit; border-color: color-mix(in srgb, currentColor 28%, transparent); }
+  .btn-ghost:hover { border-color: currentColor; background: color-mix(in srgb, currentColor 6%, transparent); }
+  .btn-ember { background: var(--ember); color: var(--ink); }
+  .btn-ember:hover { background: #ff7d33; transform: translateY(-1px); }
+  .btn:disabled { opacity: 0.6; cursor: progress; transform: none; }
+</style>

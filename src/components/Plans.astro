@@ -2,10 +2,10 @@
 // Precios dinámicos del catálogo (Admin → Planes). No se usa mientras SITE.showPrices sea false.
 import { SITE } from "../config";
 ---
-<section id="precios">
-  <div class="wrap">
-    <h2>Planes</h2>
-    <div id="plans" class="grid g3" data-api={`${SITE.apiUrl}/api/public/plans`}></div>
+<section id="precios" class="plans-sec tone-white">
+  <div class="container">
+    <h2>Planes<span class="dot">.</span></h2>
+    <div id="plans" class="plans" data-api={`${SITE.apiUrl}/api/public/plans`}></div>
   </div>
 </section>
 <script>
@@ -14,13 +14,21 @@ import { SITE } from "../config";
     fetch(el.dataset.api!).then((r) => (r.ok ? r.json() : Promise.reject())).then((d) => {
       for (const p of d.plans) {
         const c = document.createElement("div");
-        c.className = "card";
+        c.className = "plan";
         const h = document.createElement("h3"); h.textContent = p.name;
-        const pr = document.createElement("div"); pr.className = "stat"; pr.textContent = p.priceMxn == null ? "A tu medida" : `$${Number(p.priceMxn).toLocaleString("es-MX")} MXN/mes`;
-        const ul = document.createElement("ul"); ul.className = "ticks";
+        const pr = document.createElement("div"); pr.className = "price nums"; pr.textContent = p.priceMxn == null ? "A tu medida" : `$${Number(p.priceMxn).toLocaleString("es-MX")} MXN/mes`;
+        const ul = document.createElement("ul"); ul.className = "plan-list";
         for (const f of p.features) { const li = document.createElement("li"); li.textContent = f; ul.appendChild(li); }
         c.append(h, pr, ul); el.appendChild(c);
       }
     }).catch(() => { el.closest("section")?.remove(); });
   }
 </script>
+
+<style is:global>
+  .plans-sec { padding-block: var(--section); }
+  .plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: var(--s-6); margin-top: var(--s-7); }
+  .plan { border-top: 2px solid var(--ink); padding-top: var(--s-4); display: grid; gap: var(--s-3); align-content: start; }
+  .plan .price { font-size: var(--step-3); font-weight: 700; font-stretch: 112%; }
+  .plan-list { display: grid; gap: var(--s-2); color: var(--ink-soft); }
+</style>

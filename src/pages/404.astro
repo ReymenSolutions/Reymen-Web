@@ -1,10 +1,17 @@
 ---
 import Base from "../layouts/Base.astro";
+import Button from "../components/Button.astro";
 ---
 <Base title="Página no encontrada · Reymen" description="No encontramos esta página." noindex chat={false}>
-  <section class="hero"><div class="wrap" style="max-width:640px">
-    <h1>No encontramos esa página</h1>
-    <p class="lead">Puede que el enlace haya cambiado.</p>
-    <a class="btn primary" href="/">Ir al inicio</a>
-  </div></section>
+  <section class="nf tone-paper">
+    <div class="container">
+      <h1>No encontramos esa página<span class="dot">.</span></h1>
+      <p class="lede">Puede que el enlace haya cambiado. Vuelve al inicio y busca desde ahí.</p>
+      <Button href="/" size="lg">Ir al inicio</Button>
+    </div>
+  </section>
 </Base>
+<style>
+  .nf { padding-block: var(--section); min-height: 60vh; }
+  .nf .container { display: grid; gap: var(--s-5); justify-items: start; }
+</style>
