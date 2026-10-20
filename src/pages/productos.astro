@@ -1,0 +1,82 @@
+---
+import Base from "../layouts/Base.astro";
+import Section from "../components/Section.astro";
+import Button from "../components/Button.astro";
+import StatusBadge from "../components/StatusBadge.astro";
+import Glyph from "../components/Glyph.astro";
+import EcosystemMap from "../components/EcosystemMap.astro";
+import { products, assertCatalogIntegrity, MODEL_LABEL } from "../lib/catalog";
+import { SITE } from "../config";
+
+await assertCatalogIntegrity();
+const list = await products();
+const ctaLabel = (a: string) => (a === "LIVE" ? "Agendar demo" : a === "BETA" ? "Solicitar acceso" : "Registrar interés");
+// Datos estructurados solo para productos disponibles, sin precio ni valoraciones.
+const ld = list
+  .filter((p) => p.availability === "LIVE")
+  .map((p) => ({ "@context": "https://schema.org", "@type": "SoftwareApplication", name: p.name, description: p.description, applicationCategory: "BusinessApplication", url: `${SITE.url}/productos#${p.id}`, publisher: { "@type": "Organization", name: SITE.name } }));
+---
+<Base title="Productos · Reymen Solutions" description="Reymen App, Reymen POS, Reymen AI Agents y Smart Cards: productos propios que se conectan entre sí, con su estado de disponibilidad." path="/productos" crumbs={[{ name: "Productos", path: "/productos" }]} ld={ld}>
+  <Section labelledby="p-title">
+    <div class="intro">
+      <h1 id="p-title">Productos propios que se conectan entre sí<span class="dot">.</span></h1>
+      <p class="lede">Reymen App es la plataforma central. El punto de venta se contrata por separado y se conecta con ella; los agentes de IA son un módulo que se administra desde la misma plataforma.</p>
+      <p class="legend">Cada producto indica su estado: <StatusBadge status="LIVE" /> ya se puede contratar · <StatusBadge status="BETA" /> en pruebas · <StatusBadge status="COMING_SOON" /> en preparación.</p>
+    </div>
+  </Section>
+
+  {list.map((p, i) => (
+    <Section id={p.id} tone={i % 2 === 0 ? "white" : "paper"} labelledby={`${p.id}-title`}>
+      <div class="product">
+        <div class="head">
+          <Glyph name={p.glyph === "app" || p.glyph === "pos" || p.glyph === "card" ? "software" : p.glyph} size={34} class="g" />
+          <h2 id={`${p.id}-title`}>{p.name} <StatusBadge status={p.availability} /></h2>
+          <p class="model">{MODEL_LABEL[p.model]}</p>
+          <p class="lede">{p.tagline}</p>
+          <p class="desc">{p.description}</p>
+          <div class="actions">
+            <Button href={`/contacto?interes=${p.id}`} event={`Producto ${p.id}`}>{ctaLabel(p.availability)}</Button>
+            {p.availability === "LIVE" && p.href && <Button href={p.href} variant="ghost" external>Abrir {p.name}</Button>}
+          </div>
+        </div>
+        <ul class="features">
+          {p.features.map((f) => (
+            <li>
+              <h3>{f.title} {f.status !== "live" && <StatusBadge status={f.status} />}</h3>
+              <p>{f.text}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </Section>
+  ))}
+
+  <Section id="conexion" tone="night" labelledby="map-title">
+    <div class="map-head">
+      <h2 id="map-title">Cómo se conectan<span class="dot">.</span></h2>
+      <p class="lede">Elige un recorrido para ver por dónde pasa. Cada uno indica si ya está disponible, está en pruebas, en desarrollo o es solo un ejemplo.</p>
+    </div>
+    <EcosystemMap />
+  </Section>
+</Base>
+
+<style>
+  .intro { display: grid; gap: var(--s-4); max-width: 52rem; }
+  h1 { font-size: var(--step-4); }
+  .legend { color: var(--ink-soft); font-size: var(--step--1); display: flex; flex-wrap: wrap; gap: 0.35rem 0.6rem; align-items: center; max-width: none; }
+  .product { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(1.5rem, 4vw, 4rem); align-items: start; }
+  .head { display: grid; gap: var(--s-3); justify-items: start; }
+  .g { color: var(--blue-ink); --glyph-node: var(--blue); }
+  .head h2 { font-size: var(--step-3); display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.75rem; }
+  .model { color: var(--ink-soft); font-size: var(--step--1); font-weight: 600; }
+  .desc { color: var(--ink-soft); }
+  .actions { display: flex; flex-wrap: wrap; gap: var(--s-3); margin-top: var(--s-2); }
+  .features { display: grid; }
+  .features li { padding: var(--s-4) 0; border-top: 1px solid var(--mist); }
+  .features li:last-child { border-bottom: 1px solid var(--mist); }
+  .features h3 { margin-bottom: var(--s-1); font-size: var(--step-0); display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.6rem; }
+  .features p { color: var(--ink-soft); font-size: 0.97rem; }
+  .map-head { display: grid; gap: var(--s-3); margin-bottom: var(--head-gap); max-width: 52rem; }
+  :global(.tone-night) .map-head h2 { color: var(--white); }
+  @media (max-width: 62rem) { .product { grid-template-columns: 1fr; } }
+</style>

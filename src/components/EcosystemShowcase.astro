@@ -6,7 +6,7 @@ import Button from "./Button.astro";
 ---
 <div class="eco">
   <div class="copy">
-    <h2 id="eco-title">Reymen para restaurantes<span class="dot-ember">.</span></h2>
+    <h3 id="eco-title">Reymen para restaurantes<span class="dot-ember">.</span></h3>
     <p class="lede">Nuestro primer ecosistema ya funciona en cafeterías y restaurantes: un punto de venta que no se detiene y una plataforma que conecta cocina, inventario, clientes y mensajes.</p>
     <dl class="facts">
       <div><dt>Reymen POS</dt><dd>Mesas, cocina, cobro dividido y corte de caja. Sigue cobrando sin internet.</dd></div>
@@ -33,6 +33,7 @@ import Button from "./Button.astro";
 
 <style>
   .eco { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(2rem, 5vw, 6rem); align-items: center; }
+  #eco-title { font-size: var(--step-3); font-stretch: calc(var(--wdth-heading) * 1%); letter-spacing: -0.024em; }
   .copy { display: grid; gap: var(--s-5); justify-items: start; }
   .facts { display: grid; gap: var(--s-4); }
   .facts div { display: grid; gap: 0.15rem; padding-left: var(--s-4); border-left: 2px solid var(--mist); }

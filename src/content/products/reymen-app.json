@@ -1,0 +1,103 @@
+{
+  "id": "reymen-app",
+  "name": "Reymen App",
+  "order": 1,
+  "model": "platform",
+  "publication": "published",
+  "availability": "LIVE",
+  "glyph": "app",
+  "href": "https://app.reymen.mx",
+  "tagline": "La plataforma donde administras tus clientes, mensajes y automatizaciones.",
+  "description": "Plataforma en app.reymen.mx. Cada negocio ve solo sus datos y administra los módulos que contrató.",
+  "features": [
+    {
+      "id": "crm",
+      "title": "CRM",
+      "text": "Contactos, prospectos, seguimiento y citas en un solo lugar.",
+      "status": "live",
+      "evidence": {
+        "code": [
+          "ReymenApp src/app/(portal)/portal/leads, pipeline, appointments",
+          "ReymenApp docs/crm/ROADMAP-CRM.md"
+        ],
+        "tests": true,
+        "production": true
+      }
+    },
+    {
+      "id": "inbox",
+      "title": "Bandeja de mensajes",
+      "text": "Conversaciones de varios canales en una bandeja, con respuesta sugerida por el Agente IA. Los conectores de cada canal se activan por separado.",
+      "status": "beta",
+      "evidence": {
+        "code": [
+          "ReymenApp docs/crm/INBOX-CANALES.md",
+          "ReymenApp docs/crm/INBOX-IA.md"
+        ],
+        "tests": true,
+        "production": false
+      }
+    },
+    {
+      "id": "automatizaciones",
+      "title": "Automatizaciones",
+      "text": "Flujos preparados que reaccionan a eventos del negocio, con ejecuciones, reintentos y control por cliente. La entrega de mensajes depende de los conectores.",
+      "status": "beta",
+      "evidence": {
+        "code": [
+          "ReymenApp docs/automations/ARQUITECTURA.md",
+          "ReymenApp src/lib/automation/"
+        ],
+        "tests": true,
+        "production": false
+      }
+    },
+    {
+      "id": "foods",
+      "title": "Inventario y recetas (Reymen Foods)",
+      "text": "Insumos, recetas, proveedores, compras y rentabilidad por platillo para restaurantes y cafeterías.",
+      "status": "live",
+      "evidence": {
+        "code": [
+          "ReymenApp src/lib/food.ts",
+          "ReymenApp src/lib/food-inventory.ts"
+        ],
+        "tests": true,
+        "production": true
+      }
+    },
+    {
+      "id": "loyalty",
+      "title": "Lealtad",
+      "text": "Sellos por visita y recompensas, con registro público y canje desde el punto de venta.",
+      "status": "beta",
+      "evidence": {
+        "code": [
+          "ReymenApp docs/LOYALTY_INTEGRACION.md",
+          "ReymenPOS docs/integration.md"
+        ],
+        "tests": true,
+        "production": false
+      }
+    },
+    {
+      "id": "smartcards",
+      "title": "Smart Cards (conexión)",
+      "text": "Estadísticas y equipo de tus tarjetas desde Reymen App, con acceso único al panel de Smart Cards.",
+      "status": "beta",
+      "evidence": {
+        "code": [
+          "ReymenApp docs/DOCUMENTACION_TECNICA.md §12",
+          "ReymenApp src/lib/smartcard-company.ts"
+        ],
+        "tests": true,
+        "production": false
+      }
+    }
+  ],
+  "related": [
+    "reymen-pos",
+    "ai-agents",
+    "smart-cards"
+  ]
+}

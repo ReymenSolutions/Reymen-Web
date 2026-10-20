@@ -2,10 +2,18 @@
 // Formulario de contacto → POST {apiUrl}/api/public/leads. Mismo contrato que antes: consentimiento obligatorio y campo trampa.
 import { SITE } from "../config";
 import Button from "./Button.astro";
-interface Props { vertical?: string }
-const { vertical = "" } = Astro.props;
+interface Props { vertical?: string; interests?: { value: string; label: string }[]; sourceBase?: string }
+const { vertical = "", interests = [], sourceBase } = Astro.props;
 ---
-<form class="lead" id="lead-form" novalidate data-api={`${SITE.apiUrl}/api/public/leads`} data-source={vertical ? `web-${vertical}` : "web"}>
+<form class="lead" id="lead-form" novalidate data-api={`${SITE.apiUrl}/api/public/leads`} data-source={sourceBase ?? (vertical ? `web-${vertical}` : "web")}>
+  {interests.length > 0 && (
+    <div class="field">
+      <label for="lf-interest">¿Qué te interesa?</label>
+      <select id="lf-interest" name="interest">
+        {interests.map((o) => <option value={o.value}>{o.label}</option>)}
+      </select>
+    </div>
+  )}
   <div class="field">
     <label for="lf-name">Nombre</label>
     <input id="lf-name" name="name" autocomplete="name" required minlength="2" maxlength="120" />
@@ -70,6 +78,11 @@ const { vertical = "" } = Astro.props;
     const select = form.elements.namedItem("vertical") as HTMLSelectElement | null;
     if (giro && select && [...select.options].some((o) => o.value === giro)) select.value = giro;
 
+    // Interés preseleccionado desde un enlace (?interes=ai-agents): llega al CRM en el campo `source` (la API no cambia).
+    const interestSelect = form.elements.namedItem("interest") as HTMLSelectElement | null;
+    const wanted = new URLSearchParams(location.search).get("interes");
+    if (wanted && interestSelect && [...interestSelect.options].some((o) => o.value === wanted)) interestSelect.value = wanted;
+
     const box = document.getElementById("lead-msg")!;
     const show = (text: string) => { box.innerHTML = `<div class="msg err"></div>`; box.firstElementChild!.textContent = text; };
     const track = (name: string, props?: Record<string, string>, cb?: () => void) => {
@@ -98,7 +111,7 @@ const { vertical = "" } = Astro.props;
           body: JSON.stringify({
             name: fd.get("name"), contact: fd.get("contact"), business: fd.get("business") || undefined,
             vertical: fd.get("vertical") || undefined, message: fd.get("message") || undefined,
-            consent: fd.get("consent") === "on", website: fd.get("website") || undefined, source: form.dataset.source,
+            consent: fd.get("consent") === "on", website: fd.get("website") || undefined, source: (interestSelect?.value ? `${form.dataset.source}-${interestSelect.value}` : form.dataset.source)!.slice(0, 60),
           }),
         });
         if (res.ok) { track("Lead Enviado", { vertical: String(fd.get("vertical") ?? "") }, () => { window.location.href = "/gracias"; }); return; }

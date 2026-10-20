@@ -1,8 +1,9 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
-import { PUBLIC_ROUTES } from "../src/routes";
+import { STATIC_ROUTES } from "../src/routes";
+import { product, vertical, feature } from "../src/lib/schemas";
 
-const pages = ["/", "/restaurantes", "/privacidad", "/gracias"];
+const pages = ["/", "/restaurantes", "/productos", "/contacto", "/privacidad", "/gracias"];
 
 // Las pruebas no dependen de internet: la analítica externa se simula vacía.
 test.beforeEach(async ({ page }) => { await page.route("https://plausible.io/**", (r) => r.fulfill({ status: 200, contentType: "text/javascript", body: "" })); });
@@ -33,7 +34,8 @@ test.describe("rutas, SEO y encabezados", () => {
   test("el sitemap lista exactamente las rutas públicas", async ({ request }) => {
     const xml = await (await request.get("/sitemap.xml")).text();
     const locs = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
-    expect(locs).toEqual(PUBLIC_ROUTES.map((p) => `https://reymen.mx${p}`));
+    // Estáticas + verticales publicadas (hoy solo /restaurantes). Las páginas en borrador o sin listar no entran.
+    expect([...locs].sort()).toEqual([...STATIC_ROUTES, "/restaurantes"].map((p) => `https://reymen.mx${p}`).sort());
   });
 
   test("encabezados de seguridad presentes", async ({ request }) => {
@@ -59,7 +61,7 @@ test.describe("rutas, SEO y encabezados", () => {
 
 test.describe("responsive", () => {
   for (const w of widths) {
-    for (const path of ["/", "/restaurantes"]) {
+    for (const path of ["/", "/restaurantes", "/productos", "/contacto"]) {
       test(`${path} a ${w}px: sin desbordes y botones tocables`, async ({ page }) => {
         await page.setViewportSize({ width: w, height: w < 600 ? 800 : 900 });
         await page.goto(path);
@@ -99,8 +101,72 @@ test.describe("navegación e interacciones", () => {
     await page.keyboard.press("Escape");
     await expect(menu).toHaveAttribute("aria-expanded", "false");
     await menu.click();
-    await page.locator("[data-nav] a", { hasText: "Restaurantes" }).click();
+    await page.locator("[data-nav] .dd-btn", { hasText: "Soluciones" }).click();
+    await page.locator("#dd-soluciones a").first().click();
     await expect(page).toHaveURL(/\/restaurantes$/);
+  });
+
+  test("menú de escritorio: desplegables con teclado y sin enlaces a páginas en borrador", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/");
+    const btn = page.locator(".dd-btn", { hasText: "Productos" });
+    await btn.focus();
+    await page.keyboard.press("Enter");
+    await expect(btn).toHaveAttribute("aria-expanded", "true");
+    await expect(page.locator("#dd-productos a", { hasText: "Reymen AI Agents" })).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(btn).toHaveAttribute("aria-expanded", "false");
+    await expect(btn).toBeFocused();
+    // Mientras /ai-agents, /smart-cards y /realty no estén publicadas, el menú apunta a las secciones de /productos.
+    const hrefs = await page.locator("[data-nav] a").evaluateAll((as) => as.map((a) => (a as HTMLAnchorElement).getAttribute("href")));
+    for (const h of hrefs) expect(h).not.toMatch(/^\/(realty|ai-agents|smart-cards|automatizaciones|servicios|seguridad)(\/|#|$)/);
+    expect(hrefs).toContain("/productos#ai-agents");
+  });
+
+  test("desplegable abierto sobre el hero oscuro: contraste correcto (axe)", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/");
+    await page.locator(".dd-btn", { hasText: "Productos" }).click();
+    await expect(page.locator("#dd-productos")).toBeVisible();
+    const { violations } = await new AxeBuilder({ page }).include(".site-header").withTags(["wcag2a", "wcag2aa"]).analyze();
+    expect(violations.map((v) => `${v.id}: ${v.nodes.length}`)).toEqual([]);
+  });
+
+  test("las páginas en borrador no existen", async ({ request }) => {
+    for (const path of ["/realty", "/ai-agents", "/smart-cards", "/clinicas-y-servicios"]) expect((await request.get(path)).status()).toBe(404);
+  });
+
+  test("ningún enlace interno está roto", async ({ page, request }) => {
+    const seen = new Set<string>();
+    for (const path of pages) {
+      await page.goto(path);
+      const hrefs = await page.locator("a[href^='/']").evaluateAll((as) => as.map((a) => (a as HTMLAnchorElement).getAttribute("href")!));
+      for (const h of hrefs) seen.add(h.split("#")[0].split("?")[0] || "/");
+    }
+    for (const url of seen) expect((await request.get(url)).status(), url).toBe(200);
+  });
+
+  test("/productos: cada producto tiene su sección, su estado y su CTA", async ({ page }) => {
+    await page.goto("/productos");
+    for (const id of ["reymen-app", "reymen-pos", "ai-agents", "smart-cards"]) {
+      const sec = page.locator(`#${id}`);
+      await expect(sec).toHaveCount(1);
+      await expect(sec.locator(".badge").first()).toBeVisible();
+      await expect(sec.locator(`a[href="/contacto?interes=${id}"]`)).toHaveCount(1);
+    }
+    // Lo que está en desarrollo o es concepto se rotula como tal.
+    await expect(page.locator("#ai-agents")).toContainText("Concepto");
+    await expect(page.locator("#ai-agents")).toContainText("En desarrollo");
+  });
+
+  test("mapa del ecosistema: elegir un recorrido cambia el detalle y marca el concepto", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/productos");
+    const map = page.locator("[data-map]");
+    await map.locator(".pick", { hasText: "ejecuta una acción autorizada" }).click();
+    await expect(map.locator(".detail.side:not([hidden])")).toContainText("Ejemplo conceptual");
+    await expect(map).toHaveAttribute("data-journey", "autoriza");
   });
 
   test("demo del hero: etapas, pausa y reproducir", async ({ page }) => {
@@ -116,7 +182,7 @@ test.describe("navegación e interacciones", () => {
 
   test("selector de servicios cambia el enfoque", async ({ page }) => {
     await page.goto("/");
-    await page.locator(".pick").nth(2).click();
+    await page.locator("[data-canvas] .pick").nth(2).click();
     await expect(page.locator("[data-canvas]")).toHaveAttribute("data-focus", "software");
   });
 
@@ -180,6 +246,17 @@ test.describe("formulario de contacto (API simulada)", () => {
     await expect(page).not.toHaveURL(/gracias/);
   });
 
+  test("/contacto: el interés viaja en source y se preselecciona desde ?interes=", async ({ page }) => {
+    let body: Record<string, unknown> = {};
+    await page.route(api, async (r) => { body = JSON.parse(r.request().postData() ?? "{}"); await r.fulfill({ status: 200, contentType: "application/json", body: '{"success":true}', headers: { "access-control-allow-origin": "*" } }); });
+    await page.goto("/contacto?interes=ai-agents");
+    await expect(page.locator("#lf-interest")).toHaveValue("ai-agents");
+    await fill(page);
+    await page.click("#lead-form button[type=submit]");
+    await expect(page).toHaveURL(/\/gracias$/);
+    expect(body.source).toBe("web-contacto-ai-agents");
+  });
+
   test("el giro se preselecciona desde ?giro=", async ({ page }) => {
     await page.goto("/?giro=inmobiliaria");
     await expect(page.locator("#lf-vertical")).toHaveValue("inmobiliaria");
@@ -214,4 +291,34 @@ test("las afirmaciones retiradas no reaparecen", async ({ page }) => {
     const text = (await page.locator("body").innerText()).toLowerCase();
     expect(text).not.toMatch(/al instante|contestados al instante|contesta tu whatsapp/);
   }
+});
+
+test.describe("catálogos: la regla de evidencia", () => {
+  const ev = (o: object = {}) => ({ code: [], tests: false, production: false, ...o });
+  const f = (status: string, evidence: object) => feature.safeParse({ id: "x", title: "Algo", text: "Algo", status, evidence: ev(evidence) });
+
+  test("una función live exige respaldo en código y confirmación de producción", () => {
+    expect(f("live", {}).success).toBe(false);
+    expect(f("live", { code: ["doc"] }).success).toBe(false);
+    expect(f("live", { code: ["doc"], production: true }).success).toBe(true);
+  });
+  test("beta exige código; planned y concept no pueden decir que ya operan", () => {
+    expect(f("beta", {}).success).toBe(false);
+    expect(f("beta", { code: ["doc"] }).success).toBe(true);
+    expect(f("planned", { production: true }).success).toBe(false);
+    expect(f("concept", {}).success).toBe(true);
+  });
+  test("un producto COMING_SOON no puede declarar funciones live", () => {
+    const base = { id: "p", name: "P", order: 1, tagline: "t", description: "d", model: "module", publication: "published", availability: "COMING_SOON" };
+    const live = { id: "a", title: "Aa", text: "Aa", status: "live", evidence: ev({ code: ["x"], production: true }) };
+    expect(product.safeParse({ ...base, features: [live] }).success).toBe(false);
+    expect(product.safeParse({ ...base, features: [] }).success).toBe(true);
+  });
+  test("una vertical LIVE debe estar desplegada y una publicada que no es LIVE/BETA lleva noindex", () => {
+    const base = { id: "v", name: "V", order: 1, route: "/v", description: "d", audience: "a", layout: "coming-soon", cta: { primary: { label: "x", href: "/c" } }, seo: { title: "t", description: "d", noindex: false } };
+    const live = { id: "a", title: "Aa", text: "Aa", status: "live", evidence: ev({ code: ["x"], production: true }) };
+    expect(vertical.safeParse({ ...base, publication: "published", availability: "LIVE", stages: { code: true, tests: true, deployed: false }, features: [live] }).success).toBe(false);
+    expect(vertical.safeParse({ ...base, publication: "published", availability: "COMING_SOON", stages: { code: true, tests: true, deployed: false } }).success).toBe(false);
+    expect(vertical.safeParse({ ...base, publication: "draft", availability: "COMING_SOON", stages: { code: true, tests: true, deployed: false } }).success).toBe(true);
+  });
 });

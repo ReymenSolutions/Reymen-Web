@@ -5,75 +5,107 @@ import Button from "../components/Button.astro";
 import HeroStage from "../components/HeroStage.astro";
 import Traces from "../components/Traces.astro";
 import Glyph from "../components/Glyph.astro";
+import StatusBadge from "../components/StatusBadge.astro";
 import EcosystemShowcase from "../components/EcosystemShowcase.astro";
+import EcosystemMap from "../components/EcosystemMap.astro";
 import ServicesCanvas from "../components/ServicesCanvas.astro";
-import Timeline from "../components/Timeline.astro";
-import FeatureList from "../components/FeatureList.astro";
 import Faq from "../components/Faq.astro";
 import ContactSection from "../components/ContactSection.astro";
 import Plans from "../components/Plans.astro";
 import { SITE } from "../config";
+import { homeContent, capabilities, services, products, productHref, interestVerticals, assertCatalogIntegrity, MODEL_LABEL } from "../lib/catalog";
 
-const demo = SITE.calendlyUrl || "#contacto";
-
-const solutions = [
-  { glyph: "restaurant", name: "Restaurantes y cafeterías", text: "Punto de venta, cocina, inventario con recetas y lealtad. Es donde más hemos trabajado.", href: "/restaurantes", cta: "Ver la solución para restaurantes" },
-  { glyph: "clinic", name: "Clínicas y servicios", text: "Citas y seguimiento de clientes en el CRM de Reymen, ajustados a cómo trabajas.", href: "/?giro=servicios#contacto", cta: "Platicar sobre mi clínica" },
-  { glyph: "property", name: "Inmobiliarias", text: "Estamos preparando una solución para inmobiliarias. Cuéntanos qué necesitas y te avisamos.", href: "/?giro=inmobiliaria#contacto", cta: "Registrar mi interés" },
-];
-const process = [
-  { h: "Conversamos", p: "Entendemos tu operación y qué te quita más tiempo o dinero hoy." },
-  { h: "Configuramos", p: "Cargamos tu información, conectamos tus herramientas y dejamos todo listo para operar." },
-  { h: "Acompañamos", p: "Capacitamos a tu equipo y revisamos resultados contigo desde la primera semana." },
-];
-const why = [
-  { h: "Productos propios, no solo proyectos", p: "Tenemos un ecosistema que ya funciona en restaurantes, y desarrollamos a la medida lo que todavía no existe." },
-  { h: "La misma base para todo", p: "Agentes, automatizaciones y software comparten seguridad, respaldos y control, así que crecen contigo sin rehacerse." },
-  { h: "Pensados para México", p: "IVA desglosado, propinas, efectivo y español de México, no traducciones." },
-  { h: "Tú controlas la IA", p: "Defines las reglas, ves lo que consume y, cuando algo es delicado, el agente pasa a una persona." },
-];
-const trust = [
-  { h: "Un negocio, sus datos", p: "Cada negocio está aislado de los demás y cada persona de tu equipo ve solo lo que su rol permite.", icon: "layers" },
-  { h: "Respaldos que sí se prueban", p: "Copias diarias de la base de datos con rotación y pruebas de restauración programadas.", icon: "archive" },
-  { h: "IA con reglas y límites", p: "El asistente sigue tus reglas, escala lo delicado a una persona y tiene un tope de consumo por negocio.", icon: "shield" },
-];
+// Todo el contenido sale de src/content (home.json, capabilities, products, services, verticals). Aquí solo está la composición.
+await assertCatalogIntegrity();
+const home = await homeContent();
+const caps = await capabilities();
+const prods = await products();
+const svcs = await services();
+const soon = await interestVerticals();
+const demo = SITE.calendlyUrl || "/contacto";
 const icons: Record<string, string> = {
   layers: '<path d="M12 3 3 8l9 5 9-5-9-5Z"/><path d="m3 13 9 5 9-5"/>',
   archive: '<path d="M4 8h16v11H4z"/><path d="m4 8 2-4h12l2 4"/><path d="M10 13h4"/>',
   shield: '<path d="M12 3 5 6v5c0 4.5 3 8 7 10 4-2 7-5.5 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-4"/>',
 };
-const faq = [
-  { q: "¿Cuánto tarda en estar funcionando?", a: "Depende del alcance. Una operación sencilla (punto de venta, menú e inventario básico) puede arrancar en pocos días; las integraciones y automatizaciones a la medida se acuerdan en la demo." },
-  { q: "¿Tengo que cambiar todo lo que uso hoy?", a: "No. Empezamos por lo que más te cuesta (ventas, atención a clientes o seguimiento) y conectamos el resto después. Te ayudamos a pasar tu información." },
-  { q: "¿Desarrollan software, agentes de IA o automatizaciones a la medida?", a: "Sí. Además de nuestros productos, diseñamos y construimos agentes de IA, automatizaciones y aplicaciones web o móviles para la operación de cada negocio." },
-  { q: "¿El asistente de IA puede equivocarse?", a: "Responde solo con las reglas y la información que tú autorizas. Si duda, si el cliente pide hablar con una persona o si el tema es delicado, te pasa la conversación en lugar de inventar." },
-  { q: "¿Mis datos y los de mis clientes están seguros?", a: "Cada negocio tiene sus datos aislados, con permisos por rol y sesiones controladas. Hacemos respaldos diarios de la base de datos y tenemos pruebas de restauración programadas." },
-  { q: "¿Cuánto cuesta?", a: "Depende de los módulos y del tamaño de tu operación. En la demo te damos una propuesta clara, sin letras chiquitas." },
-];
+const glyphOf = (g: string) => (g === "app" || g === "pos" || g === "card" ? "software" : g) as "software";
 ---
-<Base darkHero title="Reymen Solutions · Software, automatización y agentes de IA a la medida" description="Reymen Solutions diseña software, automatizaciones y agentes de IA para negocios en México, y tiene un ecosistema propio de punto de venta, inventario, lealtad y mensajes para restaurantes." path="">
+<Base darkHero title="Reymen Solutions · Software, agentes de IA y automatización" description="Reymen Solutions diseña software, agentes de IA y automatizaciones para negocios en México, y tiene un ecosistema propio de punto de venta, inventario, lealtad y mensajes para restaurantes.">
   <section class="hero tone-night" aria-labelledby="hero-title">
     <Traces />
     <div class="container hero-grid">
       <div class="hero-copy">
-        <h1 id="hero-title">Construimos el software, la automatización y los agentes de IA que tu negocio necesita<span class="dot">.</span></h1>
-        <p class="lede">Reymen Solutions diseña tecnología a la medida y productos propios para negocios en México. Nuestro primer ecosistema ya opera en restaurantes y cafeterías.</p>
+        <h1 id="hero-title">{home.hero.title}<span class="dot">.</span></h1>
+        <p class="lede">{home.hero.lede}</p>
         <div class="cta-wrap"><div class="cta-row">
           <Button href={demo} size="lg" event="CTA Demo" external={!!SITE.calendlyUrl}>Agendar demo</Button>
-          <Button href="/restaurantes" variant="ghost" size="lg" event="Ver Restaurantes"><span class="l-full">Ver Reymen para restaurantes</span><span class="l-short">Ver restaurantes</span></Button>
+          <Button href="/productos" variant="ghost" size="lg" event="Ver Ecosistema"><span class="l-full">Ver productos y soluciones</span><span class="l-short">Ver productos</span></Button>
         </div></div>
+        <p class="tagline">{home.hero.tagline}</p>
         <dl class="facts">
-          <div><dt>Productos propios y a la medida</dt><dd>Un ecosistema que ya funciona, y desarrollo para lo que no existe.</dd></div>
-          <div><dt>Pensado para México</dt><dd>IVA desglosado, propinas y efectivo.</dd></div>
-          <div><dt>Tus datos son tuyos</dt><dd>Cada negocio aislado y con respaldos diarios.</dd></div>
+          {home.facts.map((f) => <div><dt>{f.title}</dt><dd>{f.text}</dd></div>)}
         </dl>
       </div>
       <div class="hero-stage"><HeroStage /></div>
     </div>
   </section>
 
-  <Section id="ecosistema" tone="white" after="night" labelledby="eco-title">
+  <Section id="que-hacemos" tone="white" after="night" labelledby="que-title">
+    <div class="head"><h2 id="que-title">Qué hacemos<span class="dot">.</span></h2></div>
+    <div class="triad">
+      {caps.map((c) => (
+        <a class="cap" href={c.href}>
+          <Glyph name={c.glyph} size={32} class="cap-glyph" />
+          <h3>{c.title}</h3>
+          <p>{c.text}</p>
+        </a>
+      ))}
+    </div>
+  </Section>
+
+  <Section id="productos" labelledby="prod-title">
+    <div class="head">
+      <h2 id="prod-title">Productos propios<span class="dot">.</span></h2>
+      <p class="lede">Se conectan entre sí. Unos se contratan por separado y otros son módulos de Reymen App.</p>
+    </div>
+    <ul class="rows">
+      {prods.map((p) => (
+        <li>
+          <a class="row" href={productHref(p)}>
+            <span class="r-name"><Glyph name={glyphOf(p.glyph)} size={30} class="r-glyph" />{p.name} <StatusBadge status={p.availability} /></span>
+            <span class="r-text">{p.tagline}<span class="r-model">{MODEL_LABEL[p.model]}</span></span>
+            <span class="r-cta">Conocer el producto</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </Section>
+
+  <Section id="ecosistema" tone="night" labelledby="map-title">
+    <div class="head">
+      <h2 id="map-title">Un ecosistema conectado<span class="dot">.</span></h2>
+      <p class="lede">Elige un recorrido para ver cómo se conectan las herramientas. Cada uno indica si ya está disponible, está en pruebas, en desarrollo o es un ejemplo.</p>
+    </div>
+    <EcosystemMap />
+  </Section>
+
+  <Section id="soluciones" tone="white" after="night" labelledby="sol-title">
+    <div class="head"><h2 id="sol-title">Soluciones por industria<span class="dot">.</span></h2></div>
     <EcosystemShowcase />
+    {soon.length > 0 && (
+      <ul class="rows soon">
+        {soon.map((v) => (
+          <li>
+            <a class="row" href={`/contacto?interes=${v.id}`}>
+              <span class="r-name"><Glyph name={glyphOf(v.interest!.glyph)} size={30} class="r-glyph" />{v.name} <StatusBadge status={v.availability} /></span>
+              <span class="r-text">{v.interest!.text}</span>
+              <span class="r-cta">{v.interest!.cta}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+    <p class="other">¿Tu giro no está aquí? <a href="/contacto?interes=otra-industria">Cuéntanos qué necesitas</a> y lo revisamos juntos.</p>
   </Section>
 
   <Section id="servicios" tone="night" labelledby="servicios-title">
@@ -82,40 +114,16 @@ const faq = [
       <p class="lede">Además de nuestros productos, desarrollamos a la medida sobre la misma base. Elige una capacidad y mira dónde entra en el flujo.</p>
     </div>
     <ServicesCanvas />
-  </Section>
-
-  <Section id="soluciones" after="night" labelledby="soluciones-title">
-    <div class="head"><h2 id="soluciones-title">Una plataforma, varios giros<span class="dot">.</span></h2></div>
-    <ul class="solutions">
-      {solutions.map((s) => (
-        <li>
-          <a class="solution" href={s.href}>
-            <span class="s-name"><Glyph name={s.glyph as "restaurant"} size={30} class="s-glyph" />{s.name}</span>
-            <span class="s-text">{s.text}</span>
-            <span class="s-cta">{s.cta}</span>
-          </a>
-        </li>
-      ))}
+    <ul class="svc">
+      {svcs.map((s) => <li><h3>{s.title}</h3><p>{s.text}</p></li>)}
     </ul>
-    <p class="other">¿Tu giro no está aquí? <a href="#contacto">Cuéntanos qué necesitas</a> y lo revisamos juntos.</p>
+    <div class="svc-cta"><Button href="/contacto?interes=servicios-a-medida" event="Servicios Proyecto">Cuéntanos tu proyecto</Button></div>
   </Section>
 
-  <Section id="proceso" tone="white" labelledby="proceso-title">
-    <div class="head"><h2 id="proceso-title">Cómo trabajamos contigo<span class="dot">.</span></h2></div>
-    <Timeline items={process} />
-  </Section>
-
-  <Section id="por-que" labelledby="porque-title">
-    <div class="split">
-      <h2 id="porque-title">Por qué Reymen<span class="dot">.</span></h2>
-      <FeatureList items={why} cols={2} />
-    </div>
-  </Section>
-
-  <Section id="seguridad" tone="white" labelledby="seguridad-title">
+  <Section id="seguridad" tone="white" after="night" labelledby="seguridad-title">
     <div class="head"><h2 id="seguridad-title">Tus datos y los de tus clientes, protegidos<span class="dot">.</span></h2></div>
     <div class="trust">
-      {trust.map((t) => (
+      {home.trust.map((t) => (
         <div>
           <svg class="ico" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" set:html={icons[t.icon]} />
           <h3>{t.h}</h3>
@@ -131,7 +139,7 @@ const faq = [
   <Section id="preguntas" labelledby="faq-title">
     <div class="faq-grid">
       <h2 id="faq-title">Preguntas frecuentes<span class="dot">.</span></h2>
-      <Faq items={faq} />
+      <Faq items={home.faq} />
     </div>
   </Section>
 
@@ -153,22 +161,38 @@ const faq = [
   .facts div { display: grid; gap: 0.1rem; }
   .facts dt { font-weight: 650; font-stretch: 104%; color: var(--on-night); }
   .facts dd { margin: 0; color: var(--on-night-soft); font-size: 0.95rem; }
+  .tagline { margin: 0; color: var(--on-night-soft); font-weight: 600; font-stretch: 108%; letter-spacing: 0.01em; }
+  .triad { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-7); }
+  .cap { display: grid; gap: var(--s-3); align-content: start; padding-top: var(--s-5); border-top: 2px solid var(--mist); text-decoration: none; transition: border-color var(--t-base) var(--ease); }
+  .cap:hover { border-top-color: var(--blue); }
+  .cap :global(.cap-glyph) { color: var(--blue-ink); --glyph-node: var(--blue); }
+  .cap h3 { font-size: var(--step-2); }
+  .cap p { color: var(--ink-soft); }
+  .rows { border-top: 1px solid var(--mist); }
+  .rows.soon { margin-top: var(--s-7); }
+  .rows li { border-bottom: 1px solid var(--mist); }
+  .row { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 4fr) minmax(0, 2fr); gap: var(--s-2) var(--s-6); align-items: center; padding: var(--s-5) 0; text-decoration: none; position: relative; }
+  .row::before { content: ""; position: absolute; inset: 0 calc(-1 * var(--s-4)); background: color-mix(in srgb, var(--blue) 6%, transparent); opacity: 0; transition: opacity var(--t-base) var(--ease); pointer-events: none; }
+  .row:hover::before, .row:focus-visible::before { opacity: 1; }
+  .r-name { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.7rem; font-size: var(--step-2); font-weight: 700; font-stretch: 110%; letter-spacing: -0.02em; line-height: 1.15; transition: color var(--t-base) var(--ease); }
+  .row:hover .r-name { color: var(--blue-ink); }
+  .r-name :global(.r-glyph) { flex: none; color: var(--blue-ink); --glyph-node: var(--blue); }
+  .r-text { color: var(--ink-soft); display: grid; gap: 0.2rem; }
+  .r-model { font-size: var(--step--1); color: var(--ink-soft); opacity: 0.85; }
+  .r-cta { font-weight: 650; color: var(--blue-ink); text-decoration: underline; text-underline-offset: 0.25em; text-decoration-thickness: 0.08em; justify-self: end; text-align: right; }
+  .svc { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-6) var(--s-8); margin-top: var(--s-8); border-top: 1px solid var(--night-line); padding-top: var(--s-6); }
+  .svc h3 { color: var(--on-night); margin-bottom: var(--s-2); }
+  .svc p { color: var(--on-night-soft); }
+  .svc-cta { margin-top: var(--s-6); }
+  @media (max-width: 62rem) {
+    .triad { grid-template-columns: 1fr; gap: var(--s-6); }
+    .row { grid-template-columns: 1fr; }
+    .r-cta { justify-self: start; text-align: left; }
+    .svc { grid-template-columns: 1fr; margin-top: var(--s-6); }
+  }
   .head { display: grid; gap: var(--s-4); margin-bottom: var(--head-gap); max-width: 52rem; }
-  .solutions { border-top: 1px solid var(--mist); }
-  .solutions li { border-bottom: 1px solid var(--mist); }
-  .solution { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 4fr); gap: var(--s-2) var(--s-7); padding: var(--s-6) 0; text-decoration: none; position: relative; }
-  .solution::before { content: ""; position: absolute; inset: 0 calc(-1 * var(--s-4)); background: color-mix(in srgb, var(--blue) 6%, transparent); opacity: 0; transition: opacity var(--t-base) var(--ease); pointer-events: none; }
-  .solution:hover::before, .solution:focus-visible::before { opacity: 1; }
-  .s-name { display: flex; align-items: center; gap: var(--s-4); grid-row: span 2; font-size: var(--step-3); font-weight: 700; font-stretch: 112%; letter-spacing: -0.022em; line-height: 1.1; transition: color var(--t-base) var(--ease), transform var(--t-base) var(--ease); }
-  .solution:hover .s-name { color: var(--blue-ink); transform: translateX(6px); }
-  .s-name :global(.s-glyph) { flex: none; color: var(--blue-ink); --glyph-node: var(--blue); }
-  .solution:first-child .s-name :global(.s-glyph) { --glyph-node: var(--ember); }
-  .s-text { color: var(--ink-soft); max-width: 46ch; }
-  .s-cta { font-weight: 650; color: var(--blue-ink); text-decoration: underline; text-underline-offset: 0.25em; text-decoration-thickness: 0.08em; align-self: start; }
   .other { margin-top: var(--s-5); color: var(--ink-soft); }
   .other a { color: var(--blue-ink); font-weight: 600; }
-  .split { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: clamp(1.5rem, 4vw, 4rem); align-items: start; }
-  .split h2 { position: sticky; top: 6rem; }
   .trust { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-7); }
   .ico { color: var(--blue); margin-bottom: var(--s-3); }
   .trust h3 { margin-bottom: var(--s-2); }
@@ -176,11 +200,9 @@ const faq = [
   .faq-grid { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: clamp(1.5rem, 4vw, 4rem); align-items: start; }
   .faq-grid h2 { position: sticky; top: 6rem; }
   @media (max-width: 62rem) {
-    .hero-grid, .faq-grid, .split { grid-template-columns: 1fr; }
-    .faq-grid h2, .split h2 { position: static; }
-    .solution { grid-template-columns: 1fr; }
-    .s-name { grid-row: auto; }
-    .trust { grid-template-columns: 1fr; gap: var(--s-6); }
+    .hero-grid, .faq-grid { grid-template-columns: 1fr; }
+    .faq-grid h2 { position: static; }
+        .trust { grid-template-columns: 1fr; gap: var(--s-6); }
   }
   @media (max-width: 62rem) {
     /* Móvil y tableta: titular, texto y botones, luego la demostración, y al final los datos de apoyo */

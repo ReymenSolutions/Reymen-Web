@@ -1,0 +1,23 @@
+---
+// Estado de una función o producto con el mismo vocabulario en todo el sitio. El color nunca es la única señal: siempre lleva texto.
+import { AVAILABILITY_LABEL, FEATURE_LABEL } from "../lib/catalog";
+interface Props { status: "live" | "beta" | "planned" | "concept" | "LIVE" | "BETA" | "COMING_SOON" | "DRAFT"; class?: string }
+const { status, class: extra = "" } = Astro.props;
+const key = String(status).toLowerCase() === "coming_soon" ? "planned" : String(status).toLowerCase();
+const label = status in AVAILABILITY_LABEL ? AVAILABILITY_LABEL[status as keyof typeof AVAILABILITY_LABEL] : FEATURE_LABEL[status as keyof typeof FEATURE_LABEL];
+---
+<span class:list={["badge", `b-${key}`, extra]}>{label}</span>
+
+<style>
+  .badge { display: inline-flex; align-items: center; padding: 0.1rem 0.55rem; border-radius: 999px; font-size: 0.75rem; font-weight: 650; font-stretch: 104%; line-height: 1.5; border: 1px solid currentColor; white-space: nowrap; vertical-align: middle; }
+  .b-live { color: #0a5f3c; background: color-mix(in srgb, #0a5f3c 7%, transparent); }
+  .b-beta { color: var(--blue-ink); background: color-mix(in srgb, var(--blue) 8%, transparent); }
+  .b-planned { color: var(--ember-ink); background: color-mix(in srgb, var(--ember) 8%, transparent); }
+  .b-concept { color: var(--ink-soft); border-style: dashed; }
+  .b-draft { color: var(--ink-soft); border-style: dashed; }
+  /* Sobre noche */
+  :global(.tone-night) .b-live, :global(.on-night) .b-live { color: #6ee7b7; background: rgb(110 231 183 / 0.1); }
+  :global(.tone-night) .b-beta, :global(.on-night) .b-beta { color: var(--electric-soft); background: rgb(142 166 255 / 0.12); }
+  :global(.tone-night) .b-planned, :global(.on-night) .b-planned { color: #ffb27d; background: rgb(255 178 125 / 0.1); }
+  :global(.tone-night) .b-concept, :global(.on-night) .b-concept { color: var(--on-night-soft); }
+</style>

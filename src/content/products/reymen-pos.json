@@ -1,0 +1,123 @@
+{
+  "id": "reymen-pos",
+  "name": "Reymen POS",
+  "order": 2,
+  "model": "standalone",
+  "publication": "published",
+  "availability": "LIVE",
+  "glyph": "pos",
+  "href": "https://pos.reymen.mx",
+  "tagline": "Punto de venta para restaurantes y cafeterías que sigue cobrando sin internet.",
+  "description": "Mesas, cocina y barra, cobro y corte de caja. Se conecta con Reymen App para inventario, clientes y lealtad.",
+  "features": [
+    {
+      "id": "mesas",
+      "title": "Mesas y cuentas abiertas",
+      "text": "Plano de mesas, cuentas por mesa y envío de la orden por tiempos.",
+      "status": "live",
+      "evidence": {
+        "code": [
+          "ReymenPOS src/",
+          "ReymenPOS docs/HANDOFF.md"
+        ],
+        "tests": true,
+        "production": true
+      }
+    },
+    {
+      "id": "cocina",
+      "title": "Cocina y barra",
+      "text": "Pantalla por estación con tiempo transcurrido y aviso de retraso.",
+      "status": "live",
+      "evidence": {
+        "code": [
+          "ReymenPOS docs/integration.md (kitchen.ticket_ready)"
+        ],
+        "tests": true,
+        "production": true
+      }
+    },
+    {
+      "id": "cobro",
+      "title": "Cobro, propina y cuentas divididas",
+      "text": "Efectivo, tarjeta o transferencia, propina sugerida y división de cuenta.",
+      "status": "live",
+      "evidence": {
+        "code": [
+          "ReymenPOS docs/HANDOFF.md"
+        ],
+        "tests": true,
+        "production": true
+      }
+    },
+    {
+      "id": "corte",
+      "title": "Corte de caja",
+      "text": "Apertura y cierre de turno con diferencia contra lo contado.",
+      "status": "live",
+      "evidence": {
+        "code": [
+          "ReymenPOS docs/integration.md (shift.closed)"
+        ],
+        "tests": true,
+        "production": true
+      }
+    },
+    {
+      "id": "offline",
+      "title": "Funciona sin internet",
+      "text": "Vende con su catálogo local y entrega las ventas cuando vuelve la conexión, sin duplicarlas.",
+      "status": "live",
+      "evidence": {
+        "code": [
+          "ReymenPOS docs/integration.md"
+        ],
+        "tests": true,
+        "production": true
+      }
+    },
+    {
+      "id": "conexion",
+      "title": "Conexión con Reymen App",
+      "text": "Cada venta cerrada llega a Reymen App para inventario, clientes y reportes.",
+      "status": "live",
+      "evidence": {
+        "code": [
+          "ReymenPOS docs/integration.md (order.paid)"
+        ],
+        "tests": true,
+        "production": true
+      }
+    },
+    {
+      "id": "impresion",
+      "title": "Impresión de tickets",
+      "text": "Desde el navegador y en impresoras compatibles con Android.",
+      "status": "beta",
+      "evidence": {
+        "code": [
+          "ReymenPOS docs/printing.md",
+          "ReymenPOS docs/android.md"
+        ],
+        "tests": true,
+        "production": false
+      }
+    },
+    {
+      "id": "canje",
+      "title": "Canje de recompensas de lealtad",
+      "text": "Canje de regalos individuales con confirmación en caja.",
+      "status": "beta",
+      "evidence": {
+        "code": [
+          "ReymenPOS docs/loyalty-pos.md"
+        ],
+        "tests": true,
+        "production": false
+      }
+    }
+  ],
+  "related": [
+    "reymen-app"
+  ]
+}

@@ -1,0 +1,51 @@
+---
+import Base from "../layouts/Base.astro";
+import Section from "../components/Section.astro";
+import LeadForm from "../components/LeadForm.astro";
+import { SITE, whatsappLink } from "../config";
+import { products, publishedVerticals, interestVerticals } from "../lib/catalog";
+
+// Opciones de interés generadas desde los catálogos: un producto o vertical nuevo aparece aquí sin tocar esta página.
+const prods = await products();
+const live = await publishedVerticals();
+const soon = await interestVerticals();
+const interests = [
+  { value: "no-se", label: "Aún no lo sé" },
+  ...prods.map((p) => ({ value: p.id, label: p.name })),
+  ...live.map((v) => ({ value: v.id, label: `Solución: ${v.name}` })),
+  ...soon.map((v) => ({ value: v.id, label: `${v.name} (en preparación)` })),
+  { value: "servicios-a-medida", label: "Software, agentes o automatización a la medida" },
+  { value: "otra-industria", label: "Otra industria" },
+];
+const wa = whatsappLink();
+---
+<Base title="Contacto · Reymen Solutions" description="Cuéntanos qué necesitas: productos, soluciones por industria o desarrollo a la medida. Te respondemos por WhatsApp o correo." path="/contacto" crumbs={[{ name: "Contacto", path: "/contacto" }]}>
+  <Section labelledby="c-title">
+    <div class="wrap">
+      <div class="intro">
+        <h1 id="c-title">Cuéntanos qué necesitas<span class="dot">.</span></h1>
+        <p class="lede">Elige lo que te interesa y escribe tu caso. Te respondemos por WhatsApp o correo con una propuesta clara, sin compromiso.</p>
+        <ul class="steps">
+          <li><b>1. Nos cuentas</b><span>Tu negocio y qué te quita más tiempo o dinero hoy.</span></li>
+          <li><b>2. Te respondemos</b><span>Con una propuesta o una demo, según lo que necesites.</span></li>
+          <li><b>3. Decides</b><span>Sin compromiso y sin letras chiquitas.</span></li>
+        </ul>
+        <p class="direct">También puedes escribir a <a href={`mailto:${SITE.email}`}>{SITE.email}</a>{wa && <> o por <a href={wa} rel="noopener">WhatsApp</a></>}.</p>
+      </div>
+      <div class="card"><LeadForm interests={interests} sourceBase="web-contacto" /></div>
+    </div>
+  </Section>
+</Base>
+
+<style>
+  .wrap { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(1.5rem, 4vw, 4rem); align-items: start; }
+  .intro { display: grid; gap: var(--s-5); justify-items: start; }
+  h1 { font-size: var(--step-4); }
+  .steps { display: grid; gap: var(--s-4); width: 100%; border-top: 1px solid var(--mist); padding-top: var(--s-5); }
+  .steps li { display: grid; gap: 0.15rem; }
+  .steps span { color: var(--ink-soft); }
+  .direct { color: var(--ink-soft); }
+  .direct a { color: var(--blue-ink); font-weight: 600; }
+  .card { background: var(--white); border: 1px solid var(--mist); border-radius: var(--r-lg); padding: clamp(1.25rem, 1rem + 1.5vw, 2.25rem); box-shadow: var(--lift); }
+  @media (max-width: 62rem) { .wrap { grid-template-columns: 1fr; } }
+</style>

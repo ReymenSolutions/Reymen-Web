@@ -16,6 +16,8 @@ Tamaños relativos: **S** (menos de un día de trabajo), **M** (1–3 días), **
 | P0.6 | Sitemap generado desde una lista única de rutas (puente hacia P1) | S | — |
 
 ## P1 — Arquitectura
+> **Estado:** implementado en el PR de P1 (excepto la generalización de `FlowDiagram`, que se hará con `/automatizaciones` en P2, y el hero en dos actos, que depende de capturas nuevas, P3.1). Ver `05-catalogos.md`.
+
 | # | Trabajo | Tamaño | Depende de |
 |---|---|---|---|
 | P1.1 | Colecciones de contenido + esquemas Zod + validador de evidencia/estado (el build falla si `live` no tiene respaldo) | M | P0.4 |

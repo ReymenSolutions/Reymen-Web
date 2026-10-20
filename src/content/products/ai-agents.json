@@ -1,0 +1,136 @@
+{
+  "id": "ai-agents",
+  "name": "Reymen AI Agents",
+  "order": 3,
+  "model": "module",
+  "publication": "published",
+  "availability": "BETA",
+  "glyph": "agent",
+  "page": {
+    "route": "/ai-agents",
+    "publication": "draft"
+  },
+  "tagline": "Agentes de IA que trabajan con tus reglas y se administran desde Reymen App.",
+  "description": "Hoy: agentes de conversación con Rulebook, control humano y presupuesto. Los agentes especializados y los equipos de agentes están en desarrollo.",
+  "features": [
+    {
+      "id": "rulebook",
+      "title": "Rulebook y base de conocimiento",
+      "text": "Defines cómo habla el agente y qué información puede usar.",
+      "status": "beta",
+      "evidence": {
+        "code": [
+          "ReymenApp docs/crm/INBOX-IA.md"
+        ],
+        "tests": true,
+        "production": false
+      }
+    },
+    {
+      "id": "modos",
+      "title": "Modo por canal: apagado, sugerir o automático",
+      "text": "Tú decides si el agente solo propone respuestas o contesta lo rutinario.",
+      "status": "beta",
+      "evidence": {
+        "code": [
+          "ReymenApp src/lib/agent-mode.ts",
+          "ReymenApp src/lib/ai-auto-reply.ts"
+        ],
+        "tests": true,
+        "production": false
+      }
+    },
+    {
+      "id": "revision",
+      "title": "Respuesta revisada por tu equipo",
+      "text": "Borrador editable que una persona envía; lo delicado pasa a una persona.",
+      "status": "beta",
+      "evidence": {
+        "code": [
+          "ReymenApp docs/crm/INBOX-IA.md"
+        ],
+        "tests": true,
+        "production": false
+      }
+    },
+    {
+      "id": "control",
+      "title": "Presupuesto, tope por plan y auditoría",
+      "text": "Consumo de IA con presupuesto por cliente y registro de lo que el agente hace.",
+      "status": "beta",
+      "evidence": {
+        "code": [
+          "ReymenApp src/lib/ai/budget.ts",
+          "ReymenApp src/lib/agent-cap.ts"
+        ],
+        "tests": true,
+        "production": false
+      }
+    },
+    {
+      "id": "webchat",
+      "title": "Chat web",
+      "text": "Canal propio del sitio del negocio, atendido desde la misma bandeja.",
+      "status": "beta",
+      "evidence": {
+        "code": [
+          "ReymenApp src/app/api/public/chat/route.ts"
+        ],
+        "tests": true,
+        "production": false
+      }
+    },
+    {
+      "id": "whatsapp",
+      "title": "WhatsApp (con Twilio)",
+      "text": "Conexión de WhatsApp con Twilio. En desarrollo; no hay respuestas reales por este canal todavía.",
+      "status": "planned",
+      "evidence": {
+        "code": [
+          "ReymenApp docs/crm/INBOX-CANALES.md (contrato de canal)"
+        ],
+        "tests": false,
+        "production": false
+      }
+    },
+    {
+      "id": "otros-canales",
+      "title": "Instagram, Messenger y correo",
+      "text": "Conectores por canal; requieren credenciales de cada negocio.",
+      "status": "planned",
+      "evidence": {
+        "code": [
+          "ReymenApp docs/crm/INBOX-CANALES.md"
+        ],
+        "tests": false,
+        "production": false
+      }
+    },
+    {
+      "id": "especializados",
+      "title": "Agentes especializados",
+      "text": "Agentes para funciones concretas: ventas, marketing, operaciones, análisis y soporte.",
+      "status": "concept",
+      "evidence": {
+        "code": [],
+        "tests": false,
+        "production": false
+      }
+    },
+    {
+      "id": "equipos",
+      "title": "Equipos de agentes",
+      "text": "Varios agentes colaborando en un proceso, con un supervisor.",
+      "status": "concept",
+      "evidence": {
+        "code": [],
+        "tests": false,
+        "production": false
+      }
+    }
+  ],
+  "related": [
+    "reymen-app"
+  ],
+  "reviewNote": "Confirmar el estado real del agente en producción antes de pasar funciones a live."
+}
