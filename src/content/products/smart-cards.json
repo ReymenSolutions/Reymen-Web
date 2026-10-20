@@ -10,17 +10,58 @@
     "route": "/smart-cards",
     "publication": "published"
   },
-  "tagline": "Tarjetas con enlace público y código QR, conectadas con Reymen App.",
-  "description": "Producto con su propio panel, unido a Reymen App con acceso único y estadísticas.",
+  "tagline": "Tarjetas digitales con NFC y QR, administradas desde Reymen App.",
+  "description": "Tarjetas con perfil digital que se abren al acercar el teléfono o escanear un QR. Las administras, ves sus estadísticas y a tu equipo desde Reymen App.",
   "features": [
     {
-      "id": "qr",
-      "title": "Enlace público y código QR",
-      "text": "Cada tarjeta tiene su dirección pública y su QR.",
+      "id": "nfc-qr",
+      "title": "Se abre con NFC o con QR",
+      "text": "La persona acerca el teléfono a la tarjeta o escanea su código QR, y se abre tu perfil digital. Cada escaneo queda registrado.",
       "status": "live",
       "evidence": {
         "code": [
-          "ReymenApp docs/DOCUMENTACION_TECNICA.md §12 (SMARTCARD_PUBLIC_URL)"
+          "ReymenApp src/lib/smartcard-admin.ts (eventos nfc_scan y qr_scan)",
+          "ReymenApp src/lib/smartcard-overview.ts"
+        ],
+        "tests": true,
+        "production": true
+      }
+    },
+    {
+      "id": "perfil",
+      "title": "Perfil digital editable",
+      "text": "Edita los datos del perfil, su destino y los enlaces desde Reymen App, sin pedir cambios a nadie.",
+      "status": "live",
+      "evidence": {
+        "code": [
+          "ReymenApp src/components/portal/SmartcardProfileDialog.tsx",
+          "ReymenApp src/lib/smartcard-company.ts"
+        ],
+        "tests": true,
+        "production": true
+      }
+    },
+    {
+      "id": "enlaces",
+      "title": "Enlaces con ícono",
+      "text": "Agrega enlaces a WhatsApp, Instagram, Facebook, TikTok, YouTube, LinkedIn, reseñas, teléfono, correo o ubicación, cada uno con su ícono.",
+      "status": "live",
+      "evidence": {
+        "code": [
+          "ReymenApp src/lib/smartcard-link-icons.ts"
+        ],
+        "tests": true,
+        "production": true
+      }
+    },
+    {
+      "id": "tema",
+      "title": "Colores y tema propios",
+      "text": "Ajusta los colores del perfil a tu marca. El editor avisa cuando el contraste dificulta la lectura.",
+      "status": "live",
+      "evidence": {
+        "code": [
+          "ReymenApp src/lib/smartcard-theme.ts"
         ],
         "tests": true,
         "production": true
@@ -28,13 +69,26 @@
     },
     {
       "id": "estadisticas",
-      "title": "Escaneos y clics",
-      "text": "Estadísticas de uso por tarjeta dentro de Reymen App.",
+      "title": "Estadísticas por tipo de evento",
+      "text": "Vistas del perfil, escaneos NFC y QR y clics por enlace (WhatsApp, llamar, correo, mapa, sitio web), por tarjeta.",
       "status": "live",
       "evidence": {
         "code": [
-          "ReymenApp src/lib/smartcard-overview.ts",
-          "ReymenApp docs/smartcard-responsive-validation.md"
+          "ReymenApp src/lib/smartcard-admin.ts",
+          "ReymenApp src/lib/smartcard-overview.ts"
+        ],
+        "tests": true,
+        "production": true
+      }
+    },
+    {
+      "id": "qr-descarga",
+      "title": "Descarga del código QR",
+      "text": "Descarga el QR de cada tarjeta como imagen para usarlo en impresos o pantallas.",
+      "status": "live",
+      "evidence": {
+        "code": [
+          "ReymenApp src/components/portal/SmartcardPanel.tsx"
         ],
         "tests": true,
         "production": true
@@ -61,8 +115,7 @@
       "status": "live",
       "evidence": {
         "code": [
-          "ReymenApp src/lib/smartcard-sso.ts",
-          "ReymenApp docs/DOCUMENTACION_TECNICA.md §12"
+          "ReymenApp src/lib/smartcard-sso.ts"
         ],
         "tests": true,
         "production": true
@@ -85,14 +138,14 @@
   "related": [
     "reymen-app"
   ],
-  "reviewNote": "Disponible según el equipo (confirmado 2026-10-20). Producto en otro repositorio sin acceso: ampliar funciones y capturas con material propio.",
+  "reviewNote": "Disponible según el equipo (confirmado 2026-10-20). Verificado en Reymen App (panel, SSO, estadísticas, tema, enlaces). Sin capturas: requiere Supabase de Smart Cards. No se publica hardware, envío ni impresión.",
   "hero": {
-    "title": "Tarjetas con enlace público y código QR, conectadas con Reymen App",
-    "lede": "Cada tarjeta tiene su dirección pública y su QR. Ves los escaneos y los clics desde Reymen App y administras a tu equipo con un acceso único."
+    "title": "Tu tarjeta digital: acerca el teléfono o escanea el QR",
+    "lede": "Cada tarjeta abre tu perfil con NFC o con código QR. Editas el perfil, ves los escaneos y los clics, y administras a tu equipo desde Reymen App con un acceso único."
   },
   "seo": {
-    "title": "Smart Cards · Tarjetas con enlace público y QR",
-    "description": "Tarjetas con enlace público y código QR, con estadísticas de escaneos y clics y acceso único desde Reymen App.",
+    "title": "Smart Cards · Tarjetas digitales con NFC y QR",
+    "description": "Tarjetas digitales con NFC y código QR: perfil editable, enlaces con ícono, estadísticas por evento y equipo, administrados desde Reymen App.",
     "noindex": false
   }
 }

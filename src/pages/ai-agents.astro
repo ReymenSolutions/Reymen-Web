@@ -30,6 +30,10 @@ const ld = [{ "@context": "https://schema.org", "@type": "SoftwareApplication", 
   <Section id="hoy" tone="white" after="night" labelledby="hoy-title">
     <SectionHead id="hoy-title" title="Hoy: agentes de conversación con control humano" lede="El agente trabaja con tu Rulebook y tu base de conocimiento. Tú eliges, canal por canal, si solo propone respuestas o contesta lo rutinario." />
     <FeatureList items={control} />
+    <div class="shots">
+      <CropShot name="agente-modos" alt="Centro del Agente IA con el modo de cada canal: Apagado, Sugerir o Automático" width={1500} height={900} focus={[58, 38, 1.2]} aspect="16 / 10" label="Reymen App · Agente IA" caption="Eliges el modo canal por canal. Datos de demostración." />
+      <CropShot name="consumo-ia" alt="Pantalla Mi consumo de IA con la capacidad usada del ciclo" width={1500} height={900} focus={[58, 34, 1.2]} aspect="16 / 10" label="Reymen App · Mi consumo de IA" caption="Ves cuánto de tu capacidad incluida llevas usada. Datos de demostración." />
+    </div>
     <p class="side">No necesitas el punto de venta ni Lealtad para usar el agente. La bandeja y el seguimiento usan el CRM de Reymen App, donde también se administra todo.</p>
   </Section>
 
@@ -69,6 +73,8 @@ const ld = [{ "@context": "https://schema.org", "@type": "SoftwareApplication", 
 </Base>
 
 <style>
+  .shots { display: grid; gap: var(--s-5); margin-top: var(--s-7); }
+  @media (min-width: 52rem) { .shots { grid-template-columns: 1fr 1fr; } }
   .side { margin-top: var(--s-5); color: var(--ink-soft); max-width: 60ch; }
   .band { display: flex; align-items: center; justify-content: space-between; gap: var(--s-6); flex-wrap: wrap; }
   .band > div { display: grid; gap: var(--s-3); max-width: 44rem; }

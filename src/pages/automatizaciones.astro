@@ -1,6 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import Section from "../components/Section.astro";
+import CropShot from "../components/CropShot.astro";
 import SectionHead from "../components/SectionHead.astro";
 import PageHero from "../components/PageHero.astro";
 import FlowModel from "../components/FlowModel.astro";
@@ -35,6 +36,9 @@ const model = [
   <Section id="modelo" tone="white" after="night" labelledby="modelo-title">
     <SectionHead id="modelo-title" title="Cómo funciona" lede="Cada automatización sigue los mismos cuatro pasos." />
     <FeatureList items={model} cols={2} />
+    <div class="shot-wrap">
+      <CropShot name="automatizaciones" alt="Pantalla de automatizaciones de Reymen App con la actividad reciente de cada flujo" width={1500} height={900} focus={[58, 48, 1.2]} aspect="16 / 8" label="Reymen App · Automatizaciones" caption="Cada flujo deja registro de lo que hizo o de por qué no actuó. Datos de demostración." />
+    </div>
   </Section>
 
   <Section id="flujos" tone="night" labelledby="flujos-title">
@@ -68,6 +72,7 @@ const model = [
 </Base>
 
 <style>
+  .shot-wrap { margin-top: var(--s-7); }
   .eg { margin: 0; display: grid; gap: var(--s-3); padding: var(--s-5); background: var(--night-2); border: 1px solid var(--night-line); border-radius: var(--r-lg); box-shadow: var(--lift-night); }
   .eg-t { margin: 0; font-weight: 650; font-stretch: 106%; color: var(--on-night); }
   .eg ol { display: grid; gap: 0; }
