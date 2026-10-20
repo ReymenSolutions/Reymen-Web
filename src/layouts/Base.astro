@@ -70,7 +70,7 @@ const ld = {
       const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       if ("IntersectionObserver" in window && !reduce) {
         const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("is-in"); io.unobserve(e.target); } }), { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
-        targets.forEach((el, k) => {
+        targets.forEach((el) => {
           if (el.getBoundingClientRect().top < window.innerHeight * 0.95) return;
           el.setAttribute("data-reveal", ""); el.style.setProperty("--i", String(el.parentElement ? [...el.parentElement.children].indexOf(el) % 4 : 0)); io.observe(el);
         });

@@ -27,3 +27,10 @@ git clone https://github.com/ReymenSolutions/reymen-web /home/emilianorm/reymen-
 sudo /home/emilianorm/reymen-web/deploy/update.sh
 ```
 Producción despliega siempre desde `main`.
+
+## Calidad
+```
+npm run check   # tipos y diagnósticos de Astro (0 errores esperados)
+npm test        # compila, sirve dist/ con los encabezados de deploy/nginx.conf y corre 46 pruebas (Playwright + axe)
+```
+Las pruebas simulan la API pública y la analítica: no necesitan red. Documentación de la evolución del sitio en `docs/evolucion/`.
