@@ -4,7 +4,7 @@
   "order": 4,
   "model": "connected",
   "publication": "published",
-  "availability": "BETA",
+  "availability": "LIVE",
   "glyph": "card",
   "page": {
     "route": "/smart-cards",
@@ -17,27 +17,41 @@
       "id": "qr",
       "title": "Enlace público y código QR",
       "text": "Cada tarjeta tiene su dirección pública y su QR.",
-      "status": "beta",
+      "status": "live",
       "evidence": {
         "code": [
           "ReymenApp docs/DOCUMENTACION_TECNICA.md §12 (SMARTCARD_PUBLIC_URL)"
         ],
         "tests": true,
-        "production": false
+        "production": true
       }
     },
     {
       "id": "estadisticas",
       "title": "Escaneos y clics",
       "text": "Estadísticas de uso por tarjeta dentro de Reymen App.",
-      "status": "beta",
+      "status": "live",
       "evidence": {
         "code": [
           "ReymenApp src/lib/smartcard-overview.ts",
           "ReymenApp docs/smartcard-responsive-validation.md"
         ],
         "tests": true,
-        "production": false
+        "production": true
+      }
+    },
+    {
+      "id": "equipo",
+      "title": "Equipo e invitaciones",
+      "text": "Invita a integrantes de tu equipo a administrar las tarjetas del negocio, con límite según tu plan.",
+      "status": "live",
+      "evidence": {
+        "code": [
+          "ReymenApp src/lib/smartcard-link.ts",
+          "ReymenApp docs/DOCUMENTACION_TECNICA.md §12"
+        ],
+        "tests": true,
+        "production": true
       }
     },
     {
@@ -57,5 +71,5 @@
   "related": [
     "reymen-app"
   ],
-  "reviewNote": "Producto en otro repositorio (sin acceso). Confirmar disponibilidad real y funciones (NFC, tipos de tarjeta) antes de ampliar."
+  "reviewNote": "Disponible según el equipo (confirmado 2026-10-20). Producto en otro repositorio sin acceso: ampliar funciones y capturas con material propio."
 }
