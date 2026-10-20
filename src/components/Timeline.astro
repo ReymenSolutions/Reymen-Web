@@ -1,0 +1,43 @@
+---
+// Proceso en secuencia (esto sí es una secuencia, por eso va numerado). La línea se dibuja una vez al entrar en pantalla.
+interface Props { items: { h: string; p: string }[]; tone?: "night" | "paper" }
+const { items, tone = "paper" } = Astro.props;
+---
+<ol class:list={["timeline", tone]} data-timeline>
+  {items.map((it, i) => (
+    <li style={`--i:${i}`}>
+      <span class="n nums" aria-hidden="true">{i + 1}</span>
+      <div><h3>{it.h}</h3><p>{it.p}</p></div>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .timeline { position: relative; display: grid; grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr)); gap: var(--s-6); padding-top: var(--s-7); }
+  .timeline::before { content: ""; position: absolute; left: 0; right: 0; top: 1rem; height: 2px; background: var(--mist); }
+  .timeline::after { content: ""; position: absolute; left: 0; right: 0; top: 1rem; height: 2px; background: var(--blue); transform-origin: left; transform: scaleX(0); transition: transform 1400ms var(--ease) 200ms; }
+  .timeline.night::before { background: var(--night-line); }
+  .timeline.night::after { background: var(--electric); }
+  .timeline.in::after { transform: scaleX(1); }
+  li { position: relative; display: grid; gap: var(--s-3); align-content: start; }
+  .n { position: absolute; top: calc(-1 * var(--s-7) + 0.2rem); left: 0; width: 1.6rem; height: 1.6rem; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 0.82rem; background: var(--paper); border: 2px solid var(--blue); color: var(--blue-ink); z-index: 1; }
+  .night .n { background: var(--night); border-color: var(--electric); color: var(--electric-soft); }
+  h3 { font-size: var(--step-0); }
+  p { color: var(--ink-soft); font-size: 0.97rem; }
+  .night p { color: var(--on-night-soft); }
+  @media (max-width: 48rem) {
+    .timeline { grid-template-columns: 1fr; padding-top: 0; padding-left: var(--s-7); gap: var(--s-6); }
+    .timeline::before, .timeline::after { left: 0.8rem; right: auto; top: 0; bottom: 0; width: 2px; height: auto; }
+    .timeline::after { transform-origin: top; transform: scaleY(0); }
+    .timeline.in::after { transform: scaleY(1); }
+    .n { top: 0; left: calc(-1 * var(--s-7)); }
+  }
+  @media (prefers-reduced-motion: reduce) { .timeline::after { transform: none; transition: none; } }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-timeline]").forEach((el) => {
+    const io = new IntersectionObserver((e) => { if (e[0].isIntersecting) { el.classList.add("in"); io.disconnect(); } }, { threshold: 0.4 });
+    io.observe(el);
+  });
+</script>

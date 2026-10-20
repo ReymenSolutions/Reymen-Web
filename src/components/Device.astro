@@ -1,0 +1,19 @@
+---
+// Marco de tableta con captura real (Reymen POS). El bisel y la sombra dan profundidad; el contenido es la pantalla real.
+interface Props { name: string; alt: string; width: number; height: number; eager?: boolean; class?: string; label?: string; crop?: string }
+const { name, alt, width, height, eager = false, class: extra = "", label, crop } = Astro.props;
+---
+<figure class:list={["device", extra]}>
+  <div class="bezel">
+    <span class="cam" aria-hidden="true"></span>
+    <img src={`/capturas/${name}.webp`} alt={alt} width={width} height={height} loading={eager ? "eager" : "lazy"} fetchpriority={eager ? "high" : "auto"} decoding="async" style={crop ? `aspect-ratio:${crop};object-fit:cover;object-position:top left` : undefined} />
+  </div>
+  {label && <figcaption>{label}</figcaption>}
+</figure>
+
+<style>
+  .bezel { position: relative; padding: clamp(0.5rem, 1.4cqi, 0.9rem); background: #0a1233; border-radius: clamp(14px, 2.4cqi, 26px); box-shadow: 0 0 0 1.5px #2a3877, var(--lift-night); }
+  .cam { position: absolute; top: 50%; left: clamp(0.18rem, 0.5cqi, 0.35rem); width: 0.35rem; height: 0.35rem; border-radius: 50%; background: #1b2757; transform: translateY(-50%); }
+  img { width: 100%; height: auto; border-radius: clamp(6px, 1cqi, 12px); }
+  figcaption { margin-top: var(--s-3); font-size: var(--step--1); color: var(--on-night-soft); }
+</style>

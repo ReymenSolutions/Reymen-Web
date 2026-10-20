@@ -7,8 +7,8 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import ChatWidget from "../components/ChatWidget.astro";
 
-interface Props { title: string; description: string; path?: string; noindex?: boolean; chat?: boolean }
-const { title, description, path = "", noindex = false, chat = true } = Astro.props;
+interface Props { title: string; description: string; path?: string; noindex?: boolean; chat?: boolean; darkHero?: boolean }
+const { title, description, path = "", noindex = false, chat = true, darkHero = false } = Astro.props;
 const canonical = `${SITE.url}${path}`;
 const ld = {
   "@context": "https://schema.org",
@@ -34,7 +34,7 @@ const ld = {
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:locale" content="es_MX" />
-    <meta name="theme-color" content="#f5f7fc" />
+    <meta name="theme-color" content={darkHero ? "#060e2b" : "#f5f7fc"} />
     <link rel="preload" href={fontLatin} as="font" type="font/woff2" crossorigin />
     <link rel="icon" type="image/png" sizes="192x192" href="/icon-192-v5.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon-v5.png" />
@@ -59,7 +59,7 @@ const ld = {
   </head>
   <body>
     <a class="skip" href="#main">Saltar al contenido</a>
-    <Header />
+    <Header dark={darkHero} />
     <main id="main"><slot /></main>
     <Footer />
     {chat && <ChatWidget />}

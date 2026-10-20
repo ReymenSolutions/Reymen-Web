@@ -15,6 +15,12 @@
   --night-line: #1d2a57;
   --on-night: #e9eefc;
   --on-night-soft: #aab7dc;
+  --night-2: #0b1646;      /* paneles sobre noche */
+  --glass: rgb(255 255 255 / 0.05);
+  --glass-line: rgb(255 255 255 / 0.13);
+  --electric: #3d63ff;     /* azul eléctrico para acentos sobre noche */
+  --electric-soft: #8ea6ff;
+  --bloom: rgb(37 78 255 / 0.42); /* la luz del logo: la fuente de luz detrás del producto */
   --ember: #ff6a13;        /* operación: POS, inventario, lealtad */
   --ember-ink: #b34100;    /* naranja para texto sobre paper (≥ 4.5:1) */
   --ok: #0f7a4f;
@@ -49,6 +55,7 @@
   --r-lg: 16px;    /* ventanas de producto */
 
   /* Profundidad: solo para ventanas de producto */
+  --lift-night: 0 1px 0 rgb(255 255 255 / 0.08) inset, 0 30px 70px -20px rgb(0 0 0 / 0.65), 0 0 90px -30px rgb(61 99 255 / 0.55);
   --lift: 0 1px 2px rgb(10 22 51 / 0.06), 0 12px 32px -8px rgb(10 22 51 / 0.18), 0 40px 80px -24px rgb(27 71 245 / 0.22);
 
   /* Movimiento */

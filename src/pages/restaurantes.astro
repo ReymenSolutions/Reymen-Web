@@ -1,12 +1,25 @@
 ---
 import Base from "../layouts/Base.astro";
 import Section from "../components/Section.astro";
-import CtaGroup from "../components/CtaGroup.astro";
-import Window from "../components/Window.astro";
+import Button from "../components/Button.astro";
+import Device from "../components/Device.astro";
+import StorySteps from "../components/StorySteps.astro";
 import FeatureList from "../components/FeatureList.astro";
 import Faq from "../components/Faq.astro";
 import ContactSection from "../components/ContactSection.astro";
+import { SITE } from "../config";
 
+const demo = SITE.calendlyUrl || "#contacto";
+
+const story = [
+  { when: "Antes de abrir", h: "Tus insumos y tus costos, al día", p: "Revisas existencias y lo que está por agotarse. Cada platillo descuenta sus insumos al venderse.", img: "inventario", alt: "Inventario con alertas de stock bajo y costos por insumo", w: 1500, h2: 900 },
+  { when: "Llegan los clientes", h: "Mesas y cuentas abiertas", p: "Ves qué mesas están libres, cuáles llevan tiempo y cuánto suma cada cuenta.", img: "pos-mesas", alt: "Reymen POS con el plano de mesas, varias ocupadas con su total y estado de cocina", w: 1600, h2: 1000 },
+  { when: "Se toma la orden", h: "La orden, por mesa y por tiempos", p: "Menú por categorías, variantes y extras. Agregas al tiempo que corresponde y envías a cocina.", img: "pos-orden", alt: "Reymen POS con la cuenta de una mesa y el menú por categorías", w: 1600, h2: 1000 },
+  { when: "En cocina", h: "Cocina y barra, cada quien en su pantalla", p: "Cada producto llega a su estación, con el tiempo transcurrido y aviso cuando hay retraso.", img: "pos-cocina", alt: "Pantalla de cocina con tickets por mesa divididos entre cocina, barra y postres", w: 1600, h2: 1000 },
+  { when: "Se cobra", h: "Cobro con propina, cambio y cuentas divididas", p: "Efectivo, tarjeta o transferencia, propina sugerida y división de cuenta. Si se cae internet, sigues cobrando.", img: "pos-cobro", alt: "Cobro en efectivo con propina del 10 por ciento, monto recibido y cambio", w: 1300, h2: 1182, pos: "50% 45%" },
+  { when: "Mientras tanto, en WhatsApp", h: "El agente contesta tus mensajes", p: "Horarios, menú y reservas contestados al instante. Lo delicado pasa a una persona.", img: "inbox", alt: "Bandeja de mensajes con una conversación respondida por el Agente IA", w: 1500, h2: 900 },
+  { when: "Después", h: "Clientes que regresan", p: "Sellos y recompensas en la tarjeta del cliente. Ves quién regresa, cuánto gasta y de qué zonas vienen.", img: "lealtad", alt: "Panel de lealtad con clientes inscritos, visitas, importes y recompensas", w: 1500, h2: 900 },
+];
 const items = [
   { h: "Punto de venta con mesas y cocina", p: "Pantalla de cocina, cobro dividido, propinas y corte de caja. Rápido en tableta o celular, y sigue sin internet." },
   { h: "Inventario con recetas", p: "Cada platillo descuenta sus insumos. Ves el costo por platillo, lo agotado y lo que está por agotarse." },
@@ -23,32 +36,38 @@ const faq = [
   { q: "¿Cómo funciona la lealtad?", a: "Tus clientes guardan una tarjeta digital en su celular, acumulan sellos y canjean recompensas. Tú ves quién regresa y cuánto gasta." },
 ];
 ---
-<Base title="Reymen para restaurantes y cafeterías · Punto de venta, inventario y lealtad" description="Punto de venta con mesas y cocina, inventario con recetas, programa de lealtad y asistente de WhatsApp para restaurantes y cafeterías en México." path="/restaurantes">
-  <section class="hero tone-paper" aria-labelledby="r-title">
+<Base darkHero title="Reymen para restaurantes y cafeterías · Punto de venta, inventario y lealtad" description="Punto de venta con mesas y cocina, inventario con recetas, programa de lealtad y asistente de WhatsApp para restaurantes y cafeterías en México." path="/restaurantes">
+  <section class="hero tone-night" aria-labelledby="r-title">
     <div class="container hero-grid">
       <div class="copy">
         <h1 id="r-title">Tu cocina, tu caja y tus clientes en el mismo sistema<span class="dot-ember">.</span></h1>
         <p class="lede">Cobra rápido, controla tus insumos sin hojas de cálculo y logra que tus clientes regresen, con un asistente que contesta tu WhatsApp.</p>
-        <CtaGroup />
+        <div class="cta-row">
+          <Button href={demo} size="lg" event="CTA Demo" external={!!SITE.calendlyUrl}>Agendar demo</Button>
+          <Button href="#turno" variant="ghost" size="lg">Ver un turno completo</Button>
+        </div>
       </div>
-      <Window name="inventario" label="Inventario" alt="Inventario de un restaurante con alertas de stock bajo y costos por insumo" width={1500} height={900} eager />
+      <div class="devices">
+        <Device name="pos-mesas" alt="Reymen POS con el plano de mesas, varias ocupadas con su total y estado de cocina" width={1600} height={1000} eager class="d-main" />
+        <Device name="pos-cocina" alt="Pantalla de cocina del POS con tickets por mesa" width={1600} height={1000} crop="16 / 8.6" class="d-side" />
+      </div>
     </div>
   </section>
 
+  <Section id="turno" labelledby="turno-title">
+    <div class="head">
+      <h2 id="turno-title">Un turno en tu restaurante<span class="dot-ember">.</span></h2>
+      <p class="lede">Así se mueve un día de trabajo con Reymen, desde antes de abrir hasta la última visita del día.</p>
+    </div>
+    <StorySteps items={story} />
+  </Section>
+
   <Section tone="white" labelledby="r-resuelve">
-    <h2 id="r-resuelve" class="sec-title">Lo que resuelve en tu restaurante<span class="dot-ember">.</span></h2>
+    <div class="head"><h2 id="r-resuelve">Lo que resuelve en tu restaurante<span class="dot-ember">.</span></h2></div>
     <FeatureList items={items} />
   </Section>
 
-  <Section labelledby="r-op">
-    <h2 id="r-op" class="sec-title">Así se ve en la operación<span class="dot">.</span></h2>
-    <div class="pair">
-      <div class="item"><Window name="lealtad" label="Lealtad" alt="Panel de lealtad con clientes inscritos, visitas y recompensas" width={1500} height={900} /><p>Quién regresa, cuánto gasta y cuántas recompensas hay por canjear.</p></div>
-      <div class="item"><Window name="inbox" label="Inbox" alt="Bandeja de WhatsApp con respuestas del Agente IA" width={1500} height={900} /><p>Los mensajes de tus clientes en un lugar, con el agente respondiendo lo sencillo.</p></div>
-    </div>
-  </Section>
-
-  <Section tone="white" labelledby="r-faq">
+  <Section labelledby="r-faq">
     <div class="faq-grid">
       <h2 id="r-faq">Preguntas de restaurantes<span class="dot">.</span></h2>
       <Faq items={faq} />
@@ -59,13 +78,27 @@ const faq = [
 </Base>
 
 <style>
-  .hero { padding-block: clamp(2.5rem, 2rem + 4vw, 6rem) var(--section); }
-  .hero-grid { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: clamp(2rem, 4vw, 5rem); align-items: center; }
+  .hero { position: relative; overflow: clip; padding-block: calc(4.25rem + clamp(2rem, 1rem + 5vw, 5rem)) clamp(3rem, 2rem + 4vw, 6rem); background: var(--night); color: var(--on-night); }
+  .hero::before { content: ""; position: absolute; inset: -10% -5% 0 35%; background: radial-gradient(closest-side at 55% 50%, rgb(255 106 19 / 0.22), rgb(37 78 255 / 0.28) 45%, transparent 75%); pointer-events: none; }
+  .hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(2rem, 4vw, 4.5rem); align-items: center; }
   .copy { display: grid; gap: var(--s-6); justify-items: start; }
-  .sec-title { margin-bottom: var(--s-7); max-width: 44rem; }
-  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-7); }
-  .item p { margin-top: var(--s-3); color: var(--ink-soft); font-size: 0.97rem; }
+  .hero h1 { color: var(--white); font-size: clamp(2rem, 1.3rem + 2vw, 3.15rem); font-stretch: 106%; letter-spacing: -0.032em; }
+  .cta-row { display: flex; flex-wrap: wrap; gap: var(--s-3); }
+  .devices { position: relative; container-type: inline-size; padding-bottom: 14%; margin-right: calc(-1 * var(--gutter)); }
+  .devices :global(.d-main) { width: 100%; transform: perspective(1600px) rotateY(-6deg) rotateX(1.5deg); transform-origin: 0 60%; }
+  .devices :global(.d-side) { position: absolute; left: -6%; bottom: 0; width: 52%; transform: rotate(-2deg); z-index: 2; }
+  .head { display: grid; gap: var(--s-4); margin-bottom: var(--s-7); max-width: 52rem; }
   .faq-grid { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: var(--s-8); align-items: start; }
   .faq-grid h2 { position: sticky; top: 6rem; }
-  @media (max-width: 62rem) { .hero-grid, .pair, .faq-grid { grid-template-columns: 1fr; } .faq-grid h2 { position: static; } }
+  @media (max-width: 62rem) {
+    .hero-grid, .faq-grid { grid-template-columns: 1fr; }
+    .faq-grid h2 { position: static; }
+    .devices { margin-right: 0; }
+    .devices :global(.d-main) { transform: none; }
+  }
+  @media (max-width: 36rem) {
+    .cta-row { flex-direction: column; align-items: stretch; width: 100%; }
+    .hero { padding-top: calc(4.25rem + 1.5rem); }
+    .devices :global(.d-side) { width: 56%; left: 0; }
+  }
 </style>

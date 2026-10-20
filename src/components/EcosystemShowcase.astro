@@ -1,0 +1,58 @@
+---
+// Composición en capas del ecosistema Reymen para restaurantes: el POS al frente y Reymen App detrás.
+// Con el puntero, las capas se separan un poco (profundidad); sin hover o con movimiento reducido, se quedan quietas.
+import Device from "./Device.astro";
+import Button from "./Button.astro";
+---
+<div class="eco">
+  <div class="copy">
+    <h2 id="eco-title">Reymen para restaurantes<span class="dot-ember">.</span></h2>
+    <p class="lede">Nuestro primer ecosistema ya funciona en cafeterías y restaurantes: un punto de venta que no se detiene y una plataforma que conecta cocina, inventario, clientes y mensajes.</p>
+    <dl class="facts">
+      <div><dt>Reymen POS</dt><dd>Mesas, cocina, cobro dividido y corte de caja. Sigue cobrando sin internet.</dd></div>
+      <div><dt>Reymen App</dt><dd>Inventario con recetas, lealtad, CRM e Inbox con Agente IA, en un solo lugar.</dd></div>
+    </dl>
+    <Button href="/restaurantes" size="lg" event="Ver Ecosistema">Conocer el ecosistema</Button>
+  </div>
+
+  <div class="collage" data-collage>
+    <figure class="layer app-a">
+      <span class="chip">Reymen App · Inventario</span>
+      <div class="win"><img src="/capturas/inventario.webp" alt="Inventario de Reymen App con alertas de stock bajo y costos por insumo" width="1500" height="900" loading="lazy" decoding="async" /></div>
+    </figure>
+    <figure class="layer app-b">
+      <span class="chip">Reymen App · Lealtad</span>
+      <div class="win"><img src="/capturas/lealtad.webp" alt="Panel de lealtad de Reymen App con clientes, visitas y recompensas" width="1500" height="900" loading="lazy" decoding="async" /></div>
+    </figure>
+    <div class="layer pos">
+      <span class="chip pos-chip">Reymen POS</span>
+      <Device name="pos-orden" alt="Reymen POS con la cuenta de una mesa y el menú por categorías" width={1600} height={1000} />
+    </div>
+  </div>
+</div>
+
+<style>
+  .eco { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(2rem, 5vw, 6rem); align-items: center; }
+  .copy { display: grid; gap: var(--s-5); justify-items: start; }
+  .facts { display: grid; gap: var(--s-4); }
+  .facts div { display: grid; gap: 0.15rem; padding-left: var(--s-4); border-left: 2px solid var(--mist); }
+  .facts dt { font-weight: 700; font-stretch: 108%; }
+  .facts dd { margin: 0; color: var(--ink-soft); max-width: 40ch; }
+  .collage { position: relative; container-type: inline-size; aspect-ratio: 1 / 0.92; }
+  .layer { position: absolute; margin: 0; transition: transform 700ms var(--ease); will-change: transform; }
+  .win { border-radius: 12px; overflow: hidden; background: var(--white); border: 1px solid var(--mist); box-shadow: var(--lift); }
+  .win img { width: 100%; height: auto; }
+  .chip { position: absolute; z-index: 3; left: 0.7rem; top: -0.8rem; background: var(--ink); color: var(--white); font-size: var(--step--1); font-weight: 650; font-stretch: 106%; padding: 0.25rem 0.7rem; border-radius: 999px; box-shadow: 0 6px 16px -6px rgb(10 22 51 / 0.6); }
+  .pos-chip { background: var(--ember); color: var(--ink); left: 1.1rem; top: -0.9rem; }
+  .app-a { left: 0; top: 6%; width: 62%; transform: rotate(-3deg); z-index: 1; }
+  .app-b { right: 0; top: 0; width: 56%; transform: rotate(2.5deg); z-index: 0; }
+  .pos { right: 3%; bottom: 0; width: 76%; z-index: 2; }
+  @media (hover: hover) and (pointer: fine) {
+    .collage:hover .app-a { transform: translate(-3%, -2%) rotate(-4deg); }
+    .collage:hover .app-b { transform: translate(3%, -3%) rotate(3.5deg); }
+    .collage:hover .pos { transform: translate(1.5%, 2%); }
+  }
+  @media (max-width: 62rem) { .eco { grid-template-columns: 1fr; } }
+  @media (max-width: 36rem) { .collage { aspect-ratio: 1 / 1.05; } .app-b { display: none; } .app-a { width: 78%; } .pos { width: 92%; right: 0; } }
+  @media (prefers-reduced-motion: reduce) { .layer { transition: none; } }
+</style>

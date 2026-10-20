@@ -1,6 +1,6 @@
 ---
 // Ventana de producto: captura real de la plataforma. La etiqueta dice qué pantalla es; los datos son de demostración.
-interface Props { name: "lealtad" | "inbox" | "inventario" | "pipeline"; alt: string; label: string; width: number; height: number; eager?: boolean; class?: string }
+interface Props { name: string; alt: string; label: string; width: number; height: number; eager?: boolean; class?: string }
 const { name, alt, label, width, height, eager = false, class: extra = "" } = Astro.props;
 ---
 <figure class:list={["window", extra]}>

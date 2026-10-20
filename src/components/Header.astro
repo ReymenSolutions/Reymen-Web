@@ -2,15 +2,17 @@
 import { SITE } from "../config";
 import Wordmark from "./Wordmark.astro";
 import Button from "./Button.astro";
+interface Props { dark?: boolean }
+const { dark = false } = Astro.props;
 const links = [
-  { href: "/#productos", label: "Productos" },
-  { href: "/#soluciones", label: "Soluciones" },
+  { href: "/restaurantes", label: "Restaurantes" },
   { href: "/#servicios", label: "Servicios" },
+  { href: "/#soluciones", label: "Soluciones" },
   { href: "/#seguridad", label: "Seguridad" },
   { href: "/#preguntas", label: "Preguntas" },
 ];
 ---
-<header class="site-header" data-header>
+<header class="site-header" data-header data-dark={dark ? "true" : "false"}>
   <div class="container bar">
     <Wordmark />
     <nav id="site-nav" class="nav" aria-label="Principal" data-nav>
@@ -32,6 +34,13 @@ const links = [
 <style>
   .site-header { position: sticky; top: 0; z-index: 40; background: color-mix(in srgb, var(--paper) 86%, transparent); backdrop-filter: saturate(1.4) blur(14px); border-bottom: 1px solid transparent; transition: border-color var(--t-base) var(--ease); }
   .site-header[data-scrolled="true"] { border-bottom-color: var(--mist); }
+  /* Sobre un hero oscuro: transparente y con texto claro hasta que se hace scroll */
+  .site-header[data-dark="true"] { margin-bottom: -4.25rem; }
+  .site-header[data-dark="true"]:not([data-scrolled="true"]) { background: transparent; backdrop-filter: none; color: var(--on-night); }
+  .site-header[data-dark="true"]:not([data-scrolled="true"]) .nav a { color: var(--on-night-soft); }
+  .site-header[data-dark="true"]:not([data-scrolled="true"]) .nav a:hover { color: var(--white); background: rgb(255 255 255 / 0.08); }
+  .site-header[data-dark="true"]:not([data-scrolled="true"]) .nav .enter a { color: var(--electric-soft); }
+  .site-header[data-dark="true"]:not([data-scrolled="true"]) .menu { border-color: var(--glass-line); color: var(--on-night); }
   .bar { display: flex; align-items: center; gap: var(--s-6); height: 4.25rem; }
   .nav { margin-inline: auto; }
   .nav ul { display: flex; gap: var(--s-1); align-items: center; }
@@ -43,7 +52,9 @@ const links = [
   .menu { display: none; width: 2.75rem; height: 2.75rem; place-items: center; background: none; border: 1.5px solid var(--mist); border-radius: var(--r-md); cursor: pointer; }
   @media (max-width: 62rem) {
     .menu { display: grid; }
-    .nav { display: none; position: absolute; inset: 4.25rem 0 auto 0; background: var(--paper); border-bottom: 1px solid var(--mist); padding: var(--s-3) var(--gutter) var(--s-5); margin: 0; }
+    .nav { display: none; position: absolute; inset: 4.25rem 0 auto 0; background: var(--paper); color: var(--ink); border-bottom: 1px solid var(--mist); padding: var(--s-3) var(--gutter) var(--s-5); margin: 0; }
+    .site-header[data-dark="true"]:not([data-scrolled="true"]) .nav[data-open="true"] { background: var(--night); border-bottom-color: var(--night-line); }
+    .site-header[data-dark="true"]:not([data-scrolled="true"]) .nav[data-open="true"] a { color: var(--on-night); border-bottom-color: var(--night-line); }
     .nav[data-open="true"] { display: block; }
     .nav ul { flex-direction: column; align-items: stretch; gap: 0; }
     .nav a { padding: 0.95rem 0.25rem; font-size: 1.05rem; border-bottom: 1px solid var(--mist); border-radius: 0; }

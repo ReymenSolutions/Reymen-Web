@@ -24,13 +24,13 @@
 /* El punto de Reymen: cierre de titulares en azul de marca. Es el sello de la identidad, no un énfasis. */
 .dot { color: var(--blue); }
 .dot-ember { color: var(--ember); }
-.tone-night .dot { color: #5b7cff; }
+.tone-night .dot, .on-night .dot { color: var(--electric); }
 
 /* Foco visible en todo lo interactivo (el contorno nunca se quita sin reemplazo) */
 :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
   outline: 3px solid var(--blue); outline-offset: 3px; border-radius: 4px;
 }
-.tone-night :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible { outline-color: #8ea6ff; }
+.tone-night :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible, .on-night :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible { outline-color: #8ea6ff; }
 
 /* Utilidades */
 .container { width: min(var(--max), 100% - 2 * var(--gutter)); margin-inline: auto; }
@@ -39,7 +39,7 @@
 .skip:focus { top: var(--s-3); }
 .nums { font-variant-numeric: tabular-nums; }
 .lede { font-size: var(--step-1); line-height: 1.5; color: var(--ink-soft); max-width: 46ch; }
-.tone-night .lede { color: var(--on-night-soft); }
+.tone-night .lede, .on-night .lede { color: var(--on-night-soft); }
 
 /* Movimiento: todo lo decorativo se apaga si la persona lo pide */
 @media (prefers-reduced-motion: reduce) {
