@@ -18,19 +18,20 @@ export const evidence = z.object({
   production: z.boolean().default(false),
 });
 
-export const feature = z
-  .object({ id: z.string(), title: z.string().min(2), text: z.string().min(2), status: featureStatus, evidence: evidence.default({ code: [], tests: false, production: false }) })
-  .superRefine((f, ctx) => {
-    if (f.status === "live" && !(f.evidence.code.length > 0 && f.evidence.production)) {
-      ctx.addIssue({ code: "custom", message: `«${f.id}»: una función \`live\` necesita evidence.code y evidence.production: true` });
-    }
-    if (f.status === "beta" && f.evidence.code.length === 0) {
-      ctx.addIssue({ code: "custom", message: `«${f.id}»: una función \`beta\` necesita evidence.code` });
-    }
-    if ((f.status === "planned" || f.status === "concept") && f.evidence.production) {
-      ctx.addIssue({ code: "custom", message: `«${f.id}»: \`${f.status}\` no puede tener production: true (si ya opera, cambia su estado)` });
-    }
-  });
+const featureBase = z.object({ id: z.string(), title: z.string().min(2), text: z.string().min(2), status: featureStatus, group: z.string().optional(), evidence: evidence.default({ code: [], tests: false, production: false }) });
+/** La regla de evidencia, común a funciones, flujos y controles. */
+function refineEvidence(f: z.infer<typeof featureBase>, ctx: z.RefinementCtx) {
+  if (f.status === "live" && !(f.evidence.code.length > 0 && f.evidence.production)) {
+    ctx.addIssue({ code: "custom", message: `«${f.id}»: una función \`live\` necesita evidence.code y evidence.production: true` });
+  }
+  if (f.status === "beta" && f.evidence.code.length === 0) {
+    ctx.addIssue({ code: "custom", message: `«${f.id}»: una función \`beta\` necesita evidence.code` });
+  }
+  if ((f.status === "planned" || f.status === "concept") && f.evidence.production) {
+    ctx.addIssue({ code: "custom", message: `«${f.id}»: \`${f.status}\` no puede tener production: true (si ya opera, cambia su estado)` });
+  }
+}
+export const feature = featureBase.superRefine(refineEvidence);
 
 const cta = z.object({ label: z.string(), href: z.string() });
 const seo = z.object({ title: z.string().max(70), description: z.string().max(170), noindex: z.boolean().default(false) });
@@ -61,6 +62,10 @@ export const product = z
     features: z.array(feature),
     related: z.array(z.string()).default([]),
     glyph: z.enum(["agent", "automation", "software", "restaurant", "clinic", "property", "app", "pos", "card"]).default("software"),
+    /** Contenido de la página propia del producto (cuando la tiene). */
+    hero: z.object({ title: z.string(), lede: z.string() }).optional(),
+    seo: seo.optional(),
+    faq: z.array(z.object({ q: z.string(), a: z.string() })).default([]),
     /** Nota interna para el equipo (no se muestra). */
     reviewNote: z.string().optional(),
   })
@@ -103,7 +108,7 @@ export const vertical = z
   });
 
 export const capability = z.object({ id: z.string(), order: z.number(), title: z.string(), text: z.string(), glyph: z.enum(["agent", "automation", "software"]), href: z.string() });
-export const service = z.object({ id: z.string(), order: z.number(), title: z.string(), text: z.string() });
+export const service = z.object({ id: z.string(), order: z.number(), title: z.string(), text: z.string(), when: z.string().optional() });
 
 export const home = z.object({
   hero: z.object({ title: z.string(), lede: z.string(), tagline: z.string() }),
@@ -111,3 +116,32 @@ export const home = z.object({
   trust: z.array(z.object({ h: z.string(), p: z.string(), icon: z.enum(["layers", "archive", "shield"]) })),
   faq: z.array(z.object({ q: z.string(), a: z.string() })),
 });
+
+/** Catálogo comercial de agentes: una categoría con sus agentes, cada uno con su estado real. */
+export const agentCategory = z.object({ id: z.string(), order: z.number(), title: z.string(), text: z.string(), items: z.array(feature) });
+
+/** Flujo de automatización: Evento → Condición → Acción → Resultado, con su estado y respaldo. */
+export const automationFlow = featureBase
+  .extend({ order: z.number(), audience: z.enum(["clientes", "equipo"]), event: z.string(), condition: z.string(), action: z.string(), result: z.string(), requires: z.string() })
+  .superRefine(refineEvidence);
+
+/** Página de capacidad o de empresa (automatizaciones, servicios, seguridad): contenido propio y navegación. */
+export const landing = z
+  .object({
+    id: z.string(),
+    route: z.string().startsWith("/"),
+    publication,
+    availability: availability.optional(),
+    nav: z.object({ placement: z.enum(["top", "capacidades"]), label: z.string(), order: z.number(), text: z.string().optional() }).optional(),
+    seo,
+    hero: z.object({ title: z.string(), lede: z.string() }),
+    cta: z.object({ primary: cta, secondary: cta.optional() }),
+    groups: z.array(z.object({ id: z.string(), title: z.string(), text: z.string().optional() })).default([]),
+    features: z.array(feature).default([]),
+    steps: z.array(z.object({ h: z.string(), p: z.string() })).default([]),
+    notes: z.array(z.string()).default([]),
+    faq: z.array(z.object({ q: z.string(), a: z.string() })).default([]),
+  })
+  .superRefine((l, ctx) => {
+    if (l.publication === "published" && l.availability === "DRAFT") ctx.addIssue({ code: "custom", message: `«${l.id}» está publicada pero su disponibilidad es DRAFT` });
+  });

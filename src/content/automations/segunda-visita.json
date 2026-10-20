@@ -1,0 +1,20 @@
+{
+  "id": "segunda-visita",
+  "title": "Segunda visita",
+  "text": "Invita a volver a quien vino una sola vez y no regresó.",
+  "status": "beta",
+  "evidence": {
+    "code": [
+      "ReymenApp src/lib/automation/blueprints/second-visit.ts"
+    ],
+    "tests": true,
+    "production": false
+  },
+  "order": 2,
+  "audience": "clientes",
+  "event": "Un cliente vino una sola vez y pasan los días que definiste sin que regrese",
+  "condition": "Tiene consentimiento, sigue dentro del plazo máximo y no se le escribió antes",
+  "action": "Le invita a volver",
+  "result": "Un mensaje por cliente, que se puede medir contra un grupo de control",
+  "requires": "Reymen POS"
+}

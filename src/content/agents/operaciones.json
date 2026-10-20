@@ -1,0 +1,52 @@
+{
+  "id": "operaciones",
+  "order": 3,
+  "title": "Operaciones",
+  "text": "Dar seguimiento a tareas y procesos del negocio.",
+  "items": [
+    {
+      "id": "tareas",
+      "title": "Seguimiento de tareas",
+      "text": "Recuerda pendientes y da seguimiento a quien corresponde.",
+      "status": "concept",
+      "evidence": {
+        "code": [],
+        "tests": false,
+        "production": false
+      }
+    },
+    {
+      "id": "procesamiento",
+      "title": "Procesamiento de información",
+      "text": "Ordena y prepara datos que hoy se capturan a mano.",
+      "status": "concept",
+      "evidence": {
+        "code": [],
+        "tests": false,
+        "production": false
+      }
+    },
+    {
+      "id": "alertas",
+      "title": "Alertas operativas",
+      "text": "Hoy las alertas operativas son automatizaciones (ver Automatizaciones); un agente podría explicarlas y priorizarlas.",
+      "status": "concept",
+      "evidence": {
+        "code": [],
+        "tests": false,
+        "production": false
+      }
+    },
+    {
+      "id": "coordinacion",
+      "title": "Coordinación de flujos",
+      "text": "Conecta varios pasos de un proceso.",
+      "status": "concept",
+      "evidence": {
+        "code": [],
+        "tests": false,
+        "production": false
+      }
+    }
+  ]
+}

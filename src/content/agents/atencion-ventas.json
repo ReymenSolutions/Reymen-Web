@@ -1,0 +1,47 @@
+{
+  "id": "atencion-ventas",
+  "order": 1,
+  "title": "Atención y ventas",
+  "text": "Responder, calificar y dar seguimiento a prospectos y clientes.",
+  "items": [
+    {
+      "id": "prospectos",
+      "title": "Atención de prospectos y clientes",
+      "text": "Responde preguntas frecuentes con tu información y pasa a una persona lo delicado.",
+      "status": "beta",
+      "evidence": {
+        "code": [
+          "ReymenApp docs/crm/INBOX-IA.md",
+          "ReymenApp src/lib/ai-auto-reply.ts"
+        ],
+        "tests": true,
+        "production": false
+      }
+    },
+    {
+      "id": "calificacion",
+      "title": "Calificación de leads",
+      "text": "Evalúa qué tan listo está un prospecto para comprar.",
+      "status": "concept",
+      "evidence": {
+        "code": [],
+        "tests": false,
+        "production": false
+      }
+    },
+    {
+      "id": "seguimiento",
+      "title": "Seguimiento comercial",
+      "text": "Clasifica la intención de cada mensaje, crea la oportunidad y adelanta una etapa del pipeline; todo queda registrado y se puede deshacer.",
+      "status": "beta",
+      "evidence": {
+        "code": [
+          "ReymenApp docs/crm/INBOX-IA.md (pipeline con IA)",
+          "ReymenApp src/lib/ai-pipeline.ts"
+        ],
+        "tests": true,
+        "production": false
+      }
+    }
+  ]
+}

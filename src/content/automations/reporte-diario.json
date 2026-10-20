@@ -1,0 +1,20 @@
+{
+  "id": "reporte-diario",
+  "title": "Reporte ejecutivo diario",
+  "text": "Manda a dueños y gerentes el resumen del día anterior.",
+  "status": "beta",
+  "evidence": {
+    "code": [
+      "ReymenApp src/lib/automation/blueprints/daily-executive-report.ts"
+    ],
+    "tests": true,
+    "production": false
+  },
+  "order": 8,
+  "audience": "equipo",
+  "event": "Llega la hora configurada del reporte, en la zona horaria del negocio",
+  "condition": "Hay un día anterior que resumir",
+  "action": "Arma el resumen del día anterior",
+  "result": "Dueños y gerentes reciben ventas, tickets, comparativos, productos más vendidos, cancelaciones, stock crítico y merma",
+  "requires": "Reymen Foods"
+}

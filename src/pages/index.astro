@@ -117,7 +117,7 @@ const glyphOf = (g: string) => (g === "app" || g === "pos" || g === "card" ? "so
     <ul class="svc">
       {svcs.map((s) => <li><h3>{s.title}</h3><p>{s.text}</p></li>)}
     </ul>
-    <div class="svc-cta"><Button href="/contacto?interes=servicios-a-medida" event="Servicios Proyecto">Cuéntanos tu proyecto</Button></div>
+    <div class="svc-cta"><Button href="/contacto?interes=servicios-a-medida" event="Servicios Proyecto">Cuéntanos tu proyecto</Button><Button href="/servicios" variant="ghost">Ver los servicios</Button></div>
   </Section>
 
   <Section id="seguridad" tone="white" after="night" labelledby="seguridad-title">
@@ -131,7 +131,7 @@ const glyphOf = (g: string) => (g === "app" || g === "pos" || g === "card" ? "so
         </div>
       ))}
     </div>
-    <p class="other">Así tratamos los datos personales: <a href="/privacidad">aviso de privacidad</a>.</p>
+    <p class="other">Conoce todos los controles en <a href="/seguridad">Seguridad</a>. Así tratamos los datos personales: <a href="/privacidad">aviso de privacidad</a>.</p>
   </Section>
 
   {SITE.showPrices && <Plans />}
@@ -183,7 +183,7 @@ const glyphOf = (g: string) => (g === "app" || g === "pos" || g === "card" ? "so
   .svc { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-6) var(--s-8); margin-top: var(--s-8); border-top: 1px solid var(--night-line); padding-top: var(--s-6); }
   .svc h3 { color: var(--on-night); margin-bottom: var(--s-2); }
   .svc p { color: var(--on-night-soft); }
-  .svc-cta { margin-top: var(--s-6); }
+  .svc-cta { margin-top: var(--s-6); display: flex; flex-wrap: wrap; gap: var(--s-3); }
   @media (max-width: 62rem) {
     .triad { grid-template-columns: 1fr; gap: var(--s-6); }
     .row { grid-template-columns: 1fr; }

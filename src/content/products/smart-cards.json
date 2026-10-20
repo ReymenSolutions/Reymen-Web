@@ -8,7 +8,7 @@
   "glyph": "card",
   "page": {
     "route": "/smart-cards",
-    "publication": "draft"
+    "publication": "published"
   },
   "tagline": "Tarjetas con enlace público y código QR, conectadas con Reymen App.",
   "description": "Producto con su propio panel, unido a Reymen App con acceso único y estadísticas.",
@@ -55,6 +55,20 @@
       }
     },
     {
+      "id": "acceso-unico",
+      "title": "Acceso único desde Reymen App",
+      "text": "Entras al panel de Smart Cards desde Reymen App, sin crear otra contraseña.",
+      "status": "live",
+      "evidence": {
+        "code": [
+          "ReymenApp src/lib/smartcard-sso.ts",
+          "ReymenApp docs/DOCUMENTACION_TECNICA.md §12"
+        ],
+        "tests": true,
+        "production": true
+      }
+    },
+    {
       "id": "contactos",
       "title": "Contactos al CRM",
       "text": "Lo que alguien deja en una tarjeta llega como contacto al CRM. El receptor está listo; el envío desde la tarjeta está pendiente.",
@@ -71,5 +85,14 @@
   "related": [
     "reymen-app"
   ],
-  "reviewNote": "Disponible según el equipo (confirmado 2026-10-20). Producto en otro repositorio sin acceso: ampliar funciones y capturas con material propio."
+  "reviewNote": "Disponible según el equipo (confirmado 2026-10-20). Producto en otro repositorio sin acceso: ampliar funciones y capturas con material propio.",
+  "hero": {
+    "title": "Tarjetas con enlace público y código QR, conectadas con Reymen App",
+    "lede": "Cada tarjeta tiene su dirección pública y su QR. Ves los escaneos y los clics desde Reymen App y administras a tu equipo con un acceso único."
+  },
+  "seo": {
+    "title": "Smart Cards · Tarjetas con enlace público y QR",
+    "description": "Tarjetas con enlace público y código QR, con estadísticas de escaneos y clics y acceso único desde Reymen App.",
+    "noindex": false
+  }
 }

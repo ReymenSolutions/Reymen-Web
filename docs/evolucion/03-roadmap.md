@@ -30,6 +30,8 @@ Tamaños relativos: **S** (menos de un día de trabajo), **M** (1–3 días), **
 | P1.8 | Plantilla de datos estructurados (`JsonLd`, `Breadcrumbs`) y metadatos desde datos | S | P1.1 |
 
 ## P2 — Expansión comercial
+> **Estado:** implementado (AI Agents, Automatizaciones, Smart Cards, Servicios, Seguridad y ampliación de Restaurantes). Realty queda preparado en `draft` por decisión del equipo. Ver `05-catalogos.md`.
+
 | # | Trabajo | Tamaño | Depende de |
 |---|---|---|---|
 | P2.1 | `/ai-agents` (niveles 1–3, control, catálogo con estados) | L | P1.1, P1.6, capturas del Agente IA |

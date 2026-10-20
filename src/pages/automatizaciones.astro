@@ -1,0 +1,83 @@
+---
+import Base from "../layouts/Base.astro";
+import Section from "../components/Section.astro";
+import SectionHead from "../components/SectionHead.astro";
+import PageHero from "../components/PageHero.astro";
+import FlowModel from "../components/FlowModel.astro";
+import FeatureList from "../components/FeatureList.astro";
+import Faq from "../components/Faq.astro";
+import ContactSection from "../components/ContactSection.astro";
+import { getLanding, automationFlows, assertCatalogIntegrity } from "../lib/catalog";
+
+await assertCatalogIntegrity();
+// Contenido en src/content/landings/automatizaciones.json y src/content/automations/*.json (flujos reales de Reymen App).
+const l = await getLanding("automatizaciones");
+const flows = await automationFlows();
+const byGroup = (g: string) => l.features.filter((f) => f.group === g).map((f) => ({ h: f.title, p: f.text, status: f.status }));
+const example = flows.find((f) => f.id === "insumo-bajo")!;
+const chain = [["Evento", example.event], ["Condición", example.condition], ["Acción", example.action], ["Resultado", example.result]];
+const model = [
+  { h: "Evento", p: "Algo ocurre en tu negocio: se cierra una venta, baja un insumo, llega un cumpleaños." },
+  { h: "Condición", p: "Se revisan tus reglas: consentimiento, plazos, horarios y si ya se avisó." },
+  { h: "Acción", p: "Reymen avisa a tu equipo o escribe a un cliente, según el flujo." },
+  { h: "Resultado", p: "Queda registrado con su estado y puedes medir su efecto." },
+];
+---
+<Base darkHero title={l.seo.title} description={l.seo.description} path={l.route} crumbs={[{ name: "Automatizaciones", path: l.route }]}>
+  <PageHero id="auto-title" title={l.hero.title} lede={l.hero.lede} status="BETA" primary={{ label: l.cta.primary.label, href: l.cta.primary.href }} secondary={l.cta.secondary && { label: l.cta.secondary.label, short: "Ver flujos", href: l.cta.secondary.href }}>
+    <figure slot="visual" class="eg">
+      <p class="eg-t">Ejemplo real: {example.title}</p>
+      <ol>{chain.map(([k, v]) => <li><span class="k">{k}</span><span class="v">{v}</span></li>)}</ol>
+      <figcaption>Flujo de Reymen App, hoy en beta.</figcaption>
+    </figure>
+  </PageHero>
+
+  <Section id="modelo" tone="white" after="night" labelledby="modelo-title">
+    <SectionHead id="modelo-title" title="Cómo funciona" lede="Cada automatización sigue los mismos cuatro pasos." />
+    <FeatureList items={model} cols={2} />
+  </Section>
+
+  <Section id="flujos" tone="night" labelledby="flujos-title">
+    <SectionHead id="flujos-title" title="Los flujos que ya existen" lede="Elige uno y mira cómo se llena cada paso. Son flujos reales de Reymen App, hoy en beta.">
+    </SectionHead>
+    <FlowModel flows={flows} />
+  </Section>
+
+  {l.groups.map((g, i) => (
+    <Section id={g.id} tone={i % 2 === 0 ? "white" : "paper"} after={i === 0 ? "night" : undefined} labelledby={`${g.id}-title`}>
+      <SectionHead id={`${g.id}-title`} title={g.title} lede={g.text} />
+      <FeatureList items={byGroup(g.id)} cols={2} />
+    </Section>
+  ))}
+
+  <Section id="alcance" labelledby="alcance-title">
+    <SectionHead id="alcance-title" title="Lo que hoy sí y lo que todavía no" />
+    <ul class="notes">
+      {l.notes.map((n) => <li>{n}</li>)}
+    </ul>
+  </Section>
+
+  <Section id="preguntas" tone="white" labelledby="faq-title">
+    <div class="faq-grid">
+      <h2 id="faq-title">Preguntas frecuentes<span class="dot">.</span></h2>
+      <Faq items={l.faq} />
+    </div>
+  </Section>
+
+  <ContactSection vertical="automatizaciones" title="Cuéntanos tu proceso" lede="Dinos qué pasos repite tu equipo hoy y te mostramos qué se puede automatizar. Sin compromiso." />
+</Base>
+
+<style>
+  .eg { margin: 0; display: grid; gap: var(--s-3); padding: var(--s-5); background: var(--night-2); border: 1px solid var(--night-line); border-radius: var(--r-lg); box-shadow: var(--lift-night); }
+  .eg-t { margin: 0; font-weight: 650; font-stretch: 106%; color: var(--on-night); }
+  .eg ol { display: grid; gap: 0; }
+  .eg li { display: grid; grid-template-columns: 5.5rem 1fr; gap: var(--s-3); padding: var(--s-3) 0; border-top: 1px solid var(--night-line); }
+  .k { font-size: 0.78rem; font-weight: 700; color: var(--electric-soft); padding-top: 0.15rem; }
+  .v { color: var(--on-night); font-size: 0.95rem; }
+  .eg figcaption { color: var(--on-night-soft); font-size: var(--step--1); }
+  .notes { display: grid; gap: var(--s-4); max-width: 62ch; }
+  .notes li { padding-left: var(--s-5); border-left: 2px solid var(--mist); color: var(--ink-soft); }
+  .faq-grid { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: clamp(1.5rem, 4vw, 4rem); align-items: start; }
+  .faq-grid h2 { position: sticky; top: 6rem; }
+  @media (max-width: 62rem) { .faq-grid { grid-template-columns: 1fr; } .faq-grid h2 { position: static; } }
+</style>

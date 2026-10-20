@@ -1,0 +1,260 @@
+{
+  "id": "seguridad",
+  "route": "/seguridad",
+  "publication": "published",
+  "availability": "LIVE",
+  "nav": {
+    "placement": "top",
+    "label": "Seguridad",
+    "order": 2
+  },
+  "seo": {
+    "title": "Seguridad y privacidad · Reymen Solutions",
+    "description": "Cómo protegemos los datos de tu negocio y de tus clientes: aislamiento por negocio, permisos por rol, bitácora, respaldos y controles de IA.",
+    "noindex": false
+  },
+  "hero": {
+    "title": "Tus datos y los de tus clientes, protegidos",
+    "lede": "Esta página describe los controles que ya están implementados en Reymen App y en este sitio, con el estado de cada uno. No declaramos certificaciones."
+  },
+  "cta": {
+    "primary": {
+      "label": "Agendar demo",
+      "href": "/contacto?interes=no-se"
+    },
+    "secondary": {
+      "label": "Aviso de privacidad",
+      "href": "/privacidad"
+    }
+  },
+  "groups": [
+    {
+      "id": "acceso",
+      "title": "Aislamiento y acceso",
+      "text": "Quién puede ver y hacer qué."
+    },
+    {
+      "id": "datos",
+      "title": "Datos y respaldos",
+      "text": "Cómo se guardan y se recuperan."
+    },
+    {
+      "id": "ia",
+      "title": "Inteligencia artificial",
+      "text": "Límites y supervisión del agente."
+    },
+    {
+      "id": "trazabilidad",
+      "title": "Trazabilidad y abuso",
+      "text": "Qué queda registrado y qué se bloquea."
+    }
+  ],
+  "features": [
+    {
+      "id": "aislamiento",
+      "title": "Un negocio, sus datos",
+      "text": "Cada negocio solo ve su información: cada consulta se filtra por su organización y se valida contra ella, con pruebas de cruce entre negocios.",
+      "status": "live",
+      "evidence": {
+        "code": [
+          "ReymenApp docs/realty.md (aislamiento por organización)",
+          "ReymenApp docs/AUDITORIA_SEGUIMIENTO.md (AUD-001)"
+        ],
+        "tests": true,
+        "production": true
+      },
+      "group": "acceso"
+    },
+    {
+      "id": "roles",
+      "title": "Permisos por rol",
+      "text": "Cada persona ve y hace solo lo que su rol permite.",
+      "status": "live",
+      "evidence": {
+        "code": [
+          "ReymenApp src/lib/permissions.ts"
+        ],
+        "tests": true,
+        "production": true
+      },
+      "group": "acceso"
+    },
+    {
+      "id": "mfa",
+      "title": "Verificación en dos pasos",
+      "text": "Las cuentas pueden proteger su acceso con un segundo factor.",
+      "status": "beta",
+      "evidence": {
+        "code": [
+          "ReymenApp docs/AUDITORIA_SEGUIMIENTO.md (AUD-005)"
+        ],
+        "tests": true,
+        "production": false
+      },
+      "group": "acceso"
+    },
+    {
+      "id": "https",
+      "title": "Conexión cifrada",
+      "text": "Reymen App y este sitio se sirven por HTTPS.",
+      "status": "live",
+      "evidence": {
+        "code": [
+          "ReymenApp docs/DEPLOY.md",
+          "Reymen-Web docker-compose.yml"
+        ],
+        "tests": false,
+        "production": true
+      },
+      "group": "datos"
+    },
+    {
+      "id": "respaldo",
+      "title": "Respaldo diario de la base de datos",
+      "text": "Copia diaria con rotación de 14 días y respaldo antes de cada actualización.",
+      "status": "beta",
+      "evidence": {
+        "code": [
+          "ReymenApp docs/DEPLOY.md (backup.sh)"
+        ],
+        "tests": false,
+        "production": false
+      },
+      "group": "datos"
+    },
+    {
+      "id": "restauracion",
+      "title": "Prueba de restauración",
+      "text": "Existe una prueba que restaura un respaldo en una base temporal y cuenta filas; está programada cada mes.",
+      "status": "beta",
+      "evidence": {
+        "code": [
+          "ReymenApp docs/DEPLOY.md (restore-test.sh)"
+        ],
+        "tests": false,
+        "production": false
+      },
+      "group": "datos"
+    },
+    {
+      "id": "presupuesto",
+      "title": "Presupuesto de IA por negocio",
+      "text": "Cada negocio tiene un tope de consumo; si se agota, el agente se pausa y la conversación pasa a una persona.",
+      "status": "beta",
+      "evidence": {
+        "code": [
+          "ReymenApp src/lib/ai/budget.ts"
+        ],
+        "tests": true,
+        "production": false
+      },
+      "group": "ia"
+    },
+    {
+      "id": "escalamiento",
+      "title": "El agente escala lo delicado",
+      "text": "Si el cliente pide una persona o el tema es delicado, el agente no contesta y pasa la conversación.",
+      "status": "beta",
+      "evidence": {
+        "code": [
+          "ReymenApp src/lib/ai-auto-reply.ts"
+        ],
+        "tests": true,
+        "production": false
+      },
+      "group": "ia"
+    },
+    {
+      "id": "reglas",
+      "title": "Solo con tus reglas",
+      "text": "El agente responde con tu Rulebook y tu base de conocimiento, y no inventa precios.",
+      "status": "beta",
+      "evidence": {
+        "code": [
+          "ReymenApp docs/crm/INBOX-IA.md"
+        ],
+        "tests": true,
+        "production": false
+      },
+      "group": "ia"
+    },
+    {
+      "id": "bitacora",
+      "title": "Bitácora de auditoría",
+      "text": "Los cambios importantes quedan registrados con quién, qué y cuándo.",
+      "status": "live",
+      "evidence": {
+        "code": [
+          "ReymenApp src/lib/audit.ts"
+        ],
+        "tests": true,
+        "production": true
+      },
+      "group": "trazabilidad"
+    },
+    {
+      "id": "firmas",
+      "title": "Firmas en las integraciones",
+      "text": "Los eventos entre sistemas llevan firma, ventana de tiempo y protección contra repeticiones.",
+      "status": "beta",
+      "evidence": {
+        "code": [
+          "ReymenApp src/lib/webhook-validator.ts",
+          "ReymenApp src/lib/webhook-ingest.ts"
+        ],
+        "tests": true,
+        "production": false
+      },
+      "group": "trazabilidad"
+    },
+    {
+      "id": "limites",
+      "title": "Límites contra abuso",
+      "text": "Los formularios y el chat públicos tienen límites por conexión y un campo trampa contra bots.",
+      "status": "live",
+      "evidence": {
+        "code": [
+          "ReymenApp src/app/api/public/leads/route.ts",
+          "ReymenApp src/lib/public-api.ts"
+        ],
+        "tests": true,
+        "production": true
+      },
+      "group": "trazabilidad"
+    },
+    {
+      "id": "consentimiento-web",
+      "title": "Consentimiento y aviso de privacidad",
+      "text": "El formulario pide tu consentimiento y guarda la versión del aviso que aceptaste.",
+      "status": "live",
+      "evidence": {
+        "code": [
+          "ReymenApp src/app/api/public/leads/route.ts",
+          "Reymen-Web src/pages/privacidad.astro"
+        ],
+        "tests": true,
+        "production": true
+      },
+      "group": "trazabilidad"
+    }
+  ],
+  "steps": [],
+  "notes": [
+    "Un control marcado como Beta está verificado en el código y todavía no confirmado en producción por el equipo.",
+    "Los respaldos no declaran cifrado ni copia externa: esos detalles se confirman con operaciones antes de publicarse."
+  ],
+  "faq": [
+    {
+      "q": "¿Tienen certificaciones de seguridad?",
+      "a": "Esta página no declara certificaciones. Describe los controles implementados y su estado."
+    },
+    {
+      "q": "¿Quién puede ver mis datos?",
+      "a": "Solo tu negocio y las personas de tu equipo que tengan el rol necesario: cada negocio está aislado de los demás."
+    },
+    {
+      "q": "¿Qué datos personales recopila este sitio?",
+      "a": "Los que escribes en el formulario o en el chat. Los usamos para contactarte, según el aviso de privacidad."
+    }
+  ]
+}

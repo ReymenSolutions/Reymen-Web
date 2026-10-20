@@ -1,0 +1,67 @@
+{
+  "id": "servicios",
+  "route": "/servicios",
+  "publication": "published",
+  "availability": "LIVE",
+  "nav": {
+    "placement": "top",
+    "label": "Servicios",
+    "order": 1
+  },
+  "seo": {
+    "title": "Servicios a la medida · Reymen Solutions",
+    "description": "Desarrollo de software, consultoría tecnológica, agentes de IA y automatización a la medida para negocios en México.",
+    "noindex": false
+  },
+  "hero": {
+    "title": "Construimos lo que tu negocio necesita, sobre una base que ya funciona",
+    "lede": "Además de nuestros productos, desarrollamos software, agentes de IA y automatizaciones a la medida. Partimos de la misma plataforma que usamos para Reymen App, así que lo que construimos nace con permisos, bitácora y respaldos."
+  },
+  "cta": {
+    "primary": {
+      "label": "Cuéntanos tu proyecto",
+      "href": "/contacto?interes=servicios-a-medida"
+    },
+    "secondary": {
+      "label": "Solicitar diagnóstico",
+      "href": "/contacto?interes=servicios-a-medida"
+    }
+  },
+  "steps": [
+    {
+      "h": "Conversamos",
+      "p": "Entendemos tu operación y qué te quita más tiempo o dinero hoy."
+    },
+    {
+      "h": "Proponemos",
+      "p": "Te damos una propuesta clara con alcance, tiempos y responsables antes de empezar."
+    },
+    {
+      "h": "Construimos y acompañamos",
+      "p": "Configuramos, conectamos tus herramientas, capacitamos a tu equipo y revisamos resultados contigo."
+    }
+  ],
+  "notes": [
+    "Reymen App y Reymen POS son ejemplos de lo que construimos: productos propios que ya operan."
+  ],
+  "faq": [
+    {
+      "q": "¿Cómo empezamos?",
+      "a": "Con una conversación y, si lo necesitas, un diagnóstico: revisamos qué te quita más tiempo y qué conviene automatizar, conectar o construir primero."
+    },
+    {
+      "q": "¿Tengo que cambiar lo que uso hoy?",
+      "a": "No. Empezamos por lo que más te cuesta y conectamos el resto después."
+    },
+    {
+      "q": "¿Qué recibo antes de empezar?",
+      "a": "Una propuesta con alcance, tiempos y responsables. Sin letras chiquitas."
+    },
+    {
+      "q": "¿Cuánto cuesta?",
+      "a": "Depende del alcance. En la primera conversación te damos una propuesta clara."
+    }
+  ],
+  "features": [],
+  "groups": []
+}

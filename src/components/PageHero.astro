@@ -1,0 +1,44 @@
+---
+// Cabecera de página de producto o capacidad: noche con la luz de la marca, título, texto, botones y, si hay, un elemento visual a la derecha.
+// Los botones se acomodan por el ancho de su columna (en una fila si caben, con etiqueta corta si hace falta).
+import Traces from "./Traces.astro";
+import Button from "./Button.astro";
+import StatusBadge from "./StatusBadge.astro";
+interface Cta { label: string; href: string; short?: string }
+interface Props { title: string; lede: string; primary: Cta; secondary?: Cta; status?: "LIVE" | "BETA" | "COMING_SOON"; tone?: "blue" | "ember"; id?: string; eyebrow?: string }
+const { title, lede, primary, secondary, status, tone = "blue", id = "page-title", eyebrow } = Astro.props;
+const has = Astro.slots.has("visual");
+---
+<section class="hero tone-night" aria-labelledby={id}>
+  <Traces tone={tone} />
+  <div class:list={["container", "hero-grid", { solo: !has }]}>
+    <div class="copy">
+      {(status || eyebrow) && <p class="meta">{eyebrow && <span>{eyebrow}</span>}{status && <StatusBadge status={status} />}</p>}
+      <h1 id={id}>{title}<span class="dot">.</span></h1>
+      <p class="lede">{lede}</p>
+      <div class="cta-wrap"><div class="cta-row">
+        <Button href={primary.href} size="lg" event={`Hero ${id}`}>{primary.label}</Button>
+        {secondary && <Button href={secondary.href} variant="ghost" size="lg"><span class="l-full">{secondary.label}</span><span class="l-short">{secondary.short ?? secondary.label}</span></Button>}
+      </div></div>
+    </div>
+    {has && <div class="visual"><slot name="visual" /></div>}
+  </div>
+</section>
+
+<style>
+  .hero { position: relative; overflow: clip; padding-block: calc(4.25rem + clamp(1.5rem, 0.5rem + 3.4vw, 3.5rem)) clamp(3rem, 2rem + 3.5vw, 5.5rem); background: var(--night); color: var(--on-night); }
+  .hero::before { content: ""; position: absolute; inset: -10% -5% 0 38%; background: radial-gradient(closest-side at 55% 45%, var(--bloom), transparent 72%); pointer-events: none; }
+  .hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(2rem, 4vw, 4.5rem); align-items: center; }
+  .hero-grid.solo { grid-template-columns: minmax(0, 46rem); }
+  .copy { display: grid; gap: var(--s-5); justify-items: start; }
+  .meta { margin: 0; display: flex; align-items: center; gap: var(--s-3); color: var(--on-night-soft); font-size: var(--step--1); font-weight: 600; }
+  h1 { color: var(--white); font-size: clamp(1.65rem, 1rem + 2.1vw, 3rem); font-stretch: 106%; letter-spacing: -0.032em; }
+  .cta-row { display: flex; flex-wrap: wrap; gap: var(--s-3); }
+  .l-short { display: none; }
+  .cta-wrap { container-type: inline-size; width: 100%; }
+  @container (max-width: 31rem) { .cta-row { flex-wrap: nowrap; } .l-full { display: none; } .l-short { display: inline; } }
+  @container (max-width: 24rem) { .cta-row { gap: var(--s-2); } .cta-row :global(.btn) { flex: 1 1 0; min-width: 0; padding: 0.8rem 0.6rem; font-size: 0.95rem; white-space: normal; text-align: center; } }
+  @container (max-width: 17.5rem) { .cta-row { flex-direction: column; } }
+  @media (max-width: 62rem) { .hero-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 36rem) { .hero { padding-top: calc(4.25rem + 1.25rem); padding-bottom: 2.5rem; } .hero-grid { gap: var(--s-5); } .hero :global(.lede) { font-size: 1rem; line-height: 1.5; } }
+</style>

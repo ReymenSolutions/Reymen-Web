@@ -2,5 +2,6 @@
   "id": "desarrollo",
   "order": 1,
   "title": "Desarrollo de software",
-  "text": "Aplicaciones web y móviles hechas para tu operación, con la misma seguridad y respaldos que usamos en nuestros productos."
+  "text": "Aplicaciones web y móviles hechas para tu operación, con la misma seguridad y respaldos que usamos en nuestros productos.",
+  "when": "Cuando ninguna herramienta que existe se ajusta a tu operación."
 }

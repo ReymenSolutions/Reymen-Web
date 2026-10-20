@@ -1,0 +1,20 @@
+{
+  "id": "bienvenida",
+  "title": "Bienvenida a cliente nuevo",
+  "text": "Cuando un cliente deja su teléfono por primera vez en el punto de venta, le da la bienvenida.",
+  "status": "beta",
+  "evidence": {
+    "code": [
+      "ReymenApp src/lib/automation/blueprints/welcome-new-customer.ts"
+    ],
+    "tests": true,
+    "production": false
+  },
+  "order": 1,
+  "audience": "clientes",
+  "event": "Un cliente deja su teléfono por primera vez en el punto de venta",
+  "condition": "Dio su consentimiento de contacto y no recibió este mensaje antes",
+  "action": "Le envía un mensaje de bienvenida",
+  "result": "La ejecución queda registrada con su estado: enviada, entregada, fallida u omitida",
+  "requires": "Reymen POS"
+}

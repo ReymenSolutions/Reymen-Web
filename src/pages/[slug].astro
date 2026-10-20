@@ -8,6 +8,7 @@ import Section from "../components/Section.astro";
 import Button from "../components/Button.astro";
 import StatusBadge from "../components/StatusBadge.astro";
 import Glyph from "../components/Glyph.astro";
+import CropShot from "../components/CropShot.astro";
 import { allVerticals, getProduct, assertCatalogIntegrity } from "../lib/catalog";
 
 export async function getStaticPaths() {
@@ -33,6 +34,14 @@ const glyph = (v.interest?.glyph ?? "software") as "software";
       </div>
     </div>
   </Section>
+  {v.captures.length > 0 && (
+    <Section tone="night" labelledby="cap-title">
+      <h2 id="cap-title" class="visually-hidden">Capturas</h2>
+      <div class="caps">
+        {v.captures.map((c) => <CropShot name={c.file} alt={c.alt} width={1500} height={900} />)}
+      </div>
+    </Section>
+  )}
   {v.features.length > 0 && (
     <Section tone="white" labelledby="f-title">
       <h2 id="f-title">Lo que estamos preparando<span class="dot">.</span></h2>
@@ -57,4 +66,5 @@ const glyph = (v.interest?.glyph ?? "software") as "software";
   h3 { font-size: var(--step-0); display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.6rem; margin-bottom: var(--s-1); }
   .features p { color: var(--ink-soft); }
   .note { margin-top: var(--s-4); }
+  .caps { display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: var(--s-6); }
 </style>

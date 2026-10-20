@@ -8,7 +8,7 @@
   "glyph": "agent",
   "page": {
     "route": "/ai-agents",
-    "publication": "draft"
+    "publication": "published"
   },
   "tagline": "Agentes de IA que trabajan con tus reglas y se administran desde Reymen App.",
   "description": "Hoy: agentes de conversación con Rulebook, control humano y presupuesto. Los agentes especializados y los equipos de agentes están en desarrollo.",
@@ -62,6 +62,20 @@
         "code": [
           "ReymenApp src/lib/ai/budget.ts",
           "ReymenApp src/lib/agent-cap.ts"
+        ],
+        "tests": true,
+        "production": false
+      }
+    },
+    {
+      "id": "probador",
+      "title": "Probador",
+      "text": "Pruebas qué respondería el agente antes de encenderlo en un canal.",
+      "status": "beta",
+      "evidence": {
+        "code": [
+          "ReymenApp src/app/(portal)/portal/ai-lab/page.tsx",
+          "ReymenApp docs/crm/INBOX-IA.md"
         ],
         "tests": true,
         "production": false
@@ -132,5 +146,36 @@
   "related": [
     "reymen-app"
   ],
-  "reviewNote": "Confirmar el estado real del agente en producción antes de pasar funciones a live."
+  "reviewNote": "Confirmar el estado real del agente en producción antes de pasar funciones a live.",
+  "hero": {
+    "title": "Agentes de IA que trabajan con tus reglas",
+    "lede": "Reymen AI Agents se administra desde Reymen App: tú defines qué sabe el agente, qué puede hacer y cuándo pasa la conversación a una persona. Hoy está en beta."
+  },
+  "seo": {
+    "title": "Reymen AI Agents · Agentes de IA con tus reglas",
+    "description": "Agentes de IA que responden con tus reglas, con control humano y presupuesto, administrados desde Reymen App. Hoy en beta.",
+    "noindex": false
+  },
+  "faq": [
+    {
+      "q": "¿El agente puede equivocarse?",
+      "a": "Responde solo con las reglas y la información que tú autorizas. Si duda, si el cliente pide hablar con una persona o si el tema es delicado, pasa la conversación en lugar de inventar."
+    },
+    {
+      "q": "¿Necesito el punto de venta o Lealtad?",
+      "a": "No. Puedes contratar el agente sin el punto de venta ni Lealtad. La bandeja y el seguimiento usan el CRM de Reymen App."
+    },
+    {
+      "q": "¿Dónde lo administro?",
+      "a": "En Reymen App, en el módulo Agente IA: modo por canal, Rulebook, base de conocimiento, probador y consumo."
+    },
+    {
+      "q": "¿Cuánto consume?",
+      "a": "Cada negocio tiene un presupuesto de IA con tope. Si se agota, el agente se pausa y la conversación pasa a una persona."
+    },
+    {
+      "q": "¿Funciona con WhatsApp?",
+      "a": "La conexión de WhatsApp con Twilio está en desarrollo. Hoy el canal disponible en beta es el chat web."
+    }
+  ]
 }

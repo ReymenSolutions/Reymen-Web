@@ -6,6 +6,8 @@ import Traces from "../components/Traces.astro";
 import Device from "../components/Device.astro";
 import StorySteps from "../components/StorySteps.astro";
 import FeatureList from "../components/FeatureList.astro";
+import EcosystemMap from "../components/EcosystemMap.astro";
+import SectionHead from "../components/SectionHead.astro";
 import Faq from "../components/Faq.astro";
 import ContactSection from "../components/ContactSection.astro";
 import { SITE } from "../config";
@@ -48,7 +50,12 @@ const faq = v.faq;
     <StorySteps items={story} />
   </Section>
 
-  <Section tone="white" labelledby="r-resuelve">
+  <Section id="conexion" tone="night" labelledby="r-conexion">
+    <SectionHead id="r-conexion" title="Todo conectado" lede="Lo que pasa en la caja llega al inventario, a tus clientes y a tu equipo. Cada recorrido indica si ya está disponible o está en pruebas." dot="ember" />
+    <EcosystemMap only={["venta", "inventario", "agente"]} />
+  </Section>
+
+  <Section tone="white" after="night" labelledby="r-resuelve">
     <div class="head"><h2 id="r-resuelve">Lo que resuelve en tu restaurante<span class="dot-ember">.</span></h2></div>
     <FeatureList items={items} />
   </Section>

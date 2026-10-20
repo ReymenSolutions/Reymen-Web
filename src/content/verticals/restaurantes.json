@@ -85,6 +85,34 @@
       }
     },
     {
+      "id": "crm",
+      "title": "CRM y seguimiento",
+      "text": "Tus clientes y sus conversaciones en un solo lugar, con el seguimiento que cada uno necesita.",
+      "status": "live",
+      "evidence": {
+        "code": [
+          "ReymenApp src/app/(portal)/portal/leads",
+          "ReymenApp docs/crm/ROADMAP-CRM.md"
+        ],
+        "tests": true,
+        "production": true
+      }
+    },
+    {
+      "id": "automatizaciones",
+      "title": "Automatizaciones",
+      "text": "Alerta de insumos bajos, reporte diario del negocio y mensajes a clientes con su consentimiento.",
+      "status": "beta",
+      "evidence": {
+        "code": [
+          "ReymenApp src/lib/automation/blueprints/",
+          "ReymenApp docs/automations/ARQUITECTURA.md"
+        ],
+        "tests": true,
+        "production": false
+      }
+    },
+    {
       "id": "reportes",
       "title": "Reportes del día",
       "text": "Ventas por hora, producto estrella, ticket promedio y mermas, con el día de tu zona horaria.",

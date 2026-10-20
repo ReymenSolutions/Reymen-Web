@@ -1,0 +1,78 @@
+---
+import Base from "../layouts/Base.astro";
+import Section from "../components/Section.astro";
+import SectionHead from "../components/SectionHead.astro";
+import PageHero from "../components/PageHero.astro";
+import CropShot from "../components/CropShot.astro";
+import FeatureList from "../components/FeatureList.astro";
+import AgentCatalog from "../components/AgentCatalog.astro";
+import TeamDiagram from "../components/TeamDiagram.astro";
+import Faq from "../components/Faq.astro";
+import Button from "../components/Button.astro";
+import ContactSection from "../components/ContactSection.astro";
+import { SITE } from "../config";
+import { getProduct, agentCategories, assertCatalogIntegrity } from "../lib/catalog";
+
+await assertCatalogIntegrity();
+// Contenido en src/content/products/ai-agents.json y src/content/agents/*.json. Esta página solo compone.
+const p = await getProduct("ai-agents");
+const cats = await agentCategories();
+const pick = (ids: string[]) => p.features.filter((f) => ids.includes(f.id)).map((f) => ({ h: f.title, p: f.text, status: f.status }));
+const channels = pick(["webchat", "whatsapp", "otros-canales"]);
+const control = pick(["rulebook", "modos", "revision", "probador", "control"]);
+const ld = [{ "@context": "https://schema.org", "@type": "SoftwareApplication", name: p.name, description: p.description, applicationCategory: "BusinessApplication", url: `${SITE.url}${p.page!.route}`, publisher: { "@type": "Organization", name: SITE.name } }];
+---
+<Base darkHero title={p.seo!.title} description={p.seo!.description} path={p.page!.route} crumbs={[{ name: "Productos", path: "/productos" }, { name: p.name, path: p.page!.route }]} ld={ld}>
+  <PageHero id="ai-title" title={p.hero!.title} lede={p.hero!.lede} status="BETA" primary={{ label: "Solicitar acceso", href: "/contacto?interes=ai-agents" }} secondary={{ label: "Ver cómo funciona", short: "Cómo funciona", href: "#hoy" }}>
+    <CropShot slot="visual" name="inbox" alt="Bandeja de mensajes de Reymen App con una conversación y una respuesta sugerida por el Agente IA" width={1500} height={900} focus={[60, 55, 1.5]} aspect="16 / 10" label="Reymen App · Bandeja" caption="Una respuesta sugerida por el Agente IA, lista para que tu equipo la revise. Datos de demostración." eager />
+  </PageHero>
+
+  <Section id="hoy" tone="white" after="night" labelledby="hoy-title">
+    <SectionHead id="hoy-title" title="Hoy: agentes de conversación con control humano" lede="El agente trabaja con tu Rulebook y tu base de conocimiento. Tú eliges, canal por canal, si solo propone respuestas o contesta lo rutinario." />
+    <FeatureList items={control} />
+    <p class="side">No necesitas el punto de venta ni Lealtad para usar el agente. La bandeja y el seguimiento usan el CRM de Reymen App, donde también se administra todo.</p>
+  </Section>
+
+  <Section id="canales" labelledby="canales-title">
+    <SectionHead id="canales-title" title="Canales" lede="Por dónde puede conversar el agente. Cada canal indica su estado real." />
+    <FeatureList items={channels} cols={3} />
+  </Section>
+
+  <Section id="especializados" tone="white" labelledby="esp-title">
+    <SectionHead id="esp-title" title="Agentes especializados" lede="La línea de agentes que queremos construir. Solo lo marcado como Beta existe hoy; lo demás está en desarrollo o es un concepto." />
+    <AgentCatalog categories={cats} />
+  </Section>
+
+  <Section id="equipos" labelledby="equipos-title">
+    <SectionHead id="equipos-title" title="Equipos de agentes" lede="Una idea para más adelante: varios agentes que colaboran en un proceso, con un supervisor." />
+    <TeamDiagram />
+  </Section>
+
+  <Section id="medida" tone="white" labelledby="medida-title">
+    <div class="band">
+      <div>
+        <h2 id="medida-title">¿Necesitas un agente para otro proceso?<span class="dot">.</span></h2>
+        <p class="lede">Construimos agentes a la medida de un proceso concreto de tu negocio, con tus reglas y un límite de consumo.</p>
+      </div>
+      <Button href="/servicios" variant="ghost" size="lg">Ver servicios a la medida</Button>
+    </div>
+  </Section>
+
+  <Section id="preguntas" labelledby="faq-title">
+    <div class="faq-grid">
+      <h2 id="faq-title">Preguntas frecuentes<span class="dot">.</span></h2>
+      <Faq items={p.faq} />
+    </div>
+  </Section>
+
+  <ContactSection vertical="ai-agents" title="Solicita acceso al beta" lede="Cuéntanos qué proceso quieres atender con un agente y te respondemos con una propuesta clara. Sin compromiso." />
+</Base>
+
+<style>
+  .side { margin-top: var(--s-5); color: var(--ink-soft); max-width: 60ch; }
+  .band { display: flex; align-items: center; justify-content: space-between; gap: var(--s-6); flex-wrap: wrap; }
+  .band > div { display: grid; gap: var(--s-3); max-width: 44rem; }
+  .faq-grid { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: clamp(1.5rem, 4vw, 4rem); align-items: start; }
+  .faq-grid h2 { position: sticky; top: 6rem; }
+  @media (max-width: 62rem) { .faq-grid { grid-template-columns: 1fr; } .faq-grid h2 { position: static; } }
+</style>
