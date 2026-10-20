@@ -2,12 +2,12 @@
 // «El turno»: una narrativa que sigue el día de un restaurante. A la izquierda avanza el texto; a la derecha, un dispositivo fijo
 // cambia de pantalla real según el paso que se lee. En móvil cada paso trae su propia imagen y nada queda fijo.
 // `focus` = [x, y, zoom]: centro (en %) de la zona que se acerca y cuánto. Sirve para que el texto del producto se lea.
-interface Item { when: string; h: string; p: string; img: string; alt: string; w: number; h2: number; pos?: string; focus?: [number, number, number] }
+interface Item { when: string; h: string; p: string; img: string; alt: string; w: number; h2: number; pos?: string; focus?: number[] }
 interface Props { items: Item[] }
 const { items } = Astro.props;
 // Origen de la transformación para que la ventana visible quede centrada en el punto de foco (sin salirse de la imagen)
 const origin = (c: number, z: number) => { const w = 1 / z; const a = Math.min(Math.max(c / 100 - w / 2, 0), 1 - w); return z === 1 ? 0 : (a / (1 - w)) * 100; };
-const fv = (it: Item) => { const [x, y, z] = it.focus ?? [50, 50, 1]; return `--z:${z};--ox:${origin(x, z).toFixed(1)}%;--oy:${origin(y, z).toFixed(1)}%;`; };
+const fv = (it: Item) => { const [x = 50, y = 50, z = 1] = it.focus ?? []; return `--z:${z};--ox:${origin(x, z).toFixed(1)}%;--oy:${origin(y, z).toFixed(1)}%;`; };
 ---
 <div class="story" data-story>
   <ol class="steps">

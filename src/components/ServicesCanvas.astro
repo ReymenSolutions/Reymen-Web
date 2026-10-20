@@ -8,7 +8,7 @@ const nodes: N[] = [
   { id: "web", label: "Formulario web", f: ["agentes"] },
   { id: "mail", label: "Correo", f: ["agentes"] },
   { id: "ia", label: "Agente IA", sub: "con tus reglas", f: ["agentes", "auto"] },
-  { glyph: "automation", id: "auto", label: "Automatización", sub: "avisos y reportes", f: ["auto", "software"] },
+  { id: "auto", label: "Automatización", sub: "avisos y reportes", f: ["auto", "software"] },
   { id: "crm", label: "CRM", f: ["auto", "software"] },
   { id: "sheet", label: "Hojas de cálculo", f: ["auto", "software"] },
   { id: "team", label: "Tu equipo", sub: "avisos", f: ["auto", "software"] },
@@ -47,7 +47,7 @@ const edgePath = (L: Record<string, P>, a: string, b: string, vertical: boolean)
 };
 const focuses = [
   { glyph: "agent", id: "agentes", name: "Agentes de IA a la medida", text: "Asistentes que responden con tus reglas, tu información y tu tono, y que pasan a una persona cuando importa." },
-  { glyph: "automation", id: "auto", name: "Automatización", text: "Flujos que conectan WhatsApp, correo, hojas de cálculo y tu CRM, con avisos y reportes para tu equipo." },
+  { glyph: "automation", id: "auto", name: "Automatización", text: "Flujos que conectan tus herramientas (formularios, correo, hojas de cálculo y tu CRM), con avisos y reportes para tu equipo." },
   { glyph: "software", id: "software", name: "Desarrollo de software", text: "Aplicaciones web y móviles hechas para tu operación, con la misma seguridad y respaldos que usamos en nuestros productos." },
 ];
 // Recortes (ventana visible en % de la captura): ancho de imagen = 100/ancho, desplazamientos negativos para centrar la ventana
@@ -91,6 +91,8 @@ const proofs = [
     ))}
   </div>
 
+  <p class="concept">Esquema conceptual de un flujo a la medida; no representa conexiones activas.</p>
+
   <!-- Prueba real: una captura de Reymen App recortada a lo que explica cada capacidad (sin pantallas inventadas) -->
   <div class="proofs">
     {proofs.map((x) => (
@@ -118,6 +120,7 @@ const proofs = [
   .pick[aria-pressed="true"] .text { display: block; animation: in var(--t-base) var(--ease); }
   @keyframes in { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
   .panel { background: var(--night-2); border: 1px solid var(--night-line); border-radius: var(--r-lg); padding: var(--s-5); box-shadow: var(--lift-night); display: grid; gap: var(--s-5); }
+  .concept { margin: 0; color: var(--on-night-soft); font-size: var(--step--1); }
   .proofs { display: grid; border-top: 1px solid var(--night-line); padding-top: var(--s-5); }
   .proof { grid-area: 1 / 1; display: grid; gap: var(--s-2); opacity: 0; visibility: hidden; transition: opacity var(--t-base) var(--ease), visibility 0s linear var(--t-base); }
   .crop { position: relative; aspect-ratio: var(--ca); overflow: hidden; border-radius: var(--r-sm); border: 1px solid var(--glass-line); background: #e9eefb; }

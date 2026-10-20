@@ -1,10 +1,10 @@
 ---
-// Demostración conectada del ecosistema Reymen: WhatsApp → Agente IA → CRM → POS → Inventario → Lealtad.
+// Demostración conectada del ecosistema Reymen: Mensaje → Agente IA → CRM → POS → Inventario → Lealtad.
 // Pantallas reales (datos de demostración), un teléfono con la conversación y un hilo de luz entre etapas.
 // Funciona sola, se puede pausar y cada etapa se puede abrir a mano. Con movimiento reducido no se reproduce sola.
 const steps = [
-  { id: "whatsapp", label: "WhatsApp", screen: "inbox", bar: "Inbox", alt: "Bandeja de mensajes de Reymen App con la conversación de un cliente", toast: "Mensaje nuevo de Fernanda", focus: [30, 50, 1.8], cap: "Un cliente escribe por WhatsApp y el mensaje llega a tu bandeja." },
-  { id: "ia", label: "Agente IA", screen: "inbox", bar: "Inbox", alt: "Conversación respondida por el Agente IA dentro de la bandeja", toast: "El Agente IA respondió", focus: [38, 55, 1.7], cap: "El agente contesta con tus reglas y pasa a una persona lo que no debe resolver solo." },
+  { id: "whatsapp", label: "Mensaje", screen: "inbox", bar: "Inbox", alt: "Bandeja de mensajes de Reymen App con la conversación de un cliente", toast: "Mensaje nuevo de Fernanda", focus: [30, 50, 1.8], cap: "Un cliente escribe y el mensaje llega a tu bandeja (ejemplo con un chat tipo WhatsApp)." },
+  { id: "ia", label: "Agente IA", screen: "inbox", bar: "Inbox", alt: "Conversación respondida por el Agente IA dentro de la bandeja", toast: "El Agente IA sugirió una respuesta", focus: [38, 55, 1.7], cap: "El Agente IA propone la respuesta con tus reglas y pasa a una persona lo que no debe resolver solo." },
   { id: "crm", label: "CRM", screen: "pipeline", bar: "Seguimiento", alt: "Tablero de seguimiento del CRM con oportunidades por etapa", toast: "Contacto nuevo en seguimiento", focus: [50, 50, 1], cap: "El contacto entra al CRM con su conversación, listo para darle seguimiento." },
   { id: "pos", label: "POS", screen: "pos-cobro", bar: "Reymen POS", alt: "Cobro en efectivo del punto de venta con propina y cambio", toast: "Cuenta cobrada: $191.00", focus: [50, 50, 1], cap: "Cuando llega, su cuenta se cobra en el POS: propina, cambio y cuentas divididas." },
   { id: "inventario", label: "Inventario", screen: "inventario", bar: "Inventario", alt: "Inventario con alertas de stock bajo y costos por insumo", toast: "Leche entera: stock bajo", focus: [40, 56, 1.5], cap: "Cada venta descuenta sus insumos y el sistema avisa lo que baja del mínimo." },
@@ -54,7 +54,7 @@ const dims: Record<string, [number, number, string, string?]> = { inbox: [1500, 
     <p class="cap" data-cap>{steps[0].cap}</p>
     <button type="button" class="pause" data-pause aria-pressed="false">Pausar</button>
   </div>
-  <p class="note">Ejemplo con datos de demostración de un negocio ficticio.</p>
+  <p class="note">Ejemplo con datos de demostración de un negocio ficticio. La conexión con WhatsApp está en desarrollo.</p>
 </div>
 
 <script id="stage-data" type="application/json" set:html={JSON.stringify(steps.map((s) => ({ toast: s.toast, cap: s.cap })))} />

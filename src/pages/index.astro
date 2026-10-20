@@ -18,8 +18,8 @@ const demo = SITE.calendlyUrl || "#contacto";
 
 const solutions = [
   { glyph: "restaurant", name: "Restaurantes y cafeterías", text: "Punto de venta, cocina, inventario con recetas y lealtad. Es donde más hemos trabajado.", href: "/restaurantes", cta: "Ver la solución para restaurantes" },
-  { glyph: "clinic", name: "Clínicas y servicios", text: "Citas, recordatorios y seguimiento por WhatsApp para reducir ausencias.", href: "/?giro=servicios#contacto", cta: "Platicar sobre mi clínica" },
-  { glyph: "property", name: "Inmobiliarias", text: "Fichas públicas de cada propiedad y captura de prospectos en un solo lugar.", href: "/?giro=inmobiliaria#contacto", cta: "Platicar sobre mi inmobiliaria" },
+  { glyph: "clinic", name: "Clínicas y servicios", text: "Citas y seguimiento de clientes en el CRM de Reymen, ajustados a cómo trabajas.", href: "/?giro=servicios#contacto", cta: "Platicar sobre mi clínica" },
+  { glyph: "property", name: "Inmobiliarias", text: "Estamos preparando una solución para inmobiliarias. Cuéntanos qué necesitas y te avisamos.", href: "/?giro=inmobiliaria#contacto", cta: "Registrar mi interés" },
 ];
 const process = [
   { h: "Conversamos", p: "Entendemos tu operación y qué te quita más tiempo o dinero hoy." },
@@ -29,12 +29,12 @@ const process = [
 const why = [
   { h: "Productos propios, no solo proyectos", p: "Tenemos un ecosistema que ya funciona en restaurantes, y desarrollamos a la medida lo que todavía no existe." },
   { h: "La misma base para todo", p: "Agentes, automatizaciones y software comparten seguridad, respaldos y control, así que crecen contigo sin rehacerse." },
-  { h: "Pensados para México", p: "IVA desglosado, propinas, efectivo, WhatsApp y español de México, no traducciones." },
+  { h: "Pensados para México", p: "IVA desglosado, propinas, efectivo y español de México, no traducciones." },
   { h: "Tú controlas la IA", p: "Defines las reglas, ves lo que consume y, cuando algo es delicado, el agente pasa a una persona." },
 ];
 const trust = [
   { h: "Un negocio, sus datos", p: "Cada negocio está aislado de los demás y cada persona de tu equipo ve solo lo que su rol permite.", icon: "layers" },
-  { h: "Respaldos que sí se prueban", p: "Copias diarias cifradas fuera del servidor, y pruebas periódicas de restauración para confirmar que funcionan.", icon: "archive" },
+  { h: "Respaldos que sí se prueban", p: "Copias diarias de la base de datos con rotación y pruebas de restauración programadas.", icon: "archive" },
   { h: "IA con reglas y límites", p: "El asistente sigue tus reglas, escala lo delicado a una persona y tiene un tope de consumo por negocio.", icon: "shield" },
 ];
 const icons: Record<string, string> = {
@@ -44,10 +44,10 @@ const icons: Record<string, string> = {
 };
 const faq = [
   { q: "¿Cuánto tarda en estar funcionando?", a: "Depende del alcance. Una operación sencilla (punto de venta, menú e inventario básico) puede arrancar en pocos días; las integraciones y automatizaciones a la medida se acuerdan en la demo." },
-  { q: "¿Tengo que cambiar todo lo que uso hoy?", a: "No. Empezamos por lo que más te cuesta (ventas, WhatsApp o seguimiento) y conectamos el resto después. Te ayudamos a pasar tu información." },
+  { q: "¿Tengo que cambiar todo lo que uso hoy?", a: "No. Empezamos por lo que más te cuesta (ventas, atención a clientes o seguimiento) y conectamos el resto después. Te ayudamos a pasar tu información." },
   { q: "¿Desarrollan software, agentes de IA o automatizaciones a la medida?", a: "Sí. Además de nuestros productos, diseñamos y construimos agentes de IA, automatizaciones y aplicaciones web o móviles para la operación de cada negocio." },
   { q: "¿El asistente de IA puede equivocarse?", a: "Responde solo con las reglas y la información que tú autorizas. Si duda, si el cliente pide hablar con una persona o si el tema es delicado, te pasa la conversación en lugar de inventar." },
-  { q: "¿Mis datos y los de mis clientes están seguros?", a: "Cada negocio tiene sus datos aislados, con permisos por rol y sesiones controladas. Hacemos respaldos cifrados fuera del servidor y probamos periódicamente que se pueden restaurar." },
+  { q: "¿Mis datos y los de mis clientes están seguros?", a: "Cada negocio tiene sus datos aislados, con permisos por rol y sesiones controladas. Hacemos respaldos diarios de la base de datos y tenemos pruebas de restauración programadas." },
   { q: "¿Cuánto cuesta?", a: "Depende de los módulos y del tamaño de tu operación. En la demo te damos una propuesta clara, sin letras chiquitas." },
 ];
 ---
@@ -64,8 +64,8 @@ const faq = [
         </div></div>
         <dl class="facts">
           <div><dt>Productos propios y a la medida</dt><dd>Un ecosistema que ya funciona, y desarrollo para lo que no existe.</dd></div>
-          <div><dt>Pensado para México</dt><dd>IVA desglosado, propinas, efectivo y WhatsApp.</dd></div>
-          <div><dt>Tus datos son tuyos</dt><dd>Cada negocio aislado y con respaldos cifrados.</dd></div>
+          <div><dt>Pensado para México</dt><dd>IVA desglosado, propinas y efectivo.</dd></div>
+          <div><dt>Tus datos son tuyos</dt><dd>Cada negocio aislado y con respaldos diarios.</dd></div>
         </dl>
       </div>
       <div class="hero-stage"><HeroStage /></div>
