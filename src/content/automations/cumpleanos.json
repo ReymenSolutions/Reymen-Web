@@ -1,0 +1,20 @@
+{
+  "id": "cumpleanos",
+  "title": "Campaña de cumpleaños",
+  "text": "Felicita a quien cumple años, solo con su consentimiento y la fecha que él dio.",
+  "status": "beta",
+  "evidence": {
+    "code": [
+      "ReymenApp src/lib/automation/blueprints/birthday-campaign.ts"
+    ],
+    "tests": true,
+    "production": false
+  },
+  "order": 4,
+  "audience": "clientes",
+  "event": "Es el cumpleaños de un cliente",
+  "condition": "Dio su fecha y su consentimiento, y no se le felicitó este año",
+  "action": "Le escribe para felicitarlo",
+  "result": "Una felicitación al año por cliente",
+  "requires": "Reymen POS"
+}

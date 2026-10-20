@@ -1,0 +1,20 @@
+{
+  "id": "recompensa",
+  "title": "Recompensa de lealtad disponible",
+  "text": "Avisa al cliente de una recompensa ganada.",
+  "status": "beta",
+  "evidence": {
+    "code": [
+      "ReymenApp src/lib/automation/blueprints/loyalty-reward-unlocked.ts"
+    ],
+    "tests": true,
+    "production": false
+  },
+  "order": 6,
+  "audience": "clientes",
+  "event": "Un cliente gana una recompensa de lealtad",
+  "condition": "Tiene consentimiento de contacto",
+  "action": "Le avisa de la recompensa",
+  "result": "Queda registrado; se activa de forma explícita y se puede simular antes",
+  "requires": "Reymen Lealtad y Automatizaciones"
+}

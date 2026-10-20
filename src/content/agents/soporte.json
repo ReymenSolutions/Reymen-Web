@@ -1,0 +1,56 @@
+{
+  "id": "soporte",
+  "order": 5,
+  "title": "Soporte",
+  "text": "Clasificar solicitudes y resolver con tu base de conocimiento.",
+  "items": [
+    {
+      "id": "clasificacion",
+      "title": "Clasificación de solicitudes",
+      "text": "Ordena lo que llega por tema y urgencia.",
+      "status": "concept",
+      "evidence": {
+        "code": [],
+        "tests": false,
+        "production": false
+      }
+    },
+    {
+      "id": "conocimiento",
+      "title": "Consulta de conocimiento",
+      "text": "Responde con tu Rulebook y tu base de conocimiento, sin inventar precios ni datos.",
+      "status": "beta",
+      "evidence": {
+        "code": [
+          "ReymenApp docs/crm/INBOX-IA.md (rulebook y artículos)"
+        ],
+        "tests": true,
+        "production": false
+      }
+    },
+    {
+      "id": "tecnica",
+      "title": "Asistencia técnica",
+      "text": "Guía a un cliente paso a paso en un problema.",
+      "status": "concept",
+      "evidence": {
+        "code": [],
+        "tests": false,
+        "production": false
+      }
+    },
+    {
+      "id": "escalamiento",
+      "title": "Escalamiento a una persona",
+      "text": "Si duda, si el cliente lo pide o si el tema es delicado, pasa la conversación a una persona con el motivo a la vista.",
+      "status": "beta",
+      "evidence": {
+        "code": [
+          "ReymenApp src/lib/ai-auto-reply.ts"
+        ],
+        "tests": true,
+        "production": false
+      }
+    }
+  ]
+}

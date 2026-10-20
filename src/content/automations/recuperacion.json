@@ -1,0 +1,20 @@
+{
+  "id": "recuperacion",
+  "title": "Recuperación de clientes",
+  "text": "Escribe a clientes habituales que llevan mucho más de lo normal sin venir.",
+  "status": "beta",
+  "evidence": {
+    "code": [
+      "ReymenApp src/lib/automation/blueprints/customer-recovery.ts"
+    ],
+    "tests": true,
+    "production": false
+  },
+  "order": 3,
+  "audience": "clientes",
+  "event": "Un cliente habitual lleva más de 2.5 veces su intervalo típico sin venir",
+  "condition": "Tiene consentimiento, suficientes visitas y no se le escribió hace poco",
+  "action": "Le escribe para que regrese",
+  "result": "Un mensaje por ausencia, con enfriamiento entre mensajes",
+  "requires": "Reymen POS"
+}

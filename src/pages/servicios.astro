@@ -1,0 +1,61 @@
+---
+import Base from "../layouts/Base.astro";
+import Section from "../components/Section.astro";
+import SectionHead from "../components/SectionHead.astro";
+import PageHero from "../components/PageHero.astro";
+import Timeline from "../components/Timeline.astro";
+import Faq from "../components/Faq.astro";
+import ContactSection from "../components/ContactSection.astro";
+import { SITE } from "../config";
+import { getLanding, services, assertCatalogIntegrity } from "../lib/catalog";
+
+await assertCatalogIntegrity();
+// Contenido en src/content/landings/servicios.json y src/content/services/*.json.
+const l = await getLanding("servicios");
+const svcs = await services();
+const ld = svcs.map((s) => ({ "@context": "https://schema.org", "@type": "Service", name: s.title, description: s.text, provider: { "@type": "Organization", name: SITE.name, url: SITE.url }, areaServed: "MX" }));
+---
+<Base darkHero title={l.seo.title} description={l.seo.description} path={l.route} crumbs={[{ name: "Servicios", path: l.route }]} ld={ld}>
+  <PageHero id="svc-title" title={l.hero.title} lede={l.hero.lede} primary={l.cta.primary} secondary={l.cta.secondary && { label: l.cta.secondary.label, short: "Diagnóstico", href: l.cta.secondary.href }} />
+
+  <Section id="servicios" tone="white" after="night" labelledby="serv-title">
+    <SectionHead id="serv-title" title="Qué construimos contigo" />
+    <ul class="rows">
+      {svcs.map((s) => (
+        <li class="row">
+          <h3>{s.title}</h3>
+          <p class="txt">{s.text}</p>
+          {s.when && <p class="when"><b>Conviene cuando</b> {s.when.replace(/^Cuando /, "")}</p>}
+        </li>
+      ))}
+    </ul>
+    {l.notes.map((n) => <p class="note">{n}</p>)}
+  </Section>
+
+  <Section id="proceso" labelledby="proc-title">
+    <SectionHead id="proc-title" title="Cómo trabajamos contigo" />
+    <Timeline items={l.steps} />
+  </Section>
+
+  <Section id="preguntas" tone="white" labelledby="faq-title">
+    <div class="faq-grid">
+      <h2 id="faq-title">Preguntas frecuentes<span class="dot">.</span></h2>
+      <Faq items={l.faq} />
+    </div>
+  </Section>
+
+  <ContactSection vertical="servicios-a-medida" title="Cuéntanos tu proyecto" lede="Dinos qué quieres construir o qué proceso te quita tiempo. Te respondemos con una propuesta clara, sin compromiso." />
+</Base>
+
+<style>
+  .rows { border-top: 1px solid var(--mist); }
+  .row { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 5fr) minmax(0, 4fr); gap: var(--s-2) var(--s-6); padding: var(--s-5) 0; border-bottom: 1px solid var(--mist); align-items: start; }
+  h3 { font-size: var(--step-2); font-stretch: 110%; letter-spacing: -0.02em; line-height: 1.15; }
+  .txt { color: var(--ink-soft); }
+  .when { color: var(--ink-soft); font-size: 0.95rem; margin: 0; }
+  .when b { color: var(--ink); }
+  .note { margin-top: var(--s-5); color: var(--ink-soft); }
+  .faq-grid { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: clamp(1.5rem, 4vw, 4rem); align-items: start; }
+  .faq-grid h2 { position: sticky; top: 6rem; }
+  @media (max-width: 62rem) { .row { grid-template-columns: 1fr; } .faq-grid { grid-template-columns: 1fr; } .faq-grid h2 { position: static; } }
+</style>

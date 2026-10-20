@@ -1,0 +1,41 @@
+{
+  "id": "industria",
+  "order": 6,
+  "title": "Agentes por industria",
+  "text": "Reglas y vocabulario de cada sector.",
+  "items": [
+    {
+      "id": "restaurantes",
+      "title": "Restaurantes y cafeterías",
+      "text": "Un agente que conoce tu menú, tus horarios y tus reglas.",
+      "status": "concept",
+      "evidence": {
+        "code": [],
+        "tests": false,
+        "production": false
+      }
+    },
+    {
+      "id": "servicios",
+      "title": "Negocios de servicios",
+      "text": "Citas, seguimiento y preguntas frecuentes de tus clientes.",
+      "status": "concept",
+      "evidence": {
+        "code": [],
+        "tests": false,
+        "production": false
+      }
+    },
+    {
+      "id": "nuevas",
+      "title": "Nuevas verticales",
+      "text": "Agentes para otros sectores, a medida que existan sus soluciones.",
+      "status": "concept",
+      "evidence": {
+        "code": [],
+        "tests": false,
+        "production": false
+      }
+    }
+  ]
+}

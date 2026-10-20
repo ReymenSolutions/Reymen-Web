@@ -1,0 +1,84 @@
+---
+// Modelo Evento → Condición → Acción → Resultado con los flujos reales de Reymen App. Eliges un flujo y se rellenan los cuatro pasos.
+// Los flujos mostrados existen en el código (con su estado); la entrega de mensajes depende de los conectores de cada negocio.
+import StatusBadge from "./StatusBadge.astro";
+import type { AutomationFlow } from "../lib/catalog";
+interface Props { flows: AutomationFlow[] }
+const { flows } = Astro.props;
+const first = flows[0];
+const valueOf = (k: string) => (first as unknown as Record<string, string>)[k];
+const steps = [["event", "Evento"], ["condition", "Condición"], ["action", "Acción"], ["result", "Resultado"]] as const;
+const groups = [{ k: "clientes", t: "Con tus clientes (con su consentimiento)" }, { k: "equipo", t: "Para tu equipo" }] as const;
+---
+<div class="flow" data-flow>
+  <div class="picker">
+    {groups.map((g) => (
+      <div class="grp">
+        <p class="gt">{g.t}</p>
+        <ul>
+          {flows.filter((f) => f.audience === g.k).map((f) => (
+            <li><button type="button" class="pick" data-id={f.id} aria-pressed={f.id === first.id ? "true" : "false"}>{f.title}</button></li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </div>
+
+  <div class="stage" aria-live="polite">
+    <div class="head">
+      <p class="what" data-what>{first.text}</p>
+      <p class="meta"><StatusBadge status={first.status} /> <span data-req>Requiere {first.requires}</span></p>
+    </div>
+    <ol class="chain">
+      {steps.map(([k, label]) => (
+        <li class="step">
+          <span class="lab">{label}</span>
+          <span class="val" data-k={k}>{valueOf(k)}</span>
+        </li>
+      ))}
+    </ol>
+    <p class="note">Flujo real de Reymen App, en beta. La entrega por WhatsApp o correo depende del conector de cada negocio.</p>
+  </div>
+</div>
+
+<script id="flow-data" type="application/json" set:html={JSON.stringify(Object.fromEntries(flows.map((f) => [f.id, { text: f.text, requires: f.requires, event: f.event, condition: f.condition, action: f.action, result: f.result }])))} />
+
+<style>
+  .flow { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: clamp(1.5rem, 4vw, 3.5rem); align-items: start; }
+  .grp + .grp { margin-top: var(--s-5); }
+  .gt { margin: 0 0 var(--s-2); font-size: var(--step--1); font-weight: 650; color: var(--on-night-soft); }
+  .picker ul { border-top: 1px solid var(--night-line); }
+  .pick { display: block; width: 100%; text-align: left; background: none; border: 0; border-bottom: 1px solid var(--night-line); padding: var(--s-3) 0 var(--s-3) var(--s-5); min-height: 2.75rem; color: var(--on-night-soft); font: inherit; font-weight: 600; font-stretch: 104%; cursor: pointer; position: relative; transition: color var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease); }
+  .pick::before { content: ""; position: absolute; left: 0; top: -1px; bottom: -1px; width: 3px; background: var(--electric); transform: scaleY(0); transform-origin: top; transition: transform var(--t-base) var(--ease); }
+  .pick:hover { color: var(--on-night); }
+  .pick:active { background: var(--glass); }
+  .pick[aria-pressed="true"] { color: var(--white); }
+  .pick[aria-pressed="true"]::before { transform: scaleY(1); }
+  .stage { background: var(--night-2); border: 1px solid var(--night-line); border-radius: var(--r-lg); padding: var(--s-5); box-shadow: var(--lift-night); display: grid; gap: var(--s-5); }
+  .what { margin: 0; color: var(--on-night); font-size: var(--step-1); font-weight: 600; font-stretch: 106%; max-width: none; }
+  .meta { margin: var(--s-2) 0 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3); color: var(--on-night-soft); font-size: var(--step--1); }
+  .chain { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-3); }
+  .step { display: grid; gap: var(--s-2); align-content: start; padding: var(--s-4); border: 1px solid #2c3d86; border-radius: var(--r-md); background: #101e55; position: relative; }
+  .step:not(:last-child)::after { content: ""; position: absolute; top: 2rem; right: calc(-1 * var(--s-3) - 1px); width: var(--s-3); border-top: 2px solid var(--electric-soft); }
+  .lab { font-size: 0.78rem; font-weight: 700; color: var(--electric-soft); }
+  .val { color: var(--on-night); font-size: 0.95rem; line-height: 1.45; animation: in var(--t-base) var(--ease); }
+  .note { margin: 0; color: var(--on-night-soft); font-size: var(--step--1); max-width: none; }
+  @keyframes in { from { opacity: 0.2; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+  @media (max-width: 62rem) { .flow { grid-template-columns: 1fr; } .chain { grid-template-columns: repeat(2, minmax(0, 1fr)); } .step::after { display: none; } }
+  @media (max-width: 36rem) { .chain { grid-template-columns: 1fr; } .stage { padding: var(--s-4); } }
+  @media (prefers-reduced-motion: reduce) { .val { animation: none; } }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-flow]").forEach((root) => {
+    const data = JSON.parse(document.getElementById("flow-data")!.textContent!) as Record<string, Record<string, string>>;
+    const picks = [...root.querySelectorAll<HTMLButtonElement>(".pick")];
+    picks.forEach((b) => b.addEventListener("click", () => {
+      const d = data[b.dataset.id!];
+      picks.forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+      root.querySelector("[data-what]")!.textContent = d.text;
+      root.querySelector("[data-req]")!.textContent = `Requiere ${d.requires}`;
+      root.querySelectorAll<HTMLElement>("[data-k]").forEach((el) => { el.textContent = d[el.dataset.k!]; el.style.animation = "none"; void el.offsetWidth; el.style.animation = ""; });
+    }));
+  });
+</script>

@@ -1,8 +1,12 @@
 ---
 // Mapa del ecosistema: elige un recorrido y se ilumina por dónde pasa. Cada recorrido lleva su estado (Disponible, Beta, En desarrollo o
 // Concepto) para no presentar como funcionando lo que no lo está. En pantallas angostas el diagrama se sustituye por los pasos del recorrido.
-import { NODES, JOURNEYS } from "../data/ecosystem";
+import { NODES, JOURNEYS as ALL } from "../data/ecosystem";
 import StatusBadge from "./StatusBadge.astro";
+interface Props { only?: string[] }
+const { only } = Astro.props;
+// Con `only` se muestran solo esos recorridos (por ejemplo, los que aplican a una vertical).
+const JOURNEYS = only ? ALL.filter((j) => only.includes(j.id)) : ALL;
 const byId = Object.fromEntries(NODES.map((n) => [n.id, n]));
 const center = (id: string) => ({ x: byId[id].x + byId[id].w / 2, y: byId[id].y + byId[id].h / 2 });
 const segs = JOURNEYS.flatMap((j) => j.steps.slice(0, -1).map((s, i) => ({ j: j.id, d: `M${center(s.node).x} ${center(s.node).y} L${center(j.steps[i + 1].node).x} ${center(j.steps[i + 1].node).y}`, status: j.status })));

@@ -2,5 +2,6 @@
   "id": "automatizacion",
   "order": 4,
   "title": "Automatización a la medida",
-  "text": "Flujos que conectan tus herramientas (formularios, correo, hojas de cálculo y tu CRM), con avisos y reportes para tu equipo."
+  "text": "Flujos que conectan tus herramientas (formularios, correo, hojas de cálculo y tu CRM), con avisos y reportes para tu equipo.",
+  "when": "Cuando tu equipo repite los mismos pasos entre varias herramientas."
 }

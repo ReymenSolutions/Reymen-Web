@@ -3,7 +3,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { STATIC_ROUTES } from "../src/routes";
 import { product, vertical, feature } from "../src/lib/schemas";
 
-const pages = ["/", "/restaurantes", "/productos", "/contacto", "/privacidad", "/gracias"];
+const pages = ["/", "/restaurantes", "/productos", "/contacto", "/ai-agents", "/smart-cards", "/automatizaciones", "/servicios", "/seguridad", "/privacidad", "/gracias"];
 
 // Las pruebas no dependen de internet: la analítica externa se simula vacía.
 test.beforeEach(async ({ page }) => { await page.route("https://plausible.io/**", (r) => r.fulfill({ status: 200, contentType: "text/javascript", body: "" })); });
@@ -34,8 +34,8 @@ test.describe("rutas, SEO y encabezados", () => {
   test("el sitemap lista exactamente las rutas públicas", async ({ request }) => {
     const xml = await (await request.get("/sitemap.xml")).text();
     const locs = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
-    // Estáticas + verticales publicadas (hoy solo /restaurantes). Las páginas en borrador o sin listar no entran.
-    expect([...locs].sort()).toEqual([...STATIC_ROUTES, "/restaurantes"].map((p) => `https://reymen.mx${p}`).sort());
+    // Estáticas + verticales, productos y páginas publicados. Las páginas en borrador (Realty, clínicas) o sin listar no entran.
+    expect([...locs].sort()).toEqual([...STATIC_ROUTES, "/restaurantes", "/ai-agents", "/smart-cards", "/automatizaciones", "/servicios", "/seguridad"].map((p) => `https://reymen.mx${p}`).sort());
   });
 
   test("encabezados de seguridad presentes", async ({ request }) => {
@@ -61,7 +61,7 @@ test.describe("rutas, SEO y encabezados", () => {
 
 test.describe("responsive", () => {
   for (const w of widths) {
-    for (const path of ["/", "/restaurantes", "/productos", "/contacto"]) {
+    for (const path of ["/", "/restaurantes", "/productos", "/contacto", "/ai-agents", "/smart-cards", "/automatizaciones", "/servicios", "/seguridad"]) {
       test(`${path} a ${w}px: sin desbordes y botones tocables`, async ({ page }) => {
         await page.setViewportSize({ width: w, height: w < 600 ? 800 : 900 });
         await page.goto(path);
@@ -117,10 +117,10 @@ test.describe("navegación e interacciones", () => {
     await page.keyboard.press("Escape");
     await expect(btn).toHaveAttribute("aria-expanded", "false");
     await expect(btn).toBeFocused();
-    // Mientras /ai-agents, /smart-cards y /realty no estén publicadas, el menú apunta a las secciones de /productos.
+    // El menú solo enlaza a páginas publicadas: Realty y clínicas siguen en borrador y no aparecen.
     const hrefs = await page.locator("[data-nav] a").evaluateAll((as) => as.map((a) => (a as HTMLAnchorElement).getAttribute("href")));
-    for (const h of hrefs) expect(h).not.toMatch(/^\/(realty|ai-agents|smart-cards|automatizaciones|servicios|seguridad)(\/|#|$)/);
-    expect(hrefs).toContain("/productos#ai-agents");
+    for (const h of hrefs) expect(h).not.toMatch(/^\/(realty|clinicas-y-servicios)(\/|#|$)/);
+    expect(hrefs).toEqual(expect.arrayContaining(["/ai-agents", "/smart-cards", "/automatizaciones", "/servicios", "/seguridad"]));
   });
 
   test("desplegable abierto sobre el hero oscuro: contraste correcto (axe)", async ({ page }) => {
@@ -134,7 +134,7 @@ test.describe("navegación e interacciones", () => {
   });
 
   test("las páginas en borrador no existen", async ({ request }) => {
-    for (const path of ["/realty", "/ai-agents", "/smart-cards", "/clinicas-y-servicios"]) expect((await request.get(path)).status()).toBe(404);
+    for (const path of ["/realty", "/clinicas-y-servicios"]) expect((await request.get(path)).status()).toBe(404);
   });
 
   test("ningún enlace interno está roto", async ({ page, request }) => {
@@ -158,6 +158,41 @@ test.describe("navegación e interacciones", () => {
     // Lo que está en desarrollo o es concepto se rotula como tal.
     await expect(page.locator("#ai-agents")).toContainText("Concepto");
     await expect(page.locator("#ai-agents")).toContainText("En desarrollo");
+  });
+
+  test("/ai-agents: niveles con su estado y el catálogo filtra por categoría", async ({ page }) => {
+    await page.goto("/ai-agents");
+    await expect(page.locator("h1")).toContainText("Agentes de IA que trabajan con tus reglas");
+    await expect(page.locator("#canales")).toContainText("WhatsApp (con Twilio)");
+    await expect(page.locator("#canales")).toContainText("En desarrollo");
+    await expect(page.locator("#equipos")).toContainText("Concepto: aún no es parte del producto");
+    const cat = page.locator("[data-catalog]");
+    await cat.locator(".chip", { hasText: "Marketing" }).click();
+    await expect(cat.locator(".cat:not([hidden])")).toHaveCount(1);
+    await expect(cat.locator(".cat:not([hidden])")).toContainText("Investigación de tendencias");
+    await cat.locator(".chip", { hasText: "Todas" }).click();
+    await expect(cat.locator(".cat:not([hidden])")).toHaveCount(6);
+  });
+
+  test("/automatizaciones: elegir un flujo rellena Evento, Condición, Acción y Resultado", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/automatizaciones");
+    const flow = page.locator("[data-flow]");
+    await flow.locator(".pick", { hasText: "Alerta de inventario bajo" }).click();
+    await expect(flow.locator('[data-k="event"]')).toContainText("baja de su mínimo");
+    await expect(flow.locator("[data-req]")).toContainText("Reymen Foods");
+    await expect(page.locator("body")).toContainText("No hay un constructor visual");
+  });
+
+  test("/smart-cards, /seguridad y /servicios muestran su contenido y su estado", async ({ page }) => {
+    await page.goto("/smart-cards");
+    await expect(page.locator("#incluye")).toContainText("Enlace público y código QR");
+    await expect(page.locator("h1 ~ *, body").first()).toBeVisible();
+    await page.goto("/seguridad");
+    await expect(page.locator("body")).toContainText("No declaramos certificaciones");
+    await expect(page.locator("#datos")).toContainText("Beta");
+    await page.goto("/servicios");
+    await expect(page.locator("#servicios .row")).toHaveCount(4);
   });
 
   test("mapa del ecosistema: elegir un recorrido cambia el detalle y marca el concepto", async ({ page }) => {
@@ -290,6 +325,13 @@ test("las afirmaciones retiradas no reaparecen", async ({ page }) => {
     await page.goto(path);
     const text = (await page.locator("body").innerText()).toLowerCase();
     expect(text).not.toMatch(/al instante|contestados al instante|contesta tu whatsapp/);
+  }
+  // Y en las páginas de agentes y automatizaciones, WhatsApp solo aparece como «en desarrollo».
+  for (const path of ["/ai-agents", "/automatizaciones"]) {
+    await page.goto(path);
+    const text = (await page.locator("body").innerText()).toLowerCase();
+    expect(text).not.toMatch(/al instante|responde por whatsapp|atienden mensajes reales/);
+    expect(text).toContain("en desarrollo");
   }
 });
 

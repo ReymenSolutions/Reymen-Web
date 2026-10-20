@@ -1,0 +1,20 @@
+{
+  "id": "insumo-bajo",
+  "title": "Alerta de inventario bajo",
+  "text": "Avisa al equipo cuando un insumo baja de su mínimo o se agota.",
+  "status": "beta",
+  "evidence": {
+    "code": [
+      "ReymenApp src/lib/automation/blueprints/inventory-low-alert.ts"
+    ],
+    "tests": true,
+    "production": false
+  },
+  "order": 7,
+  "audience": "equipo",
+  "event": "Un insumo baja de su mínimo o se agota",
+  "condition": "Aún no se avisó de ese nivel para ese insumo",
+  "action": "Avisa al equipo en la campana de Reymen App (y por correo o WhatsApp si el negocio lo conecta)",
+  "result": "Un aviso por insumo y nivel hasta que se recupere; nunca bloquea una venta",
+  "requires": "Reymen Foods"
+}

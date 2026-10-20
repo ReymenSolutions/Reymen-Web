@@ -1,0 +1,30 @@
+---
+// Concepto de «equipo de agentes»: varios agentes colaborando con un supervisor. Es una idea ilustrativa y la etiqueta lo dice; no es parte del producto.
+const roles = [
+  { n: "Agente investigador", t: "Reúne la información" },
+  { n: "Agente analista", t: "La interpreta" },
+  { n: "Agente ejecutor", t: "Propone y ejecuta con permiso" },
+  { n: "Agente supervisor", t: "Revisa y escala a una persona" },
+];
+---
+<figure class="team">
+  <p class="tag">Concepto: aún no es parte del producto</p>
+  <ol>
+    {roles.map((r, i) => <li><span class="num" aria-hidden="true">{i + 1}</span><b>{r.n}</b><span>{r.t}</span></li>)}
+  </ol>
+  <figcaption>Ejemplo ilustrativo de cómo podrían colaborar varios agentes. Hoy no hay orquestación entre agentes.</figcaption>
+</figure>
+
+<style>
+  .team { margin: 0; display: grid; gap: var(--s-4); padding: var(--s-5); border: 1px dashed var(--mist); border-radius: var(--r-lg); background: var(--white); }
+  .tag { margin: 0; font-size: var(--step--1); font-weight: 650; color: var(--ink-soft); }
+  ol { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-3); position: relative; }
+  li { display: grid; gap: 0.2rem; align-content: start; padding: var(--s-3); border: 1px solid var(--mist); border-radius: var(--r-md); position: relative; }
+  li:not(:last-child)::after { content: ""; position: absolute; top: 50%; right: calc(-1 * var(--s-3) - 1px); width: var(--s-3); border-top: 2px dashed #8195c4; }
+  .num { display: grid; place-items: center; width: 1.5rem; height: 1.5rem; border-radius: 50%; border: 1px solid var(--blue-ink); color: var(--blue-ink); font-size: 0.75rem; font-weight: 700; }
+  li b { font-stretch: 106%; }
+  li span:last-child { color: var(--ink-soft); font-size: 0.9rem; }
+  figcaption { color: var(--ink-soft); font-size: var(--step--1); }
+  @media (max-width: 62rem) { ol { grid-template-columns: repeat(2, minmax(0, 1fr)); } li::after { display: none; } }
+  @media (max-width: 30rem) { ol { grid-template-columns: 1fr; } }
+</style>

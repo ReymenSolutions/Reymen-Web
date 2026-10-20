@@ -1,0 +1,53 @@
+---
+import Base from "../layouts/Base.astro";
+import Section from "../components/Section.astro";
+import SectionHead from "../components/SectionHead.astro";
+import PageHero from "../components/PageHero.astro";
+import FeatureList from "../components/FeatureList.astro";
+import StatusBadge from "../components/StatusBadge.astro";
+import ContactSection from "../components/ContactSection.astro";
+import { SITE } from "../config";
+import { getProduct, assertCatalogIntegrity } from "../lib/catalog";
+
+await assertCatalogIntegrity();
+// Contenido en src/content/products/smart-cards.json. El producto vive en su propio repositorio; aquí solo se publica lo verificado.
+const p = await getProduct("smart-cards");
+const live = p.features.filter((f) => f.status === "live").map((f) => ({ h: f.title, p: f.text, status: f.status }));
+const pending = p.features.filter((f) => f.status !== "live").map((f) => ({ h: f.title, p: f.text, status: f.status }));
+const journey = [
+  { t: "Alguien escanea el QR de la tarjeta", s: "live" as const },
+  { t: "Se abre la página pública de la tarjeta", s: "live" as const },
+  { t: "Se registran los escaneos y los clics", s: "live" as const },
+  { t: "Ves las estadísticas en Reymen App", s: "live" as const },
+  { t: "Lo que deja la persona llega como contacto al CRM", s: "planned" as const },
+];
+const ld = [{ "@context": "https://schema.org", "@type": "SoftwareApplication", name: p.name, description: p.description, applicationCategory: "BusinessApplication", url: `${SITE.url}${p.page!.route}`, publisher: { "@type": "Organization", name: SITE.name } }];
+---
+<Base darkHero title={p.seo!.title} description={p.seo!.description} path={p.page!.route} crumbs={[{ name: "Productos", path: "/productos" }, { name: p.name, path: p.page!.route }]} ld={ld}>
+  <PageHero id="sc-title" title={p.hero!.title} lede={p.hero!.lede} status="LIVE" primary={{ label: "Agendar demo", href: "/contacto?interes=smart-cards" }} secondary={{ label: "Ver qué incluye", short: "Qué incluye", href: "#incluye" }}>
+    <ol slot="visual" class="journey" aria-label="Recorrido de una tarjeta">
+      {journey.map((j, i) => <li><span class="n" aria-hidden="true">{i + 1}</span><span class="t">{j.t}</span>{j.s !== "live" && <StatusBadge status={j.s} />}</li>)}
+    </ol>
+  </PageHero>
+
+  <Section id="incluye" tone="white" after="night" labelledby="inc-title">
+    <SectionHead id="inc-title" title="Qué incluye hoy" lede="Lo que ya puedes usar." />
+    <FeatureList items={live} cols={2} />
+  </Section>
+
+  <Section id="conexion" labelledby="con-title">
+    <SectionHead id="con-title" title="Cómo se conecta con Reymen App" lede="Smart Cards tiene su propio panel. Desde Reymen App entras con un acceso único y ves las estadísticas de tus tarjetas y a tu equipo." />
+    {pending.length > 0 && <FeatureList items={pending} cols={2} />}
+    <p class="note">Smart Cards vive aparte de Reymen App para que cada uno evolucione a su ritmo; por eso lo que conecta ambos se publica con su estado.</p>
+  </Section>
+
+  <ContactSection vertical="smart-cards" title="Conoce Smart Cards" lede="Cuéntanos cuántas tarjetas necesitas y para qué equipo. Te mostramos cómo funcionan y te respondemos con una propuesta clara." />
+</Base>
+
+<style>
+  .journey { display: grid; gap: var(--s-3); padding: var(--s-5); background: var(--night-2); border: 1px solid var(--night-line); border-radius: var(--r-lg); box-shadow: var(--lift-night); }
+  .journey li { display: flex; align-items: center; flex-wrap: wrap; gap: var(--s-3); color: var(--on-night); }
+  .n { display: grid; place-items: center; flex: none; width: 1.6rem; height: 1.6rem; border-radius: 50%; border: 1px solid var(--electric-soft); color: var(--electric-soft); font-size: 0.8rem; font-weight: 700; }
+  .t { flex: 1 1 14rem; }
+  .note { margin-top: var(--s-5); color: var(--ink-soft); max-width: 60ch; }
+</style>

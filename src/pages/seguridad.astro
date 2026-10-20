@@ -1,0 +1,49 @@
+---
+import Base from "../layouts/Base.astro";
+import Section from "../components/Section.astro";
+import SectionHead from "../components/SectionHead.astro";
+import PageHero from "../components/PageHero.astro";
+import FeatureList from "../components/FeatureList.astro";
+import Faq from "../components/Faq.astro";
+import { getLanding, assertCatalogIntegrity } from "../lib/catalog";
+
+await assertCatalogIntegrity();
+// Contenido en src/content/landings/seguridad.json: cada control declara su estado y de dónde sale su respaldo.
+const l = await getLanding("seguridad");
+const byGroup = (g: string) => l.features.filter((f) => f.group === g).map((f) => ({ h: f.title, p: f.text, status: f.status }));
+---
+<Base darkHero title={l.seo.title} description={l.seo.description} path={l.route} crumbs={[{ name: "Seguridad", path: l.route }]}>
+  <PageHero id="seg-title" title={l.hero.title} lede={l.hero.lede} primary={l.cta.primary} secondary={l.cta.secondary && { label: l.cta.secondary.label, short: "Privacidad", href: l.cta.secondary.href }} />
+
+  {l.groups.map((g, i) => (
+    <Section id={g.id} tone={i % 2 === 0 ? "white" : "paper"} after={i === 0 ? "night" : undefined} labelledby={`${g.id}-title`}>
+      <SectionHead id={`${g.id}-title`} title={g.title} lede={g.text} />
+      <FeatureList items={byGroup(g.id)} cols={2} />
+    </Section>
+  ))}
+
+  <Section id="alcance" tone={l.groups.length % 2 === 0 ? "white" : "paper"} labelledby="alc-title">
+    <SectionHead id="alc-title" title="Cómo leer esta página" />
+    <ul class="notes">
+      {l.notes.map((n) => <li>{n}</li>)}
+    </ul>
+    <p class="priv">Así tratamos los datos personales: <a href="/privacidad">aviso de privacidad</a>.</p>
+  </Section>
+
+  <Section id="preguntas" tone={l.groups.length % 2 === 0 ? "paper" : "white"} labelledby="faq-title">
+    <div class="faq-grid">
+      <h2 id="faq-title">Preguntas frecuentes<span class="dot">.</span></h2>
+      <Faq items={l.faq} />
+    </div>
+  </Section>
+</Base>
+
+<style>
+  .notes { display: grid; gap: var(--s-4); max-width: 62ch; }
+  .notes li { padding-left: var(--s-5); border-left: 2px solid var(--mist); color: var(--ink-soft); }
+  .priv { margin-top: var(--s-5); color: var(--ink-soft); }
+  .priv a { color: var(--blue-ink); font-weight: 600; }
+  .faq-grid { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: clamp(1.5rem, 4vw, 4rem); align-items: start; }
+  .faq-grid h2 { position: sticky; top: 6rem; }
+  @media (max-width: 62rem) { .faq-grid { grid-template-columns: 1fr; } .faq-grid h2 { position: static; } }
+</style>

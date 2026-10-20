@@ -2,15 +2,12 @@
 import { SITE } from "../config";
 import Wordmark from "./Wordmark.astro";
 import Button from "./Button.astro";
-import { navGroups } from "../lib/catalog";
+import { navGroups, navLinks } from "../lib/catalog";
 interface Props { dark?: boolean }
 const { dark = false } = Astro.props;
 // Soluciones y Productos salen de los catálogos; Servicios y Seguridad son secciones de la home hasta que tengan página propia.
 const groups = await navGroups();
-const links = [
-  { href: "/#servicios", label: "Servicios" },
-  { href: "/#seguridad", label: "Seguridad" },
-];
+const links = await navLinks();
 ---
 <header class="site-header" data-header data-dark={dark ? "true" : "false"}>
   <div class="container bar">
@@ -24,16 +21,21 @@ const links = [
               <svg class="chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="m2.5 4.5 3.5 3.5 3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" /></svg>
             </button>
             <div class="dd-panel" id={`dd-${g.id}`}>
-              <ul>
-                {g.items.map((it) => (
-                  <li>
-                    <a href={it.href}>
-                      <span class="dd-name">{it.label}{it.badge && <span class="dd-badge">{it.badge}</span>}</span>
-                      <span class="dd-text">{it.text}</span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
+              {g.sections.map((sec) => (
+                <>
+                  {sec.title && <p class="dd-title">{sec.title}</p>}
+                  <ul>
+                    {sec.items.map((it) => (
+                      <li>
+                        <a href={it.href}>
+                          <span class="dd-name">{it.label}{it.badge && <span class="dd-badge">{it.badge}</span>}</span>
+                          <span class="dd-text">{it.text}</span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              ))}
               {g.footer && <a class="dd-foot" href={g.footer.href}>{g.footer.label}</a>}
             </div>
           </li>
@@ -100,6 +102,7 @@ const links = [
   .dd-panel ul { display: grid; gap: 2px; }
   .nav .dd-panel a { display: grid; gap: 0.1rem; padding: 0.65rem 0.8rem; color: var(--ink); border-radius: var(--r-sm); }
   .nav .dd-panel a:hover { background: color-mix(in srgb, var(--blue) 7%, transparent); color: var(--ink); }
+  .dd-title { margin: 0.4rem 0.8rem 0.1rem; font-size: 0.75rem; font-weight: 650; color: var(--ink-soft); }
   .dd-name { display: flex; align-items: center; gap: 0.5rem; font-weight: 650; font-size: 0.95rem; }
   .dd-badge { padding: 0.05rem 0.5rem; border: 1px solid var(--blue-ink); border-radius: 999px; color: var(--blue-ink); font-size: 0.7rem; font-weight: 650; }
   .dd-text { color: var(--ink-soft); font-size: 0.85rem; line-height: 1.4; font-weight: 420; }
@@ -117,6 +120,7 @@ const links = [
     .dd[data-open="true"] .dd-panel { animation: none; }
     .nav .dd-panel a, .nav .dd-panel a:hover { color: inherit; padding: 0.7rem 0.25rem; border-bottom: 0; }
     .dd-text { color: color-mix(in srgb, currentColor 65%, transparent); }
+    .dd-title { margin: 0.6rem 0.25rem 0; color: color-mix(in srgb, currentColor 65%, transparent); }
     .dd-badge { color: inherit; border-color: currentColor; }
     .nav .dd-panel .dd-foot { color: inherit; border-top: 0; text-decoration: underline; text-underline-offset: 0.25em; }
     .site-header[data-dark="true"]:not([data-scrolled="true"]) .dd-btn { color: var(--on-night); }

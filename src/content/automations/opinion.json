@@ -1,0 +1,20 @@
+{
+  "id": "opinion",
+  "title": "Opinión después de la visita",
+  "text": "Pide la opinión del cliente un rato después de su compra.",
+  "status": "beta",
+  "evidence": {
+    "code": [
+      "ReymenApp src/lib/automation/blueprints/post-visit-feedback.ts"
+    ],
+    "tests": true,
+    "production": false
+  },
+  "order": 5,
+  "audience": "clientes",
+  "event": "Se cierra una venta",
+  "condition": "El cliente tiene consentimiento y no recibió una solicitud reciente",
+  "action": "Le envía un enlace para calificar su visita, a la hora que configuraste",
+  "result": "Una calificación de 3 o menos abre un caso de seguimiento y avisa a dueños y gerentes",
+  "requires": "Reymen POS"
+}

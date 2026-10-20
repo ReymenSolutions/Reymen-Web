@@ -1,13 +1,16 @@
 // Acceso tipado a los catálogos y reglas derivadas (qué se publica, a dónde enlaza cada cosa, cómo se llama cada estado).
 import { getCollection } from "astro:content";
 import type { z } from "astro/zod";
-import type { product as productSchema, vertical as verticalSchema, capability as capabilitySchema, service as serviceSchema, home as homeSchema } from "./schemas";
+import type { product as productSchema, vertical as verticalSchema, capability as capabilitySchema, service as serviceSchema, home as homeSchema, agentCategory as agentSchema, automationFlow as flowSchema, landing as landingSchema } from "./schemas";
 
 export type Product = z.infer<typeof productSchema>;
 export type Vertical = z.infer<typeof verticalSchema>;
 export type Capability = z.infer<typeof capabilitySchema>;
 export type Service = z.infer<typeof serviceSchema>;
 export type Home = z.infer<typeof homeSchema>;
+export type AgentCategory = z.infer<typeof agentSchema>;
+export type AutomationFlow = z.infer<typeof flowSchema>;
+export type Landing = z.infer<typeof landingSchema>;
 export type Feature = Product["features"][number];
 
 export const AVAILABILITY_LABEL = { LIVE: "Disponible", BETA: "Beta", COMING_SOON: "Próximamente", DRAFT: "Borrador" } as const;
@@ -24,7 +27,9 @@ async function data(name: "products"): Promise<Product[]>;
 async function data(name: "verticals"): Promise<Vertical[]>;
 async function data(name: "capabilities"): Promise<Capability[]>;
 async function data(name: "services"): Promise<Service[]>;
-async function data(name: "products" | "verticals" | "capabilities" | "services") {
+async function data(name: "agents"): Promise<AgentCategory[]>;
+async function data(name: "automations"): Promise<AutomationFlow[]>;
+async function data(name: "products" | "verticals" | "capabilities" | "services" | "agents" | "automations") {
   return (await getCollection(name)).map((e) => e.data as { order: number }).sort(byOrder);
 }
 
@@ -38,6 +43,11 @@ export const allVerticals = () => data("verticals");
 export const getVertical = async (id: string) => { const v = (await data("verticals")).find((x) => x.id === id); if (!v) throw new Error(`Vertical «${id}» no existe`); return v; };
 export const getProduct = async (id: string) => { const p = (await data("products")).find((x) => x.id === id); if (!p) throw new Error(`Producto «${id}» no existe`); return p; };
 export const capabilities = () => data("capabilities");
+export const agentCategories = () => data("agents");
+export const automationFlows = () => data("automations");
+/** Páginas de capacidad o empresa (automatizaciones, servicios, seguridad). Las que están en borrador no existen para nadie. */
+export const landings = async (): Promise<Landing[]> => (await getCollection("landings")).map((e) => e.data as Landing).filter((l) => l.publication !== "draft");
+export const getLanding = async (id: string) => { const l = (await getCollection("landings")).map((e) => e.data as Landing).find((x) => x.id === id); if (!l) throw new Error(`Landing «${id}» no existe`); return l; };
 export const services = () => data("services");
 export const homeContent = async (): Promise<Home> => (await getCollection("pages")).find((e) => e.id === "home")!.data as Home;
 
@@ -59,20 +69,36 @@ export async function assertCatalogIntegrity() {
 export async function navGroups() {
   const verticals = await publishedVerticals();
   const prods = await products();
+  const pages = (await landings()).filter((l) => l.publication === "published" && l.nav);
+  const capacidades = pages.filter((l) => l.nav!.placement === "capacidades").sort((a, b) => a.nav!.order - b.nav!.order);
   return [
     {
       id: "soluciones",
       label: "Soluciones",
-      items: [
-        ...verticals.map((v) => ({ label: v.name, text: v.audience, href: v.route, badge: v.availability === "LIVE" ? null : AVAILABILITY_LABEL[v.availability] })),
-        { label: "Otras industrias", text: "Cuéntanos tu caso y lo revisamos juntos.", href: "/contacto?interes=otra-industria", badge: null },
+      sections: [
+        {
+          title: null as string | null,
+          items: [
+            ...verticals.map((v) => ({ label: v.name, text: v.audience, href: v.route, badge: v.availability === "LIVE" ? null : AVAILABILITY_LABEL[v.availability] })),
+            { label: "Otras industrias", text: "Cuéntanos tu caso y lo revisamos juntos.", href: "/contacto?interes=otra-industria", badge: null },
+          ],
+        },
       ],
+      footer: null as { label: string; href: string } | null,
     },
     {
       id: "productos",
       label: "Productos",
-      items: prods.map((p) => ({ label: p.name, text: p.tagline, href: productHref(p), badge: p.availability === "LIVE" ? null : AVAILABILITY_LABEL[p.availability] })),
-      footer: { label: "Ver todos los productos", href: "/productos" },
+      sections: [
+        { title: "Productos" as string | null, items: prods.map((p) => ({ label: p.name, text: p.tagline, href: productHref(p), badge: p.availability === "LIVE" ? null : AVAILABILITY_LABEL[p.availability] })) },
+        ...(capacidades.length ? [{ title: "Capacidades" as string | null, items: capacidades.map((l) => ({ label: l.nav!.label, text: l.nav!.text ?? "", href: l.route, badge: l.availability && l.availability !== "LIVE" ? AVAILABILITY_LABEL[l.availability] : null })) }] : []),
+      ],
+      footer: { label: "Ver todos los productos", href: "/productos" } as { label: string; href: string } | null,
     },
   ];
+}
+
+/** Enlaces de primer nivel (Servicios, Seguridad…) que salen de las páginas publicadas. */
+export async function navLinks() {
+  return (await landings()).filter((l) => l.publication === "published" && l.nav?.placement === "top").sort((a, b) => a.nav!.order - b.nav!.order).map((l) => ({ label: l.nav!.label, href: l.route }));
 }

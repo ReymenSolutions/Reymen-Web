@@ -1,0 +1,20 @@
+{
+  "id": "cliente-vip",
+  "title": "Alerta de cliente VIP",
+  "text": "Avisa al equipo cuando un cliente llega al nivel VIP que definiste.",
+  "status": "beta",
+  "evidence": {
+    "code": [
+      "ReymenApp src/lib/automation/blueprints/vip-customer-alert.ts"
+    ],
+    "tests": true,
+    "production": false
+  },
+  "order": 9,
+  "audience": "equipo",
+  "event": "Un cliente llega a las visitas y al gasto que definiste como VIP",
+  "condition": "Es la primera vez que alcanza ese nivel",
+  "action": "Avisa al equipo para que lo salude; no le escribe al cliente",
+  "result": "Un aviso por cliente",
+  "requires": "Reymen POS"
+}

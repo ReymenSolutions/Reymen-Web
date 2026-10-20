@@ -1,0 +1,52 @@
+{
+  "id": "analisis",
+  "order": 4,
+  "title": "Análisis e investigación",
+  "text": "Convertir datos en informes y oportunidades.",
+  "items": [
+    {
+      "id": "datos",
+      "title": "Análisis de datos",
+      "text": "Explora tus ventas, clientes o inventario y explica lo que encuentra.",
+      "status": "concept",
+      "evidence": {
+        "code": [],
+        "tests": false,
+        "production": false
+      }
+    },
+    {
+      "id": "investigacion",
+      "title": "Investigación",
+      "text": "Reúne y resume información de varias fuentes.",
+      "status": "concept",
+      "evidence": {
+        "code": [],
+        "tests": false,
+        "production": false
+      }
+    },
+    {
+      "id": "informes",
+      "title": "Informes",
+      "text": "Arma reportes a la medida de lo que necesitas revisar.",
+      "status": "concept",
+      "evidence": {
+        "code": [],
+        "tests": false,
+        "production": false
+      }
+    },
+    {
+      "id": "oportunidades",
+      "title": "Identificación de oportunidades",
+      "text": "Señala dónde hay ventas o ahorros por aprovechar.",
+      "status": "concept",
+      "evidence": {
+        "code": [],
+        "tests": false,
+        "production": false
+      }
+    }
+  ]
+}

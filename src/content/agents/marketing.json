@@ -1,0 +1,52 @@
+{
+  "id": "marketing",
+  "order": 2,
+  "title": "Marketing",
+  "text": "Investigar el mercado y apoyar campañas y contenido.",
+  "items": [
+    {
+      "id": "tendencias",
+      "title": "Investigación de tendencias",
+      "text": "Resume lo que se mueve en tu sector.",
+      "status": "concept",
+      "evidence": {
+        "code": [],
+        "tests": false,
+        "production": false
+      }
+    },
+    {
+      "id": "competitivo",
+      "title": "Análisis competitivo",
+      "text": "Compara la oferta de tu competencia con la tuya.",
+      "status": "concept",
+      "evidence": {
+        "code": [],
+        "tests": false,
+        "production": false
+      }
+    },
+    {
+      "id": "contenido",
+      "title": "Contenido",
+      "text": "Propone textos para tus canales con tu tono.",
+      "status": "concept",
+      "evidence": {
+        "code": [],
+        "tests": false,
+        "production": false
+      }
+    },
+    {
+      "id": "campanas",
+      "title": "Asistencia para campañas",
+      "text": "Apoya la planeación y el seguimiento de una campaña.",
+      "status": "concept",
+      "evidence": {
+        "code": [],
+        "tests": false,
+        "production": false
+      }
+    }
+  ]
+}

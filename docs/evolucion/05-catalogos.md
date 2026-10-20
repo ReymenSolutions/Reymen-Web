@@ -9,6 +9,9 @@ Todo lo comercial vive en `src/content/` como JSON validado al compilar (`src/li
 | `capabilities/` | Las 3 capacidades de la home | «Qué hacemos» |
 | `services/` | Los 4 servicios a la medida | Sección de servicios de la home |
 | `pages/home.json` | Hero, datos de apoyo, seguridad, preguntas | Home |
+| `agents/` | Catálogo comercial de agentes por categoría, cada uno con su estado | `/ai-agents` (`AgentCatalog`) |
+| `automations/` | Los 9 flujos reales de Reymen App: evento, condición, acción y resultado | `/automatizaciones` (`FlowModel`) |
+| `landings/` | Páginas de capacidad y empresa: automatizaciones, servicios, seguridad | `/automatizaciones`, `/servicios`, `/seguridad`, menú |
 | `src/data/ecosystem.ts` | Nodos y recorridos del mapa del ecosistema | `EcosystemMap` |
 
 ## Dos estados que no se mezclan
@@ -33,3 +36,10 @@ Cada función lleva `status` y `evidence { code[], tests, production }`:
 ## Pendientes de confirmar (marcados en los datos)
 - Reymen POS, Reymen App (CRM, Foods) están `live` porque operan en `pos.reymen.mx` y `app.reymen.mx`; confirmar función por función.
 - Smart Cards y AI Agents están `BETA` con `reviewNote`: confirmar su disponibilidad real.
+
+## P2
+- **Páginas nuevas:** `/ai-agents` y `/smart-cards` (productos), `/automatizaciones`, `/servicios` y `/seguridad` (landings). El menú, el sitemap y los enlaces de la home las toman de los datos.
+- **Realty** sigue en `draft`: `/realty` no existe hasta que se cambie su `publication`. La plantilla `[slug].astro` ya soporta capturas y funciones para cuando se active.
+- **Smart Cards** pasó a `LIVE` por confirmación del equipo (2026-10-20); AI Agents sigue en `BETA`. La página de Smart Cards publica solo lo verificado desde Reymen App; faltan tipos de tarjeta, personalización y capturas (el producto está en otro repositorio).
+- **Agentes:** solo «Atención de prospectos», «Seguimiento comercial», «Consulta de conocimiento» y «Escalamiento» son `beta`; el resto del catálogo es `concept`. Los equipos de agentes se muestran como concepto, sin orquestación real.
+- **Automatizaciones:** los 9 flujos son `beta` (verificados en código); parten de eventos del POS, inventario y lealtad. Se dice expresamente que no hay constructor visual y que WhatsApp está en desarrollo.

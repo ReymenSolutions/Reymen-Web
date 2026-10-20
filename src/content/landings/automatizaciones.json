@@ -1,0 +1,242 @@
+{
+  "id": "automatizaciones",
+  "route": "/automatizaciones",
+  "publication": "published",
+  "availability": "BETA",
+  "nav": {
+    "placement": "capacidades",
+    "label": "Automatizaciones",
+    "order": 1,
+    "text": "Flujos que reaccionan a eventos de tu negocio."
+  },
+  "seo": {
+    "title": "Automatizaciones · Reymen Solutions",
+    "description": "Flujos que reaccionan a eventos de tu negocio, revisan condiciones y ejecutan una acción, con registro, reintentos y control. Hoy en beta.",
+    "noindex": false
+  },
+  "hero": {
+    "title": "Que los procesos se muevan solos, con tus reglas",
+    "lede": "Las automatizaciones de Reymen App reaccionan a un evento de tu negocio, revisan una condición y ejecutan una acción. Cada ejecución queda registrada, con reintentos y control. Hoy están en beta."
+  },
+  "cta": {
+    "primary": {
+      "label": "Solicitar acceso",
+      "href": "/contacto?interes=automatizaciones"
+    },
+    "secondary": {
+      "label": "Ver los flujos",
+      "href": "#flujos"
+    }
+  },
+  "groups": [
+    {
+      "id": "control",
+      "title": "Control y trazabilidad",
+      "text": "Lo que protege a tus clientes y a tu equipo."
+    },
+    {
+      "id": "integraciones",
+      "title": "Integraciones",
+      "text": "Por dónde entran los eventos y por dónde salen los avisos."
+    }
+  ],
+  "features": [
+    {
+      "id": "ejecuciones",
+      "title": "Estados de ejecución",
+      "text": "Cada ejecución queda registrada como pendiente, enviada, fallida u omitida, con su motivo.",
+      "status": "beta",
+      "evidence": {
+        "code": [
+          "ReymenApp docs/automations/N8N.md",
+          "ReymenApp src/lib/automation/dispatcher.ts"
+        ],
+        "tests": true,
+        "production": false
+      },
+      "group": "control"
+    },
+    {
+      "id": "reintentos",
+      "title": "Reintentos controlados",
+      "text": "Si un envío falla, Reymen reintenta con espera creciente y un administrador puede reintentarlo a mano.",
+      "status": "beta",
+      "evidence": {
+        "code": [
+          "ReymenApp docs/automations/N8N.md",
+          "ReymenApp src/lib/automation/retry.ts"
+        ],
+        "tests": true,
+        "production": false
+      },
+      "group": "control"
+    },
+    {
+      "id": "consentimiento",
+      "title": "Consentimiento y enfriamiento",
+      "text": "Los mensajes a clientes salen solo con su consentimiento, fuera del horario de silencio y sin repetirse.",
+      "status": "beta",
+      "evidence": {
+        "code": [
+          "ReymenApp src/lib/automation/policy.ts"
+        ],
+        "tests": true,
+        "production": false
+      },
+      "group": "control"
+    },
+    {
+      "id": "control-grupo",
+      "title": "Grupo de control",
+      "text": "Puedes dejar un porcentaje de clientes sin mensaje para medir cuánto ayuda cada flujo.",
+      "status": "beta",
+      "evidence": {
+        "code": [
+          "ReymenApp src/lib/automation/control-group.ts",
+          "ReymenApp src/lib/automation/attribution.ts"
+        ],
+        "tests": true,
+        "production": false
+      },
+      "group": "control"
+    },
+    {
+      "id": "config",
+      "title": "Configuración por negocio",
+      "text": "Horarios, canal y plazos de cada flujo se configuran por negocio.",
+      "status": "beta",
+      "evidence": {
+        "code": [
+          "ReymenApp src/lib/automation/config-spec.ts"
+        ],
+        "tests": true,
+        "production": false
+      },
+      "group": "control"
+    },
+    {
+      "id": "pos-app",
+      "title": "Reymen POS hacia Reymen App",
+      "text": "Las ventas cerradas, la cocina y los cortes llegan a Reymen App como eventos firmados y sin duplicarse.",
+      "status": "live",
+      "evidence": {
+        "code": [
+          "ReymenPOS docs/integration.md",
+          "ReymenApp src/app/api/webhooks/pos"
+        ],
+        "tests": true,
+        "production": true
+      },
+      "group": "integraciones"
+    },
+    {
+      "id": "n8n",
+      "title": "Entrega por n8n",
+      "text": "Reymen decide a quién y qué enviar; n8n entrega por cada canal, con firma e idempotencia.",
+      "status": "beta",
+      "evidence": {
+        "code": [
+          "ReymenApp docs/automations/N8N.md"
+        ],
+        "tests": true,
+        "production": false
+      },
+      "group": "integraciones"
+    },
+    {
+      "id": "api",
+      "title": "API con llave",
+      "text": "Otros sistemas consultan y escriben contactos, citas, conversaciones y base de conocimiento.",
+      "status": "beta",
+      "evidence": {
+        "code": [
+          "ReymenApp src/app/api/v1",
+          "ReymenApp src/lib/api-key-auth.ts"
+        ],
+        "tests": true,
+        "production": false
+      },
+      "group": "integraciones"
+    },
+    {
+      "id": "reparto",
+      "title": "Pedidos de plataformas de reparto",
+      "text": "Reymen recibe pedidos en un formato normalizado; la conexión con cada plataforma se revisa caso por caso.",
+      "status": "beta",
+      "evidence": {
+        "code": [
+          "ReymenApp src/lib/delivery.ts"
+        ],
+        "tests": true,
+        "production": false
+      },
+      "group": "integraciones"
+    },
+    {
+      "id": "whatsapp",
+      "title": "WhatsApp con Twilio",
+      "text": "El envío de mensajes por WhatsApp está en desarrollo.",
+      "status": "planned",
+      "evidence": {
+        "code": [
+          "ReymenApp docs/crm/INBOX-CANALES.md (contrato de canal)"
+        ],
+        "tests": false,
+        "production": false
+      },
+      "group": "integraciones"
+    },
+    {
+      "id": "otros-canales",
+      "title": "Instagram, Messenger y correo",
+      "text": "Conectores por canal, con las credenciales de cada negocio.",
+      "status": "planned",
+      "evidence": {
+        "code": [
+          "ReymenApp docs/crm/INBOX-CANALES.md"
+        ],
+        "tests": false,
+        "production": false
+      },
+      "group": "integraciones"
+    },
+    {
+      "id": "tarjetas",
+      "title": "Smart Cards hacia el CRM",
+      "text": "El receptor en Reymen App está listo; el envío desde la tarjeta está pendiente.",
+      "status": "planned",
+      "evidence": {
+        "code": [
+          "ReymenApp docs/smartcard/CRM-LEADS.md"
+        ],
+        "tests": false,
+        "production": false
+      },
+      "group": "integraciones"
+    }
+  ],
+  "steps": [],
+  "notes": [
+    "Los flujos preparados de hoy parten de eventos del punto de venta, el inventario y la lealtad. Seguimiento de formularios, sincronización de datos y otros procesos se construyen a la medida.",
+    "No hay un constructor visual para armar flujos por tu cuenta: los flujos se configuran con Reymen.",
+    "Los avisos internos aparecen en la campana de Reymen App. El envío por WhatsApp o correo depende del conector de cada negocio, y el de WhatsApp está en desarrollo."
+  ],
+  "faq": [
+    {
+      "q": "¿Necesito el punto de venta para usar automatizaciones?",
+      "a": "Los flujos preparados hoy usan eventos del punto de venta, el inventario o la lealtad. Para otros eventos, como formularios o tu CRM, los construimos a la medida."
+    },
+    {
+      "q": "¿Mis clientes reciben mensajes sin su permiso?",
+      "a": "No. Los flujos dirigidos a clientes solo escriben a quien dio su consentimiento, respetan un horario de silencio y no repiten el mensaje."
+    },
+    {
+      "q": "¿Cómo sé si un flujo funcionó?",
+      "a": "Cada ejecución queda registrada con su estado y su motivo, y puedes comparar contra un grupo de control para medir el efecto."
+    },
+    {
+      "q": "¿Puedo armar mis propios flujos?",
+      "a": "Hoy no hay un constructor visual. Configuramos los flujos contigo y construimos los que todavía no existen."
+    }
+  ]
+}

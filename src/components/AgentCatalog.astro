@@ -1,0 +1,59 @@
+---
+// Catálogo comercial de agentes por categoría, con el estado real de cada uno. Filtra por categoría (los botones son opcionales: sin JS se ven todas).
+import StatusBadge from "./StatusBadge.astro";
+import type { AgentCategory } from "../lib/catalog";
+interface Props { categories: AgentCategory[] }
+const { categories } = Astro.props;
+---
+<div class="catalog" data-catalog>
+  <div class="filters" role="group" aria-label="Categorías de agentes">
+    <button type="button" class="chip" data-cat="all" aria-pressed="true">Todas</button>
+    {categories.map((c) => <button type="button" class="chip" data-cat={c.id} aria-pressed="false">{c.title}</button>)}
+  </div>
+  <div class="cats">
+    {categories.map((c) => (
+      <section class="cat" data-cat-id={c.id} aria-labelledby={`cat-${c.id}`}>
+        <h3 id={`cat-${c.id}`}>{c.title}</h3>
+        <p class="cat-text">{c.text}</p>
+        <ul>
+          {c.items.map((it) => (
+            <li>
+              <p class="name">{it.title} <StatusBadge status={it.status} /></p>
+              <p class="text">{it.text}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </div>
+</div>
+
+<style>
+  .catalog { display: grid; gap: var(--s-6); }
+  .filters { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+  .chip { padding: 0.5rem 0.95rem; min-height: 2.5rem; border: 1px solid var(--mist); border-radius: 999px; background: var(--white); color: var(--ink-soft); font: inherit; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease); }
+  .chip:hover { color: var(--ink); border-color: #8195c4; }
+  .chip:active { transform: translateY(1px); }
+  .chip[aria-pressed="true"] { background: var(--ink); color: var(--white); border-color: var(--ink); }
+  .cats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-7) var(--s-8); }
+  .cat[hidden] { display: none; }
+  .cat h3 { font-size: var(--step-1); }
+  .cat-text { color: var(--ink-soft); margin: var(--s-1) 0 var(--s-3); }
+  ul { border-top: 1px solid var(--mist); }
+  li { padding: var(--s-3) 0; border-bottom: 1px solid var(--mist); }
+  .name { margin: 0; font-weight: 650; display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem 0.6rem; }
+  .text { margin: 0.15rem 0 0; color: var(--ink-soft); font-size: 0.95rem; }
+  @media (max-width: 62rem) { .cats { grid-template-columns: 1fr; gap: var(--s-6); } }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-catalog]").forEach((root) => {
+    const chips = [...root.querySelectorAll<HTMLButtonElement>(".chip")];
+    const cats = [...root.querySelectorAll<HTMLElement>(".cat")];
+    chips.forEach((c) => c.addEventListener("click", () => {
+      const id = c.dataset.cat!;
+      chips.forEach((x) => x.setAttribute("aria-pressed", String(x === c)));
+      cats.forEach((k) => { k.hidden = id !== "all" && k.dataset.catId !== id; });
+    }));
+  });
+</script>
