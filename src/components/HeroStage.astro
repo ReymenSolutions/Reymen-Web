@@ -1,0 +1,208 @@
+---
+// Demostración conectada del ecosistema Reymen: WhatsApp → Agente IA → CRM → POS → Inventario → Lealtad.
+// Pantallas reales (datos de demostración), un teléfono con la conversación y un hilo de luz entre etapas.
+// Funciona sola, se puede pausar y cada etapa se puede abrir a mano. Con movimiento reducido no se reproduce sola.
+const steps = [
+  { id: "whatsapp", label: "WhatsApp", screen: "inbox", bar: "Inbox", alt: "Bandeja de mensajes de Reymen App con la conversación de un cliente", toast: "Mensaje nuevo de Fernanda", focus: [30, 50, 1.8], cap: "Un cliente escribe por WhatsApp y el mensaje llega a tu bandeja." },
+  { id: "ia", label: "Agente IA", screen: "inbox", bar: "Inbox", alt: "Conversación respondida por el Agente IA dentro de la bandeja", toast: "El Agente IA respondió", focus: [38, 55, 1.7], cap: "El agente contesta con tus reglas y pasa a una persona lo que no debe resolver solo." },
+  { id: "crm", label: "CRM", screen: "pipeline", bar: "Seguimiento", alt: "Tablero de seguimiento del CRM con oportunidades por etapa", toast: "Contacto nuevo en seguimiento", focus: [50, 50, 1], cap: "El contacto entra al CRM con su conversación, listo para darle seguimiento." },
+  { id: "pos", label: "POS", screen: "pos-cobro", bar: "Reymen POS", alt: "Cobro en efectivo del punto de venta con propina y cambio", toast: "Cuenta cobrada: $191.00", focus: [50, 50, 1], cap: "Cuando llega, su cuenta se cobra en el POS: propina, cambio y cuentas divididas." },
+  { id: "inventario", label: "Inventario", screen: "inventario", bar: "Inventario", alt: "Inventario con alertas de stock bajo y costos por insumo", toast: "Leche entera: stock bajo", focus: [40, 56, 1.5], cap: "Cada venta descuenta sus insumos y el sistema avisa lo que baja del mínimo." },
+  { id: "lealtad", label: "Lealtad", screen: "lealtad", bar: "Lealtad", alt: "Panel de lealtad con clientes inscritos, visitas y recompensas", toast: "Sello 9 de 10 registrado", focus: [50, 65, 1.4], cap: "La visita suma sellos en su tarjeta y tú ves quién regresa y cuánto gasta." },
+];
+// Origen de la transformación para que la ventana visible quede centrada en el punto de foco
+const origin = (c: number, z: number) => { const w = 1 / z; const a = Math.min(Math.max(c / 100 - w / 2, 0), 1 - w); return z === 1 ? 0 : (a / (1 - w)) * 100; };
+const fv = (f: number[]) => `--z:${f[2]};--ox:${origin(f[0], f[2]).toFixed(1)}%;--oy:${origin(f[1], f[2]).toFixed(1)}%;`;
+const dims: Record<string, [number, number, string, string?]> = { inbox: [1500, 900, "top left"], pipeline: [1500, 570, "top left"], "pos-cobro": [1300, 1182, "50% 50%", "#616690"], inventario: [1500, 900, "top left"], lealtad: [1500, 900, "top left"] };
+---
+<div class="stage" data-stage data-step="0" role="group" aria-roledescription="demostración" aria-label="Recorrido de un cliente por el ecosistema Reymen">
+  <div class="scene">
+    <div class="screens">
+      {steps.map((s, i) => (
+        <div class:list={["screen", { "is-active": i === 0 }]} data-i={i} aria-hidden={i === 0 ? "false" : "true"}>
+          <div class="frame" style={dims[s.screen][3] ? `background:${dims[s.screen][3]}` : undefined}>
+            <div class="bar" aria-hidden="true"><span class="lights"></span><span class="bar-label">{s.bar}</span></div>
+            <img src={i === 0 ? `/capturas/${s.screen}.webp` : undefined} data-src={`/capturas/${s.screen}.webp`} alt={s.alt} width={dims[s.screen][0]} height={dims[s.screen][1]} style={`object-position:${dims[s.screen][2]};${dims[s.screen][3] ? "object-fit:contain;" : ""}${fv(s.focus)}`} loading={i === 0 ? "eager" : "lazy"} fetchpriority={i === 0 ? "high" : "auto"} decoding="async" />
+          </div>
+        </div>
+      ))}
+      <div class="glare" aria-hidden="true"></div>
+    </div>
+
+    <div class="phone" data-chat="msg" aria-hidden="true">
+      <div class="p-head"><span class="av">CN</span><span class="who"><b>Café Norte</b><i>en línea</i></span></div>
+      <div class="p-body">
+        <p class="b in">Hola, ¿tienen mesa para 6 a las 3 pm?</p>
+        <p class="b typing"><span></span><span></span><span></span></p>
+        <p class="b out">¡Hola Fernanda! Hoy abrimos de 8:00 a 21:00. Te anoto y una persona confirma tu mesa.</p>
+      </div>
+    </div>
+
+    <p class="toast" data-toast role="status"><span class="pip" aria-hidden="true"></span><span data-toast-text>{steps[0].toast}</span></p>
+  </div>
+
+  <div class="rail-wrap">
+    <ol class="rail" data-rail>
+      {steps.map((s, i) => (
+        <li><button type="button" data-i={i} aria-current={i === 0 ? "step" : undefined}><span class="node" aria-hidden="true"></span><span class="lbl">{s.label}</span></button></li>
+      ))}
+    </ol>
+    <span class="track" aria-hidden="true"><span class="fill" data-fill></span><span class="runner" data-runner></span></span>
+  </div>
+
+  <div class="foot">
+    <p class="cap" data-cap>{steps[0].cap}</p>
+    <button type="button" class="pause" data-pause aria-pressed="false">Pausar</button>
+  </div>
+  <p class="note">Ejemplo con datos de demostración de un negocio ficticio.</p>
+</div>
+
+<script id="stage-data" type="application/json" set:html={JSON.stringify(steps.map((s) => ({ toast: s.toast, cap: s.cap })))} />
+
+<style>
+  .stage { container-type: inline-size; display: grid; gap: var(--s-4); --mx: 70%; --my: 30%; }
+  .scene { position: relative; aspect-ratio: 16 / 11.5; margin-right: calc(-1 * var(--gutter)); }
+  .screens { position: absolute; inset: 3% 0 0 12%; perspective: 1600px; }
+  .screen { position: absolute; inset: 0; opacity: 0; visibility: hidden; transform: translate3d(0, 14px, 0) rotateY(-5deg) rotateX(1.5deg) scale(0.985); transform-origin: 0% 60%;
+    transition: opacity 560ms var(--ease), transform 700ms var(--ease), visibility 0s linear 560ms;; }
+  .screen.is-active { opacity: 1; visibility: visible; transform: translate3d(0, 0, 0) rotateY(-5deg) rotateX(1.5deg); transition-delay: 0s; }
+  .frame { height: 100%; border-radius: 14px; overflow: hidden; background: var(--white); border: 1px solid var(--glass-line); box-shadow: var(--lift-night); display: flex; flex-direction: column; }
+  .bar { flex: none; display: flex; align-items: center; gap: 0.7rem; padding: 0.45rem 0.8rem; background: #0e1b48; color: var(--on-night-soft); font-size: clamp(0.62rem, 1.7cqw, 0.8rem); font-weight: 600; font-stretch: 106%; }
+  .lights { width: 2.6em; height: 0.62em; background: radial-gradient(circle at 0.31em 50%, #3a4a85 0.28em, transparent 0.3em), radial-gradient(circle at 1.3em 50%, #3a4a85 0.28em, transparent 0.3em), radial-gradient(circle at 2.3em 50%, #3a4a85 0.28em, transparent 0.3em); }
+  .frame img { flex: 1; min-height: 0; width: 100%; object-fit: cover; object-position: top left; transform-origin: var(--ox, 0%) var(--oy, 0%); transform: scale(calc(1 + (var(--z, 1) - 1) * 0.5)); transition: transform 1500ms var(--ease) 200ms; }
+  .screen:not(.is-active) .frame img { transform: scale(1); transition: none; }
+  .glare { position: absolute; inset: 0; border-radius: 14px; pointer-events: none; opacity: 0; transition: opacity var(--t-base) var(--ease);
+    background: radial-gradient(22rem circle at var(--mx) var(--my), rgb(255 255 255 / 0.14), transparent 60%); mix-blend-mode: soft-light; }
+  .stage:hover .glare { opacity: 1; }
+
+  .phone { position: absolute; left: 0; bottom: -3%; width: 31%; aspect-ratio: 9 / 18; background: #070d26; border-radius: 9% / 4.5%; padding: 3.4% 3.4% 3.6%; box-shadow: 0 0 0 1.5px #26336b, var(--lift-night); display: flex; flex-direction: column; z-index: 2; font-size: clamp(0.5rem, 1.55cqw, 0.78rem); transition: transform 700ms var(--ease); }
+  .stage:is([data-step="3"], [data-step="4"], [data-step="5"]) .phone { transform: translate3d(-7%, 4%, 0) scale(0.94); }
+  .p-head { display: flex; align-items: center; gap: 0.6em; padding: 0.75em 0.6em; background: #0f2b3a; border-radius: 1.1em 1.1em 0 0; color: #e6f4ef; }
+  .av { width: 2.1em; height: 2.1em; border-radius: 50%; background: #1f7a61; display: grid; place-items: center; font-weight: 700; font-size: 0.8em; }
+  .who { display: grid; line-height: 1.2; } .who b { font-weight: 650; } .who i { font-style: normal; opacity: 0.7; font-size: 0.82em; }
+  .p-body { flex: 1; background: #0b1a22; border-radius: 0 0 1.1em 1.1em; padding: 0.8em 0.6em; display: flex; flex-direction: column; gap: 0.55em; overflow: hidden; }
+  .b { margin: 0; max-width: 88%; padding: 0.55em 0.75em; border-radius: 0.9em; line-height: 1.35; font-size: 1em; text-wrap: pretty; }
+  .b.in { background: #1d2f3a; color: #e8f0f3; border-top-left-radius: 0.25em; align-self: flex-start; }
+  .b.out { background: #0e5a48; color: #eafaf4; border-top-right-radius: 0.25em; align-self: flex-end; }
+  .b.typing { background: #1d2f3a; align-self: flex-end; display: none; gap: 0.3em; padding: 0.75em 0.9em; }
+  .typing span { width: 0.45em; height: 0.45em; border-radius: 50%; background: #8fb1a8; animation: blink 1s ease-in-out infinite; }
+  .typing span:nth-child(2) { animation-delay: 0.15s; } .typing span:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes blink { 0%, 100% { opacity: 0.3; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-0.2em); } }
+  .phone .b.out { display: none; }
+  .phone[data-chat="typing"] .b.typing { display: flex; }
+  .phone[data-chat="reply"] .b.out { display: block; animation: rise 420ms var(--ease) both; }
+  @keyframes rise { from { opacity: 0; transform: translateY(0.6em); } to { opacity: 1; transform: none; } }
+
+  .toast { position: absolute; right: 3%; top: -2%; z-index: 3; margin: 0; display: inline-flex; align-items: center; gap: 0.6rem; padding: 0.55rem 0.9rem; max-width: 78%;
+    background: rgb(10 20 62 / 0.82); backdrop-filter: blur(10px); border: 1px solid var(--glass-line); border-radius: 999px; color: var(--on-night); font-size: clamp(0.7rem, 1.9cqw, 0.9rem); font-weight: 600; font-stretch: 104%; box-shadow: 0 14px 30px -12px rgb(0 0 0 / 0.6); }
+  .toast .pip { width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--electric); flex: none; }
+  .toast.pop { animation: toast 520ms var(--ease) both; }
+  @keyframes toast { from { opacity: 0; transform: translateY(8px) scale(0.96); } to { opacity: 1; transform: none; } }
+  .stage[data-step="3"] .pip, .stage[data-step="4"] .pip, .stage[data-step="5"] .pip { background: var(--ember); }
+
+  .rail-wrap { position: relative; }
+  .rail { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(6, 1fr); }
+  .rail button { width: 100%; display: grid; justify-items: center; gap: 0.55rem; padding: 0.2rem 0 0.1rem; background: none; border: 0; cursor: pointer; color: var(--on-night-soft); transition: color var(--t-fast) var(--ease); }
+  .rail button:hover { color: var(--white); }
+  .node { width: 0.8rem; height: 0.8rem; border-radius: 50%; background: var(--night-2); border: 2px solid #34458a; transition: background-color var(--t-base) var(--ease), border-color var(--t-base) var(--ease), transform var(--t-base) var(--ease); }
+  .lbl { font-size: clamp(0.66rem, 2.2cqw, 0.85rem); font-weight: 600; font-stretch: 104%; text-align: center; line-height: 1.15; }
+  .rail button[aria-current="step"] { color: var(--white); }
+  .rail button[aria-current="step"] .node { background: var(--electric); border-color: var(--electric-soft); transform: scale(1.25); }
+  .stage[data-step="3"] .rail button[aria-current="step"] .node, .stage[data-step="4"] .rail button[aria-current="step"] .node, .stage[data-step="5"] .rail button[aria-current="step"] .node { background: var(--ember); border-color: #ffb27d; }
+  .rail li.done .node { background: #2a3d86; border-color: var(--electric); }
+  .track { position: absolute; left: calc(100% / 12); right: calc(100% / 12); top: 0.6rem; height: 2px; background: #223070; border-radius: 2px; }
+  .fill { position: absolute; inset: 0; background: linear-gradient(90deg, var(--electric), var(--electric-soft)); transform-origin: left; transform: scaleX(0); transition: transform 900ms var(--ease); border-radius: 2px; }
+  .runner { position: absolute; left: 0; top: 50%; width: 0.6rem; height: 0.6rem; margin: -0.3rem 0 0 -0.3rem; border-radius: 50%; background: #fff; box-shadow: 0 0 14px 4px rgb(142 166 255 / 0.9); transition: transform 900ms var(--ease); }
+
+  .foot { display: flex; gap: var(--s-4); align-items: flex-start; justify-content: space-between; min-height: 3.2em; }
+  .cap { margin: 0; color: var(--on-night); font-size: 0.97rem; line-height: 1.5; max-width: 46ch; }
+  .pause { flex: none; background: none; border: 1px solid var(--glass-line); border-radius: var(--r-sm); color: var(--on-night-soft); padding: 0.3rem 0.75rem; font-size: var(--step--1); cursor: pointer; transition: color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease); }
+  .pause:hover { color: var(--white); border-color: var(--on-night-soft); }
+  .note { margin: 0; font-size: var(--step--1); color: var(--on-night-soft); opacity: 0.75; }
+
+  @media (max-width: 62rem) { .scene { margin-right: 0; } }
+  @media (max-width: 36rem) {
+    /* Móvil: la escena es baja (el producto no domina la pantalla), la imagen se acerca a lo que importa y el teléfono solo aparece mientras se habla de WhatsApp */
+    .stage { gap: var(--s-3); }
+    .scene { aspect-ratio: 4 / 3.15; }
+    .screens { inset: 0; perspective: none; }
+    .screen, .screen.is-active { transform: none; }
+    .screen:not(.is-active) { transform: translate3d(0, 8px, 0); }
+    .frame img { transform: scale(var(--z, 1)); }
+    .frame { border-radius: 12px; }
+    .glare { display: none; }
+    .phone { width: 33%; left: auto; right: 3%; bottom: 0; aspect-ratio: 9 / 16; font-size: 0.5rem; }
+    .stage:not([data-step="0"]):not([data-step="1"]) .phone { opacity: 0; transform: translate3d(0, 14px, 0); pointer-events: none; }
+    .stage:is([data-step="3"], [data-step="4"], [data-step="5"]) .phone { transform: translate3d(0, 14px, 0); }
+    .phone { transition: transform 600ms var(--ease), opacity 400ms var(--ease); }
+    .toast { top: 0.55rem; bottom: auto; right: auto; left: 0.55rem; max-width: 82%; padding: 0.4rem 0.7rem; font-size: 0.72rem; }
+    .lbl { font-size: 0.6rem; }
+    .foot { gap: var(--s-3); align-items: flex-start; min-height: 4.4em; }
+    .cap { font-size: 0.9rem; line-height: 1.45; }
+    .pause { padding: 0.35rem 0.7rem; min-height: 2.25rem; }
+    .note { font-size: 0.75rem; }
+  }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>("[data-stage]");
+  if (root) {
+    const data = JSON.parse(document.getElementById("stage-data")!.textContent!) as { toast: string; cap: string }[];
+    const screens = [...root.querySelectorAll<HTMLElement>(".screen")];
+    const nodes = [...root.querySelectorAll<HTMLButtonElement>("[data-rail] button")];
+    const phone = root.querySelector<HTMLElement>(".phone")!;
+    const toast = root.querySelector<HTMLElement>("[data-toast]")!;
+    const toastText = root.querySelector<HTMLElement>("[data-toast-text]")!;
+    const cap = root.querySelector<HTMLElement>("[data-cap]")!;
+    const fill = root.querySelector<HTMLElement>("[data-fill]")!;
+    const runner = root.querySelector<HTMLElement>("[data-runner]")!;
+    const pause = root.querySelector<HTMLButtonElement>("[data-pause]")!;
+    const track = root.querySelector<HTMLElement>(".track")!;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const last = screens.length - 1;
+    let i = 0, playing = !reduce, visible = false, timer = 0, typing = 0;
+
+    const go = (n: number) => {
+      i = (n + screens.length) % screens.length;
+      root.dataset.step = String(i);
+      screens.forEach((s, k) => { s.classList.toggle("is-active", k === i); s.setAttribute("aria-hidden", String(k !== i)); });
+      nodes.forEach((b, k) => { b.toggleAttribute("aria-current", k === i); if (k === i) b.setAttribute("aria-current", "step"); b.parentElement!.classList.toggle("done", k < i); });
+      const p = i / last;
+      fill.style.transform = `scaleX(${p})`;
+      runner.style.transform = `translateX(${p * track.getBoundingClientRect().width}px)`;
+      toastText.textContent = data[i].toast; cap.textContent = data[i].cap;
+      toast.classList.remove("pop"); void toast.offsetWidth; toast.classList.add("pop");
+      clearTimeout(typing);
+      if (i === 0) phone.dataset.chat = "msg";
+      else if (i === 1) { phone.dataset.chat = "typing"; typing = window.setTimeout(() => { phone.dataset.chat = "reply"; }, 1100); }
+      else phone.dataset.chat = "reply";
+    };
+    const stop = () => { clearInterval(timer); timer = 0; };
+    const start = () => { stop(); if (playing && visible) timer = window.setInterval(() => go(i + 1), 4600); };
+    const setPlaying = (v: boolean) => { playing = v; pause.setAttribute("aria-pressed", String(!v)); pause.textContent = v ? "Pausar" : "Reproducir"; start(); };
+
+    nodes.forEach((b, k) => b.addEventListener("click", () => { go(k); setPlaying(false); }));
+    pause.addEventListener("click", () => setPlaying(!playing));
+    if (reduce) { pause.hidden = true; }
+    new IntersectionObserver((e) => { visible = e[0].isIntersecting; start(); }, { threshold: 0.35 }).observe(root);
+    window.addEventListener("resize", () => go(i), { passive: true });
+    go(0);
+
+    // Las demás pantallas se descargan cuando la página ya está tranquila (no compiten con el primer pintado).
+    const loadRest = () => root.querySelectorAll<HTMLImageElement>("img[data-src]").forEach((img) => { if (!img.getAttribute("src")) img.src = img.dataset.src!; });
+    if ("requestIdleCallback" in window) (window as unknown as { requestIdleCallback: (f: () => void, o?: object) => void }).requestIdleCallback(loadRest, { timeout: 2500 });
+    else setTimeout(loadRest, 1500);
+
+    // Luz que sigue al puntero (solo con puntero fino)
+    if (window.matchMedia("(pointer: fine)").matches && !reduce) {
+      let raf = 0;
+      root.addEventListener("pointermove", (e) => {
+        if (raf) return;
+        raf = requestAnimationFrame(() => {
+          const r = root.getBoundingClientRect();
+          root.style.setProperty("--mx", `${e.clientX - r.left}px`); root.style.setProperty("--my", `${e.clientY - r.top}px`); raf = 0;
+        });
+      });
+    }
+  }
+</script>

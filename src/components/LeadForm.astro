@@ -1,42 +1,96 @@
 ---
+// Formulario de contacto → POST {apiUrl}/api/public/leads. Mismo contrato que antes: consentimiento obligatorio y campo trampa.
 import { SITE } from "../config";
+import Button from "./Button.astro";
 interface Props { vertical?: string }
 const { vertical = "" } = Astro.props;
 ---
 <form class="lead" id="lead-form" novalidate data-api={`${SITE.apiUrl}/api/public/leads`} data-source={vertical ? `web-${vertical}` : "web"}>
-  <label for="lf-name">Tu nombre</label>
-  <input id="lf-name" name="name" autocomplete="name" required minlength="2" maxlength="120" />
-  <label for="lf-contact">WhatsApp o correo</label>
-  <input id="lf-contact" name="contact" autocomplete="off" required maxlength="200" placeholder="55 1234 5678 o tu@correo.com" />
-  <label for="lf-business">Tu negocio</label>
-  <input id="lf-business" name="business" maxlength="120" placeholder="Ej. Café Sol" />
-  <label for="lf-vertical">Tipo de negocio</label>
-  <select id="lf-vertical" name="vertical">
-    <option value="restaurantes" selected={vertical === "restaurantes"}>Restaurante / cafetería</option>
-    <option value="comercio">Comercio / tienda</option>
-    <option value="servicios">Servicios / clínica / estética</option>
-    <option value="inmobiliaria">Inmobiliaria</option>
-    <option value="otro">Otro</option>
-  </select>
-  <label for="lf-message">¿Qué quieres resolver? (opcional)</label>
-  <textarea id="lf-message" name="message" rows="3" maxlength="1000"></textarea>
+  <div class="field">
+    <label for="lf-name">Nombre</label>
+    <input id="lf-name" name="name" autocomplete="name" required minlength="2" maxlength="120" />
+  </div>
+  <div class="field">
+    <label for="lf-contact">WhatsApp o correo</label>
+    <input id="lf-contact" name="contact" autocomplete="off" spellcheck="false" required maxlength="200" aria-describedby="lf-contact-hint" />
+    <p id="lf-contact-hint" class="hint">Con uno de los dos te escribimos.</p>
+  </div>
+  <div class="row">
+    <div class="field">
+      <label for="lf-business">Negocio</label>
+      <input id="lf-business" name="business" autocomplete="organization" maxlength="120" />
+    </div>
+    <div class="field">
+      <label for="lf-vertical">Giro</label>
+      <select id="lf-vertical" name="vertical">
+        <option value="restaurantes" selected={vertical === "restaurantes"}>Restaurante o cafetería</option>
+        <option value="comercio">Comercio</option>
+        <option value="servicios">Servicios o clínica</option>
+        <option value="inmobiliaria">Inmobiliaria</option>
+        <option value="otro">Otro</option>
+      </select>
+    </div>
+  </div>
+  <div class="field">
+    <label for="lf-message">¿Qué quieres resolver? <span class="opt">Opcional</span></label>
+    <textarea id="lf-message" name="message" rows="3" maxlength="1000"></textarea>
+  </div>
   <div class="hp" aria-hidden="true"><label>No llenar<input name="website" tabindex="-1" autocomplete="off" /></label></div>
-  <label class="check"><input type="checkbox" name="consent" required /> <span>Acepto que Reymen use mis datos para contactarme, según el <a href="/privacidad" target="_blank">aviso de privacidad</a>.</span></label>
-  <div style="margin-top:18px"><button class="btn primary" type="submit">Quiero mi plan</button></div>
+  <label class="check"><input type="checkbox" name="consent" required /><span>Acepto que Reymen use mis datos para contactarme, según el <a href="/privacidad" target="_blank" rel="noopener">aviso de privacidad</a>.</span></label>
+  <div class="send"><Button type="submit" size="lg" event="Form Enviar">Enviar mis datos</Button></div>
   <div id="lead-msg" role="status" aria-live="polite"></div>
 </form>
+
+<style>
+  .lead { display: grid; gap: var(--s-5); }
+  .field { display: grid; gap: 0.4rem; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-4); }
+  label { font-weight: 600; font-size: 0.93rem; font-stretch: 104%; }
+  .opt { font-weight: 450; color: var(--ink-soft); margin-left: 0.4rem; }
+  .hint { font-size: var(--step--1); color: var(--ink-soft); }
+  input, select, textarea { width: 100%; padding: 0.8rem 0.9rem; background: var(--white); border: 1.5px solid #b9c5e0; border-radius: var(--r-sm); color: var(--ink); transition: border-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease); }
+  input:hover, select:hover, textarea:hover { border-color: #8195c4; }
+  input:focus-visible, select:focus-visible, textarea:focus-visible { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px color-mix(in srgb, var(--blue) 28%, transparent); }
+  input[aria-invalid="true"], textarea[aria-invalid="true"] { border-color: var(--danger); }
+  textarea { resize: vertical; min-height: 5.5rem; }
+  .hp { position: absolute; left: -5000px; height: 0; overflow: hidden; }
+  .check { display: flex; gap: var(--s-3); align-items: flex-start; font-weight: 450; font-size: 0.92rem; color: var(--ink-soft); line-height: 1.5; cursor: pointer; }
+  .check input { width: 1.15rem; height: 1.15rem; margin-top: 0.15rem; flex: none; accent-color: var(--blue); }
+  .check a { color: var(--blue-ink); }
+  .msg { padding: 0.8rem 1rem; border-radius: var(--r-sm); font-weight: 600; font-size: 0.95rem; }
+  .msg.err { background: #fdecea; color: var(--danger); }
+  @media (max-width: 36rem) { .row { grid-template-columns: 1fr; } }
+</style>
 
 <script>
   const form = document.getElementById("lead-form") as HTMLFormElement | null;
   if (form) {
+    // Giro preseleccionado desde un enlace (?giro=servicios).
+    const giro = new URLSearchParams(location.search).get("giro");
+    const select = form.elements.namedItem("vertical") as HTMLSelectElement | null;
+    if (giro && select && [...select.options].some((o) => o.value === giro)) select.value = giro;
+
     const box = document.getElementById("lead-msg")!;
-    const show = (text: string, ok: boolean) => { box.innerHTML = `<div class="msg ${ok ? "ok" : "err"}"></div>`; box.firstElementChild!.textContent = text; };
+    const show = (text: string) => { box.innerHTML = `<div class="msg err"></div>`; box.firstElementChild!.textContent = text; };
+    const track = (name: string, props?: Record<string, string>, cb?: () => void) => {
+      const pl = (window as unknown as { plausible?: (n: string, o?: unknown) => void }).plausible;
+      if (pl) { pl(name, { props, callback: cb }); if (cb) setTimeout(cb, 600); } else cb?.();
+    };
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
+      box.textContent = "";
+      form.querySelectorAll("[aria-invalid]").forEach((el) => el.removeAttribute("aria-invalid"));
+      if (!form.checkValidity()) {
+        const first = form.querySelector<HTMLInputElement>(":invalid");
+        form.querySelectorAll<HTMLInputElement>(":invalid").forEach((el) => el.setAttribute("aria-invalid", "true"));
+        show("Revisa tu nombre y tu contacto, y acepta el aviso de privacidad.");
+        first?.focus();
+        return;
+      }
       const fd = new FormData(form);
-      if (!form.checkValidity()) { show("Revisa tu nombre, tu contacto y acepta el aviso de privacidad.", false); return; }
-      const btn = form.querySelector("button")!;
-      btn.disabled = true;
+      const btn = form.querySelector<HTMLButtonElement>("button[type=submit]")!;
+      const label = btn.textContent;
+      btn.disabled = true; btn.setAttribute("aria-busy", "true"); btn.textContent = "Enviando…";
       try {
         const res = await fetch(form.dataset.api!, {
           method: "POST",
@@ -47,18 +101,13 @@ const { vertical = "" } = Astro.props;
             consent: fd.get("consent") === "on", website: fd.get("website") || undefined, source: form.dataset.source,
           }),
         });
-        if (res.ok) {
-          const go = () => { window.location.href = "/gracias"; };
-          const pl = (window as unknown as { plausible?: (n: string, o?: unknown) => void }).plausible;
-          if (pl) { pl("Lead Enviado", { props: { vertical: String(fd.get("vertical") ?? "") }, callback: go }); setTimeout(go, 600); } else go();
-          return;
-        }
-        if (res.status === 429) show("Ya recibimos varios envíos. Intenta de nuevo más tarde o escríbenos a contact@reymen.mx.", false);
-        else if (res.status === 400) show("Revisa que tu WhatsApp o correo sean válidos.", false);
-        else show("No pudimos enviar tu mensaje. Escríbenos a contact@reymen.mx.", false);
+        if (res.ok) { track("Lead Enviado", { vertical: String(fd.get("vertical") ?? "") }, () => { window.location.href = "/gracias"; }); return; }
+        if (res.status === 429) show("Ya recibimos varios envíos desde tu conexión. Intenta más tarde o escribe a contact@reymen.mx.");
+        else if (res.status === 400) { const c = form.elements.namedItem("contact") as HTMLInputElement; c.setAttribute("aria-invalid", "true"); c.focus(); show("Escribe un WhatsApp de 10 dígitos o un correo válido."); }
+        else show("No pudimos enviar tus datos. Escribe a contact@reymen.mx y te respondemos.");
       } catch {
-        show("Sin conexión. Intenta de nuevo o escríbenos a contact@reymen.mx.", false);
-      } finally { btn.disabled = false; }
+        show("Sin conexión. Intenta de nuevo o escribe a contact@reymen.mx.");
+      } finally { btn.disabled = false; btn.removeAttribute("aria-busy"); btn.textContent = label; }
     });
   }
 </script>

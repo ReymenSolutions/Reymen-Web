@@ -1,70 +1,120 @@
 ---
 import Base from "../layouts/Base.astro";
-import Cta from "../components/Cta.astro";
+import Section from "../components/Section.astro";
+import Button from "../components/Button.astro";
+import Traces from "../components/Traces.astro";
+import Device from "../components/Device.astro";
+import StorySteps from "../components/StorySteps.astro";
+import FeatureList from "../components/FeatureList.astro";
 import Faq from "../components/Faq.astro";
-import LeadForm from "../components/LeadForm.astro";
-import Shot from "../components/Shot.astro";
+import ContactSection from "../components/ContactSection.astro";
+import { SITE } from "../config";
 
+const demo = SITE.calendlyUrl || "#contacto";
+
+const story = [
+  { when: "Antes de abrir", h: "Tus insumos y tus costos, al día", p: "Revisas existencias y lo que está por agotarse. Cada platillo descuenta sus insumos al venderse.", img: "inventario", alt: "Inventario con alertas de stock bajo y costos por insumo", w: 1500, h2: 900, focus: [42, 55, 1.4] },
+  { when: "Llegan los clientes", h: "Mesas y cuentas abiertas", p: "Ves qué mesas están libres, cuáles llevan tiempo y cuánto suma cada cuenta.", img: "pos-mesas", alt: "Reymen POS con el plano de mesas, varias ocupadas con su total y estado de cocina", w: 2000, h2: 1250, focus: [40, 36, 1.4] },
+  { when: "Se toma la orden", h: "La orden, por mesa y por tiempos", p: "Menú por categorías, variantes y extras. Agregas al tiempo que corresponde y envías a cocina.", img: "pos-orden", alt: "Reymen POS con la cuenta de una mesa y el menú por categorías", w: 2000, h2: 1250, focus: [62, 45, 1.3] },
+  { when: "En cocina", h: "Cocina y barra, cada quien en su pantalla", p: "Cada producto llega a su estación, con el tiempo transcurrido y aviso cuando hay retraso.", img: "pos-cocina", alt: "Pantalla de cocina con tickets por mesa divididos entre cocina, barra y postres", w: 2000, h2: 1250, focus: [37.5, 40, 1.33] },
+  { when: "Se cobra", h: "Cobro con propina, cambio y cuentas divididas", p: "Efectivo, tarjeta o transferencia, propina sugerida y división de cuenta. Si se cae internet, sigues cobrando.", img: "pos-cobro", alt: "Cobro en efectivo con propina del 10 por ciento, monto recibido y cambio", w: 1300, h2: 1182, pos: "50% 45%" },
+  { when: "Mientras tanto, en WhatsApp", h: "El agente contesta tus mensajes", p: "Horarios, menú y reservas contestados al instante. Lo delicado pasa a una persona.", img: "inbox", alt: "Bandeja de mensajes con una conversación respondida por el Agente IA", w: 1500, h2: 900, focus: [60, 55, 1.6] },
+  { when: "Después", h: "Clientes que regresan", p: "Sellos y recompensas en la tarjeta del cliente. Ves quién regresa, cuánto gasta y de qué zonas vienen.", img: "lealtad", alt: "Panel de lealtad con clientes inscritos, visitas, importes y recompensas", w: 1500, h2: 900, focus: [50, 62, 1.4] },
+];
+const items = [
+  { h: "Punto de venta con mesas y cocina", p: "Pantalla de cocina, cobro dividido, propinas y corte de caja. Rápido en tableta o celular, y sigue sin internet." },
+  { h: "Inventario con recetas", p: "Cada platillo descuenta sus insumos. Ves el costo por platillo, lo agotado y lo que está por agotarse." },
+  { h: "Pedidos de reparto", p: "Tus pedidos de plataformas de reparto junto a tus ventas, en una sola vista." },
+  { h: "Lealtad con tarjeta digital", p: "Sellos y recompensas, cumpleaños y avisos automáticos para que vuelvan." },
+  { h: "WhatsApp con IA", p: "Horarios, menú y reservas contestados al instante, y a una persona lo que importa." },
+  { h: "Reportes del día", p: "Ventas por hora, producto estrella, ticket promedio y mermas, con el día de tu zona horaria." },
+];
 const faq = [
-  { q: "¿Funciona para una sola sucursal y para varias?", a: "Para ambas. Cada sucursal lleva su inventario y sus ventas, y tú ves el total o el detalle." },
-  { q: "¿Puedo imprimir tickets y comandas?", a: "Sí. Soportamos impresión de tickets desde el navegador y impresoras compatibles en Android; en la demo revisamos tu equipo." },
-  { q: "¿Se conecta con Uber Eats, Rappi o DiDi?", a: "Los pedidos de plataformas de reparto pueden entrar a tu operación para verlos junto a tus ventas. Revisamos el detalle de cada plataforma en la demo." },
+  { q: "¿Sirve para una sucursal y para varias?", a: "Para ambas. Cada sucursal lleva su inventario y sus ventas, y tú ves el total o el detalle." },
+  { q: "¿Puedo imprimir tickets y comandas?", a: "Sí. Imprime tickets desde el navegador y en impresoras compatibles con Android. En la demo revisamos tu equipo." },
+  { q: "¿Se conecta con Uber Eats, Rappi o DiDi?", a: "Los pedidos de las plataformas de reparto pueden entrar a tu operación para verlos junto a tus ventas. Revisamos el detalle de cada plataforma en la demo." },
   { q: "¿Qué pasa si el inventario no está al día?", a: "Nunca bloquea una venta. El sistema te avisa y tú ajustas las existencias cuando puedas." },
   { q: "¿Cómo funciona la lealtad?", a: "Tus clientes guardan una tarjeta digital en su celular, acumulan sellos y canjean recompensas. Tú ves quién regresa y cuánto gasta." },
 ];
 ---
-<Base title="Reymen para restaurantes y cafeterías · POS, inventario y lealtad" description="Punto de venta con mesas y cocina, inventario con recetas, programa de lealtad y asistente de WhatsApp para restaurantes y cafeterías en México." path="/restaurantes">
-  <section class="hero">
-    <div class="wrap grid g2" style="align-items:center">
-      <div>
-        <div class="eyebrow">Restaurantes y cafeterías</div>
-        <h1>Que tu cocina, tu caja y tus clientes <span class="grad">hablen entre sí</span>.</h1>
-        <p class="lead">Cobra rápido, controla tus insumos sin hojas de cálculo y haz que tus clientes regresen, con un asistente que contesta WhatsApp por ti.</p>
-        <Cta />
+<Base darkHero title="Reymen para restaurantes y cafeterías · Punto de venta, inventario y lealtad" description="Punto de venta con mesas y cocina, inventario con recetas, programa de lealtad y asistente de WhatsApp para restaurantes y cafeterías en México." path="/restaurantes">
+  <section class="hero tone-night" aria-labelledby="r-title">
+    <Traces tone="ember" />
+    <div class="container hero-grid">
+      <div class="copy">
+        <h1 id="r-title">Tu cocina, tu caja y tus clientes en el mismo sistema<span class="dot-ember">.</span></h1>
+        <p class="lede">Cobra rápido, controla tus insumos sin hojas de cálculo y logra que tus clientes regresen, con un asistente que contesta tu WhatsApp.</p>
+        <div class="cta-wrap"><div class="cta-row">
+          <Button href={demo} size="lg" event="CTA Demo" external={!!SITE.calendlyUrl}>Agendar demo</Button>
+          <Button href="#turno" variant="ghost" size="lg"><span class="l-full">Ver un turno completo</span><span class="l-short">Ver el turno</span></Button>
+        </div></div>
       </div>
-      <Shot name="inventario" alt="Inventario de un restaurante con alertas de stock bajo y costos por insumo" width={1500} height={900} eager />
-    </div>
-  </section>
-
-  <section>
-    <div class="wrap">
-      <h2>Lo que resuelve en tu restaurante</h2>
-      <div class="grid g3" style="margin-top:28px">
-        <div class="card"><div class="icon">🧾</div><h3>POS con mesas y cocina</h3><p>Pantalla de cocina (KDS), cobro dividido, propinas y corte de caja. Rápido en tableta o celular.</p></div>
-        <div class="card"><div class="icon">🥬</div><h3>Inventario con recetas</h3><p>Cada platillo descuenta sus insumos solo. Ves costo por platillo, agotados y por agotarse.</p></div>
-        <div class="card"><div class="icon">🛵</div><h3>Pedidos de reparto</h3><p>Tus pedidos de plataformas junto a tus ventas, en una sola vista.</p></div>
-        <div class="card"><div class="icon">⭐</div><h3>Lealtad con tarjeta digital</h3><p>Sellos y recompensas, cumpleaños y avisos automáticos para que vuelvan.</p></div>
-        <div class="card"><div class="icon">💬</div><h3>WhatsApp con IA</h3><p>Horarios, menú, reservas: contesta al instante y pasa a una persona lo que importa.</p></div>
-        <div class="card"><div class="icon">📊</div><h3>Reportes del día</h3><p>Ventas por hora, producto estrella, ticket promedio y mermas, con el día de tu zona horaria.</p></div>
+      <div class="devices">
+        <Device name="pos-mesas" alt="Reymen POS con el plano de mesas, varias ocupadas con su total y estado de cocina" width={2000} height={1250} eager class="d-main" />
+        <Device name="pos-cocina" alt="Pantalla de cocina del POS con tickets por mesa" width={2000} height={1250} crop="16 / 8.6" class="d-side" />
       </div>
     </div>
   </section>
 
-  <section class="alt">
-    <div class="wrap">
-      <h2>Así se ve en la operación</h2>
-      <div class="grid g2" style="margin-top:24px">
-        <Shot name="lealtad" alt="Panel de lealtad con clientes inscritos, visitas y recompensas" width={1500} height={900} />
-        <Shot name="inbox" alt="Bandeja de WhatsApp con respuestas del Agente IA" width={1500} height={900} />
-      </div>
+  <Section id="turno" after="night" labelledby="turno-title">
+    <div class="head">
+      <h2 id="turno-title">Un turno en tu restaurante<span class="dot-ember">.</span></h2>
+      <p class="lede">Así se mueve un día de trabajo con Reymen, desde antes de abrir hasta la última visita del día.</p>
     </div>
-  </section>
+    <StorySteps items={story} />
+  </Section>
 
-  <section>
-    <div class="wrap" style="max-width:820px">
-      <h2>Preguntas de restaurantes</h2>
+  <Section tone="white" labelledby="r-resuelve">
+    <div class="head"><h2 id="r-resuelve">Lo que resuelve en tu restaurante<span class="dot-ember">.</span></h2></div>
+    <FeatureList items={items} />
+  </Section>
+
+  <Section labelledby="r-faq">
+    <div class="faq-grid">
+      <h2 id="r-faq">Preguntas de restaurantes<span class="dot">.</span></h2>
       <Faq items={faq} />
     </div>
-  </section>
+  </Section>
 
-  <section id="contacto">
-    <div class="wrap grid g2">
-      <div>
-        <div class="eyebrow">Demo para tu restaurante</div>
-        <h2>Veamos tu operación</h2>
-        <p class="lead">Cuéntanos cuántas sucursales tienes y qué te quita más tiempo. Te mostramos cómo se vería en tu negocio.</p>
-      </div>
-      <div class="card"><LeadForm vertical="restaurantes" /></div>
-    </div>
-  </section>
+  <ContactSection vertical="restaurantes" title="Veamos tu restaurante" lede="Cuéntanos cuántas sucursales tienes y qué te quita más tiempo. Te mostramos cómo se vería en tu negocio." />
 </Base>
+
+<style>
+  .hero { position: relative; overflow: clip; padding-block: calc(4.25rem + clamp(2rem, 1rem + 5vw, 5rem)) clamp(3rem, 2rem + 4vw, 6rem); background: var(--night); color: var(--on-night); }
+  .hero::before { content: ""; position: absolute; inset: -10% -5% 0 35%; background: radial-gradient(closest-side at 55% 50%, rgb(255 106 19 / 0.22), rgb(37 78 255 / 0.28) 45%, transparent 75%); pointer-events: none; }
+  .hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(2rem, 4vw, 4.5rem); align-items: center; }
+  .copy { display: grid; gap: var(--s-6); justify-items: start; }
+  .hero h1 { color: var(--white); font-size: clamp(1.65rem, 1rem + 2.1vw, 3rem); font-stretch: 106%; letter-spacing: -0.032em; }
+  .cta-row { display: flex; flex-wrap: wrap; gap: var(--s-3); }
+  .devices { position: relative; container-type: inline-size; padding-bottom: 14%; margin-right: calc(-1 * var(--gutter)); }
+  .devices :global(.d-main) { width: 100%; transform: perspective(1600px) rotateY(-6deg) rotateX(1.5deg); transform-origin: 0 60%; }
+  .devices :global(.d-side) { position: absolute; left: -6%; bottom: 0; width: 52%; transform: rotate(-2deg); z-index: 2; }
+  .head { display: grid; gap: var(--s-4); margin-bottom: var(--head-gap); max-width: 52rem; }
+  .faq-grid { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: clamp(1.5rem, 4vw, 4rem); align-items: start; }
+  .faq-grid h2 { position: sticky; top: 6rem; }
+  @media (max-width: 62rem) {
+    .hero-grid, .faq-grid { grid-template-columns: 1fr; }
+    .faq-grid h2 { position: static; }
+    .devices { margin-right: 0; }
+    .devices :global(.d-main) { transform: none; }
+  }
+  .l-short { display: none; }
+  /* Botones: en una fila siempre que quepan; la medida la da el espacio de la columna, no la pantalla */
+  .cta-wrap { container-type: inline-size; width: 100%; }
+  @container (max-width: 31rem) {
+    .cta-row { flex-wrap: nowrap; }
+    .l-full { display: none; } .l-short { display: inline; }
+  }
+  @container (max-width: 24rem) {
+    .cta-row { gap: var(--s-2); }
+    .cta-row :global(.btn) { flex: 1 1 0; min-width: 0; padding: 0.8rem 0.6rem; font-size: 0.95rem; white-space: normal; text-align: center; }
+  }
+  @container (max-width: 17.5rem) { .cta-row { flex-direction: column; } }
+  @media (max-width: 36rem) {
+    .hero { padding-top: calc(4.25rem + 1.25rem); padding-bottom: 2.5rem; }
+    .hero-grid { gap: var(--s-5); }
+    .hero h1 { letter-spacing: -0.03em; line-height: 1.06; }
+    .hero .lede { font-size: 1rem; line-height: 1.5; }
+    .devices :global(.d-side) { width: 56%; left: 0; }
+  }
+</style>

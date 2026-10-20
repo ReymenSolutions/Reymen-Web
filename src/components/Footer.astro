@@ -1,15 +1,50 @@
 ---
 import { SITE, whatsappLink } from "../config";
+import Wordmark from "./Wordmark.astro";
 const wa = whatsappLink();
+const year = new Date().getFullYear();
 ---
-<footer>
-  <div class="wrap">
-    <div>© {new Date().getFullYear()} {SITE.name}. Hecho en México.</div>
+<footer class="site-footer">
+  <div class="container grid">
+    <div class="brand">
+      <Wordmark />
+      <p>Software, inteligencia artificial y automatización para negocios locales. Hecho en México.</p>
+    </div>
+    <nav aria-label="Pie de página">
+      <h2>Reymen</h2>
+      <ul>
+        <li><a href="/restaurantes">Para restaurantes</a></li>
+        <li><a href="/#servicios">Servicios a la medida</a></li>
+        <li><a href="/#seguridad">Seguridad</a></li>
+        <li><a href={SITE.appUrl} rel="noopener">Entrar a la plataforma</a></li>
+      </ul>
+    </nav>
     <div>
-      <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
-      {wa && <a href={wa} rel="noopener">WhatsApp</a>}
-      <a href="/privacidad">Aviso de privacidad</a>
-      <a href={SITE.appUrl} rel="noopener">Entrar a la plataforma</a>
+      <h2>Contacto</h2>
+      <ul>
+        <li><a href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
+        {wa && <li><a href={wa} rel="noopener">WhatsApp</a></li>}
+        <li><a href="/privacidad">Aviso de privacidad</a></li>
+      </ul>
     </div>
   </div>
+  <div class="container legal">© {year} {SITE.name}</div>
 </footer>
+
+<style>
+  .site-footer { position: relative; background: var(--paper); border-top: 1px solid var(--mist); padding-block: var(--s-8) var(--s-6); }
+  /* Misma salida de la noche que las secciones claras: degradado corto y un hilo de luz en el borde */
+  /* (solo cuando la página termina en una banda de noche) */
+  :global(main:has(> .tone-night:last-child)) + .site-footer { border-top-color: transparent; }
+  :global(main:has(> .tone-night:last-child)) + .site-footer::before { content: ""; position: absolute; inset: 0 0 auto; height: 4.5rem; pointer-events: none; background: linear-gradient(to bottom, var(--night) 0%, rgb(6 14 43 / 0.5) 35%, rgb(6 14 43 / 0.12) 70%, transparent 100%); }
+    :global(main:has(> .tone-night:last-child)) + .site-footer::after { content: ""; position: absolute; top: 0; left: 50%; width: min(46rem, 80%); height: 1px; transform: translateX(-50%); pointer-events: none; background: linear-gradient(90deg, transparent, var(--electric) 30%, var(--electric-soft) 50%, var(--electric) 70%, transparent); box-shadow: 0 0 22px 2px rgb(61 99 255 / 0.55); }
+  .site-footer > :global(.container) { position: relative; z-index: 1; }
+  .grid { display: grid; gap: var(--s-7); grid-template-columns: 1.4fr 1fr 1fr; }
+  .brand p { margin-top: var(--s-3); color: var(--ink-soft); max-width: 34ch; font-size: 0.95rem; }
+  h2 { font-size: 0.95rem; font-stretch: 106%; letter-spacing: 0; margin-bottom: var(--s-3); }
+  ul { display: grid; gap: var(--s-2); }
+  li a { color: var(--ink-soft); text-decoration: none; font-size: 0.95rem; }
+  li a:hover { color: var(--ink); text-decoration: underline; }
+  .legal { margin-top: var(--s-7); color: var(--ink-soft); font-size: var(--step--1); }
+  @media (max-width: 48rem) { .grid { grid-template-columns: 1fr; gap: var(--s-6); } }
+</style>

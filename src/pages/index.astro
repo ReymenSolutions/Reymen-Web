@@ -1,128 +1,216 @@
 ---
 import Base from "../layouts/Base.astro";
-import Cta from "../components/Cta.astro";
+import Section from "../components/Section.astro";
+import Button from "../components/Button.astro";
+import HeroStage from "../components/HeroStage.astro";
+import Traces from "../components/Traces.astro";
+import Glyph from "../components/Glyph.astro";
+import EcosystemShowcase from "../components/EcosystemShowcase.astro";
+import ServicesCanvas from "../components/ServicesCanvas.astro";
+import Timeline from "../components/Timeline.astro";
+import FeatureList from "../components/FeatureList.astro";
 import Faq from "../components/Faq.astro";
-import LeadForm from "../components/LeadForm.astro";
+import ContactSection from "../components/ContactSection.astro";
 import Plans from "../components/Plans.astro";
-import Shot from "../components/Shot.astro";
 import { SITE } from "../config";
 
+const demo = SITE.calendlyUrl || "#contacto";
+
+const solutions = [
+  { glyph: "restaurant", name: "Restaurantes y cafeterías", text: "Punto de venta, cocina, inventario con recetas y lealtad. Es donde más hemos trabajado.", href: "/restaurantes", cta: "Ver la solución para restaurantes" },
+  { glyph: "clinic", name: "Clínicas y servicios", text: "Citas, recordatorios y seguimiento por WhatsApp para reducir ausencias.", href: "/?giro=servicios#contacto", cta: "Platicar sobre mi clínica" },
+  { glyph: "property", name: "Inmobiliarias", text: "Fichas públicas de cada propiedad y captura de prospectos en un solo lugar.", href: "/?giro=inmobiliaria#contacto", cta: "Platicar sobre mi inmobiliaria" },
+];
+const process = [
+  { h: "Conversamos", p: "Entendemos tu operación y qué te quita más tiempo o dinero hoy." },
+  { h: "Configuramos", p: "Cargamos tu información, conectamos tus herramientas y dejamos todo listo para operar." },
+  { h: "Acompañamos", p: "Capacitamos a tu equipo y revisamos resultados contigo desde la primera semana." },
+];
+const why = [
+  { h: "Productos propios, no solo proyectos", p: "Tenemos un ecosistema que ya funciona en restaurantes, y desarrollamos a la medida lo que todavía no existe." },
+  { h: "La misma base para todo", p: "Agentes, automatizaciones y software comparten seguridad, respaldos y control, así que crecen contigo sin rehacerse." },
+  { h: "Pensados para México", p: "IVA desglosado, propinas, efectivo, WhatsApp y español de México, no traducciones." },
+  { h: "Tú controlas la IA", p: "Defines las reglas, ves lo que consume y, cuando algo es delicado, el agente pasa a una persona." },
+];
+const trust = [
+  { h: "Un negocio, sus datos", p: "Cada negocio está aislado de los demás y cada persona de tu equipo ve solo lo que su rol permite.", icon: "layers" },
+  { h: "Respaldos que sí se prueban", p: "Copias diarias cifradas fuera del servidor, y pruebas periódicas de restauración para confirmar que funcionan.", icon: "archive" },
+  { h: "IA con reglas y límites", p: "El asistente sigue tus reglas, escala lo delicado a una persona y tiene un tope de consumo por negocio.", icon: "shield" },
+];
+const icons: Record<string, string> = {
+  layers: '<path d="M12 3 3 8l9 5 9-5-9-5Z"/><path d="m3 13 9 5 9-5"/>',
+  archive: '<path d="M4 8h16v11H4z"/><path d="m4 8 2-4h12l2 4"/><path d="M10 13h4"/>',
+  shield: '<path d="M12 3 5 6v5c0 4.5 3 8 7 10 4-2 7-5.5 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-4"/>',
+};
 const faq = [
-  { q: "¿Cuánto tarda en estar funcionando?", a: "Depende del alcance. Una operación sencilla (POS, menú e inventario básico) puede arrancar en pocos días; las integraciones y automatizaciones a medida se acuerdan en la demo." },
-  { q: "¿Necesito cambiar todo lo que uso hoy?", a: "No. Empezamos por lo que más duele (ventas, WhatsApp, seguimiento) y conectamos el resto después. Te ayudamos a migrar clientes y menú." },
-  { q: "¿Qué pasa si se cae internet?", a: "El punto de venta está pensado para no detener tu servicio: las ventas no dependen de los módulos de inventario ni de las automatizaciones." },
-  { q: "¿El asistente de IA puede equivocarse?", a: "Responde solo con las reglas y la información que tú autorizas. Si duda, si el cliente pide a una persona o toca un tema delicado, te pasa la conversación en lugar de inventar." },
-  { q: "¿Mis datos y los de mis clientes están seguros?", a: "Cada negocio tiene sus datos aislados, con permisos por rol, sesiones controladas y respaldos cifrados fuera del servidor, con pruebas periódicas de restauración." },
-  { q: "¿Cuánto cuesta?", a: "Depende de los módulos y el tamaño de tu operación. En la demo te damos una propuesta clara, sin letras chiquitas." },
+  { q: "¿Cuánto tarda en estar funcionando?", a: "Depende del alcance. Una operación sencilla (punto de venta, menú e inventario básico) puede arrancar en pocos días; las integraciones y automatizaciones a la medida se acuerdan en la demo." },
+  { q: "¿Tengo que cambiar todo lo que uso hoy?", a: "No. Empezamos por lo que más te cuesta (ventas, WhatsApp o seguimiento) y conectamos el resto después. Te ayudamos a pasar tu información." },
+  { q: "¿Desarrollan software, agentes de IA o automatizaciones a la medida?", a: "Sí. Además de nuestros productos, diseñamos y construimos agentes de IA, automatizaciones y aplicaciones web o móviles para la operación de cada negocio." },
+  { q: "¿El asistente de IA puede equivocarse?", a: "Responde solo con las reglas y la información que tú autorizas. Si duda, si el cliente pide hablar con una persona o si el tema es delicado, te pasa la conversación en lugar de inventar." },
+  { q: "¿Mis datos y los de mis clientes están seguros?", a: "Cada negocio tiene sus datos aislados, con permisos por rol y sesiones controladas. Hacemos respaldos cifrados fuera del servidor y probamos periódicamente que se pueden restaurar." },
+  { q: "¿Cuánto cuesta?", a: "Depende de los módulos y del tamaño de tu operación. En la demo te damos una propuesta clara, sin letras chiquitas." },
 ];
 ---
-<Base title="Reymen · POS, lealtad y asistentes de IA para tu negocio" description="Punto de venta, inventario, programa de lealtad y asistentes de IA por WhatsApp en una sola plataforma. Para restaurantes, cafeterías y negocios locales en México." path="">
-  <section class="hero">
-    <div class="wrap grid g2" style="align-items:center">
-      <div>
-        <div class="eyebrow">Plataforma para negocios locales</div>
-        <h1>Vende más, pierde menos y <span class="grad">contesta a todos</span>, sin trabajo extra.</h1>
-        <p class="lead">Punto de venta, inventario, lealtad de clientes y asistentes de IA por WhatsApp, conectados en una sola plataforma. Empezamos por restaurantes y cafeterías.</p>
-        <Cta />
-        <p class="muted" style="margin-top:14px"><a href="/restaurantes">¿Tienes un restaurante o cafetería? Mira cómo funciona →</a></p>
+<Base darkHero title="Reymen Solutions · Software, automatización y agentes de IA a la medida" description="Reymen Solutions diseña software, automatizaciones y agentes de IA para negocios en México, y tiene un ecosistema propio de punto de venta, inventario, lealtad y mensajes para restaurantes." path="">
+  <section class="hero tone-night" aria-labelledby="hero-title">
+    <Traces />
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <h1 id="hero-title">Construimos el software, la automatización y los agentes de IA que tu negocio necesita<span class="dot">.</span></h1>
+        <p class="lede">Reymen Solutions diseña tecnología a la medida y productos propios para negocios en México. Nuestro primer ecosistema ya opera en restaurantes y cafeterías.</p>
+        <div class="cta-wrap"><div class="cta-row">
+          <Button href={demo} size="lg" event="CTA Demo" external={!!SITE.calendlyUrl}>Agendar demo</Button>
+          <Button href="/restaurantes" variant="ghost" size="lg" event="Ver Restaurantes"><span class="l-full">Ver Reymen para restaurantes</span><span class="l-short">Ver restaurantes</span></Button>
+        </div></div>
+        <dl class="facts">
+          <div><dt>Productos propios y a la medida</dt><dd>Un ecosistema que ya funciona, y desarrollo para lo que no existe.</dd></div>
+          <div><dt>Pensado para México</dt><dd>IVA desglosado, propinas, efectivo y WhatsApp.</dd></div>
+          <div><dt>Tus datos son tuyos</dt><dd>Cada negocio aislado y con respaldos cifrados.</dd></div>
+        </dl>
       </div>
-      <Shot name="lealtad" alt="Panel de lealtad de la plataforma Reymen con clientes inscritos, visitas, importes y recompensas" width={1500} height={900} eager />
+      <div class="hero-stage"><HeroStage /></div>
     </div>
   </section>
 
-  <section id="producto">
-    <div class="wrap">
-      <div class="eyebrow">Producto</div>
-      <h2>Todo tu negocio en un solo lugar</h2>
-      <p class="lead">Menos pestañas, menos hojas de cálculo y menos olvidos.</p>
-      <div class="grid g3" style="margin-top:28px">
-        <div class="card"><div class="icon">🧾</div><h3>Punto de venta</h3><p>Mesas, cocina, cobro dividido, tickets y corte de caja. Funciona rápido en tableta o celular.</p></div>
-        <div class="card"><div class="icon">📦</div><h3>Inventario y costos</h3><p>Recetas que descuentan insumos solas, avisos de agotado y costo por platillo. Nunca bloquea una venta.</p></div>
-        <div class="card"><div class="icon">⭐</div><h3>Lealtad con tarjeta digital</h3><p>Sellos y recompensas en la tarjeta del cliente, con cumpleaños y avisos para que regrese.</p></div>
-        <div class="card"><div class="icon">👥</div><h3>CRM y seguimiento</h3><p>Cada cliente y cada conversación en un solo historial, con recordatorios para no perder ventas.</p></div>
-        <div class="card"><div class="icon">💬</div><h3>Bandeja de mensajes</h3><p>WhatsApp, web y más canales en una sola bandeja para todo tu equipo.</p></div>
-        <div class="card"><div class="icon">📈</div><h3>Reportes claros</h3><p>Ventas, ticket promedio, productos estrella y qué campañas traen clientes de vuelta.</p></div>
-      </div>
-      <div class="grid g2" style="margin-top:36px">
-        <Shot name="inventario" alt="Inventario con alertas de stock bajo, costos por insumo y ajustes de existencias" width={1500} height={900} />
-        <Shot name="pipeline" alt="Pipeline de ventas en tablero con oportunidades por etapa" width={1500} height={570} />
-      </div>
-    </div>
-  </section>
+  <Section id="ecosistema" tone="white" after="night" labelledby="eco-title">
+    <EcosystemShowcase />
+  </Section>
 
-  <section id="ia" class="alt">
-    <div class="wrap grid g2" style="align-items:center">
-      <div>
-        <div class="eyebrow">Asistentes de IA</div>
-        <h2>Atiende por WhatsApp las 24 horas, con tus reglas</h2>
-        <p class="lead">El asistente responde preguntas frecuentes, toma datos y agenda, siguiendo el manual que tú escribes. Si no está seguro, pasa la conversación a una persona.</p>
-        <ul class="ticks">
-          <li>Aprende de tu menú, horarios y políticas</li>
-          <li>Tú decides: solo sugerir respuestas o contestar solo</li>
-          <li>Límites de consumo para que nunca haya sorpresas</li>
-          <li>Todo queda en tu bandeja, con historial</li>
-        </ul>
-      </div>
-      <Shot name="inbox" alt="Bandeja de mensajes de Reymen con una conversación de WhatsApp respondida por el Agente IA" width={1500} height={900} />
+  <Section id="servicios" tone="night" labelledby="servicios-title">
+    <div class="head">
+      <h2 id="servicios-title">Lo que no viene en caja, lo construimos contigo<span class="dot">.</span></h2>
+      <p class="lede">Además de nuestros productos, desarrollamos a la medida sobre la misma base. Elige una capacidad y mira dónde entra en el flujo.</p>
     </div>
-  </section>
+    <ServicesCanvas />
+  </Section>
 
-  <section id="como-funciona">
-    <div class="wrap">
-      <div class="eyebrow">Cómo trabajamos</div>
-      <h2>De la demo a tu primera venta</h2>
-      <div class="grid g3 steps" style="margin-top:28px">
-        <div class="card"><h3>Conversamos</h3><p>Entendemos tu operación y qué te quita más tiempo o dinero hoy.</p></div>
-        <div class="card"><h3>Configuramos</h3><p>Cargamos tu menú, usuarios, inventario y conectamos WhatsApp y lealtad.</p></div>
-        <div class="card"><h3>Acompañamos</h3><p>Capacitamos a tu equipo y medimos resultados desde la primera semana.</p></div>
-      </div>
-    </div>
-  </section>
+  <Section id="soluciones" after="night" labelledby="soluciones-title">
+    <div class="head"><h2 id="soluciones-title">Una plataforma, varios giros<span class="dot">.</span></h2></div>
+    <ul class="solutions">
+      {solutions.map((s) => (
+        <li>
+          <a class="solution" href={s.href}>
+            <span class="s-name"><Glyph name={s.glyph as "restaurant"} size={30} class="s-glyph" />{s.name}</span>
+            <span class="s-text">{s.text}</span>
+            <span class="s-cta">{s.cta}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+    <p class="other">¿Tu giro no está aquí? <a href="#contacto">Cuéntanos qué necesitas</a> y lo revisamos juntos.</p>
+  </Section>
 
-  <section id="negocios" class="alt">
-    <div class="wrap">
-      <div class="eyebrow">Para cada negocio</div>
-      <h2>Empezamos con restaurantes; sirve para más</h2>
-      <div class="grid g4" style="margin-top:28px">
-        <a class="card" href="/restaurantes" style="text-decoration:none"><div class="icon">🍽️</div><h3>Restaurantes y cafeterías</h3><p>POS, cocina, inventario y lealtad. Ya disponible.</p></a>
-        <div class="card"><div class="icon">🛍️</div><h3>Comercio</h3><p>Catálogo, clientes frecuentes y seguimiento por WhatsApp.</p></div>
-        <div class="card"><div class="icon">🩺</div><h3>Servicios y clínicas</h3><p>Citas, recordatorios y menos ausencias.</p></div>
-        <div class="card"><div class="icon">🏠</div><h3>Inmobiliarias</h3><p>Fichas públicas de propiedades y captura de prospectos.</p></div>
-      </div>
-    </div>
-  </section>
+  <Section id="proceso" tone="white" labelledby="proceso-title">
+    <div class="head"><h2 id="proceso-title">Cómo trabajamos contigo<span class="dot">.</span></h2></div>
+    <Timeline items={process} />
+  </Section>
 
-  <section id="seguridad">
-    <div class="wrap">
-      <div class="eyebrow">Confianza</div>
-      <h2>Tus datos y los de tus clientes, en buenas manos</h2>
-      <div class="grid g3" style="margin-top:28px">
-        <div class="card"><h3>Datos aislados por negocio</h3><p>Nadie ve la información de otro cliente. Permisos por rol dentro de tu equipo.</p></div>
-        <div class="card"><h3>Respaldos cifrados</h3><p>Copias diarias cifradas fuera del servidor y pruebas periódicas de restauración.</p></div>
-        <div class="card"><h3>IA con límites</h3><p>El asistente sigue tus reglas, escala lo delicado a una persona y tiene tope de consumo.</p></div>
-      </div>
-      <p class="muted" style="margin-top:20px">Cumplimos con el aviso de privacidad y pedimos tu consentimiento antes de contactarte. <a href="/privacidad">Leer aviso</a>.</p>
+  <Section id="por-que" labelledby="porque-title">
+    <div class="split">
+      <h2 id="porque-title">Por qué Reymen<span class="dot">.</span></h2>
+      <FeatureList items={why} cols={2} />
     </div>
-  </section>
+  </Section>
+
+  <Section id="seguridad" tone="white" labelledby="seguridad-title">
+    <div class="head"><h2 id="seguridad-title">Tus datos y los de tus clientes, protegidos<span class="dot">.</span></h2></div>
+    <div class="trust">
+      {trust.map((t) => (
+        <div>
+          <svg class="ico" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" set:html={icons[t.icon]} />
+          <h3>{t.h}</h3>
+          <p>{t.p}</p>
+        </div>
+      ))}
+    </div>
+    <p class="other">Así tratamos los datos personales: <a href="/privacidad">aviso de privacidad</a>.</p>
+  </Section>
 
   {SITE.showPrices && <Plans />}
 
-  <section id="faq" class="alt">
-    <div class="wrap" style="max-width:820px">
-      <h2>Preguntas frecuentes</h2>
+  <Section id="preguntas" labelledby="faq-title">
+    <div class="faq-grid">
+      <h2 id="faq-title">Preguntas frecuentes<span class="dot">.</span></h2>
       <Faq items={faq} />
     </div>
-  </section>
+  </Section>
 
-  <section id="contacto">
-    <div class="wrap grid g2">
-      <div>
-        <div class="eyebrow">Hablemos</div>
-        <h2>Cuéntanos de tu negocio</h2>
-        <p class="lead">Te respondemos por WhatsApp o correo con una propuesta clara. Sin compromiso.</p>
-        <p class="muted">También puedes escribir a <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.</p>
-      </div>
-      <div class="card"><LeadForm /></div>
-    </div>
-  </section>
+  <ContactSection />
 </Base>
+
+<style>
+  /* Hero: noche con la luz del logo detrás del producto y un plano de líneas muy tenue (el «plano de operación») */
+  .hero { position: relative; overflow: clip; padding-block: calc(4.25rem + clamp(1.5rem, 0.5rem + 3.4vw, 3.5rem)) clamp(3rem, 2rem + 3.5vw, 5.5rem); background: var(--night); color: var(--on-night); }
+  .hero::before { content: ""; position: absolute; inset: -10% -5% 0 38%; background: radial-gradient(closest-side at 55% 45%, var(--bloom), transparent 72%); pointer-events: none; }
+  .hero::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0.55;
+    background-image: linear-gradient(rgb(255 255 255 / 0.045) 1px, transparent 1px), linear-gradient(90deg, rgb(255 255 255 / 0.045) 1px, transparent 1px); background-size: 72px 72px;
+    mask-image: radial-gradient(ellipse 70% 60% at 65% 40%, #000 20%, transparent 75%); -webkit-mask-image: radial-gradient(ellipse 70% 60% at 65% 40%, #000 20%, transparent 75%); }
+  .hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(2rem, 4vw, 4.5rem); align-items: center; }
+  .hero-copy { display: grid; gap: var(--s-6); justify-items: start; }
+  .hero h1 { color: var(--white); font-size: clamp(1.65rem, 1rem + 2.1vw, 3rem); font-stretch: 106%; letter-spacing: -0.032em; }
+  .cta-row { display: flex; flex-wrap: wrap; gap: var(--s-3); }
+  .facts { display: grid; gap: var(--s-4); padding-top: var(--s-5); border-top: 1px solid var(--night-line); width: 100%; }
+  .facts div { display: grid; gap: 0.1rem; }
+  .facts dt { font-weight: 650; font-stretch: 104%; color: var(--on-night); }
+  .facts dd { margin: 0; color: var(--on-night-soft); font-size: 0.95rem; }
+  .head { display: grid; gap: var(--s-4); margin-bottom: var(--head-gap); max-width: 52rem; }
+  .solutions { border-top: 1px solid var(--mist); }
+  .solutions li { border-bottom: 1px solid var(--mist); }
+  .solution { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 4fr); gap: var(--s-2) var(--s-7); padding: var(--s-6) 0; text-decoration: none; position: relative; }
+  .solution::before { content: ""; position: absolute; inset: 0 calc(-1 * var(--s-4)); background: color-mix(in srgb, var(--blue) 6%, transparent); opacity: 0; transition: opacity var(--t-base) var(--ease); pointer-events: none; }
+  .solution:hover::before, .solution:focus-visible::before { opacity: 1; }
+  .s-name { display: flex; align-items: center; gap: var(--s-4); grid-row: span 2; font-size: var(--step-3); font-weight: 700; font-stretch: 112%; letter-spacing: -0.022em; line-height: 1.1; transition: color var(--t-base) var(--ease), transform var(--t-base) var(--ease); }
+  .solution:hover .s-name { color: var(--blue-ink); transform: translateX(6px); }
+  .s-name :global(.s-glyph) { flex: none; color: var(--blue-ink); --glyph-node: var(--blue); }
+  .solution:first-child .s-name :global(.s-glyph) { --glyph-node: var(--ember); }
+  .s-text { color: var(--ink-soft); max-width: 46ch; }
+  .s-cta { font-weight: 650; color: var(--blue-ink); text-decoration: underline; text-underline-offset: 0.25em; text-decoration-thickness: 0.08em; align-self: start; }
+  .other { margin-top: var(--s-5); color: var(--ink-soft); }
+  .other a { color: var(--blue-ink); font-weight: 600; }
+  .split { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: clamp(1.5rem, 4vw, 4rem); align-items: start; }
+  .split h2 { position: sticky; top: 6rem; }
+  .trust { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-7); }
+  .ico { color: var(--blue); margin-bottom: var(--s-3); }
+  .trust h3 { margin-bottom: var(--s-2); }
+  .trust p { color: var(--ink-soft); }
+  .faq-grid { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: clamp(1.5rem, 4vw, 4rem); align-items: start; }
+  .faq-grid h2 { position: sticky; top: 6rem; }
+  @media (max-width: 62rem) {
+    .hero-grid, .faq-grid, .split { grid-template-columns: 1fr; }
+    .faq-grid h2, .split h2 { position: static; }
+    .solution { grid-template-columns: 1fr; }
+    .s-name { grid-row: auto; }
+    .trust { grid-template-columns: 1fr; gap: var(--s-6); }
+  }
+  @media (max-width: 62rem) {
+    /* Móvil y tableta: titular, texto y botones, luego la demostración, y al final los datos de apoyo */
+    .hero-copy { display: contents; }
+    .hero-copy > * { grid-column: 1; }
+    .hero-stage { order: 4; }
+    .facts { order: 5; }
+    .hero-grid { gap: var(--s-5); }
+  }
+  .l-short { display: none; }
+  /* Botones: en una fila siempre que quepan; la medida la da el espacio de la columna, no la pantalla */
+  .cta-wrap { container-type: inline-size; width: 100%; }
+  @container (max-width: 31rem) {
+    .cta-row { flex-wrap: nowrap; }
+    .l-full { display: none; } .l-short { display: inline; }
+  }
+  @container (max-width: 24rem) {
+    .cta-row { gap: var(--s-2); }
+    .cta-row :global(.btn) { flex: 1 1 0; min-width: 0; padding: 0.8rem 0.6rem; font-size: 0.95rem; white-space: normal; text-align: center; }
+  }
+  @container (max-width: 17.5rem) { .cta-row { flex-direction: column; } }
+  @media (max-width: 36rem) {
+    .hero { padding-top: calc(4.25rem + 1.25rem); padding-bottom: 2.5rem; }
+    .hero-grid { gap: var(--s-5); }
+    .hero h1 { letter-spacing: -0.03em; line-height: 1.06; }
+    .hero .lede { font-size: 1rem; line-height: 1.5; }
+    /* Datos de apoyo: solo los títulos, en una lista compacta */
+    .facts { gap: var(--s-2); padding-top: var(--s-4); }
+    .facts dd { display: none; }
+    .facts dt { display: flex; align-items: center; gap: 0.6rem; font-size: 0.92rem; }
+    .facts dt::before { content: ""; width: 0.4rem; height: 0.4rem; border-radius: 50%; background: var(--electric); flex: none; }
+  }
+</style>

@@ -1,10 +1,17 @@
 ---
 import Base from "../layouts/Base.astro";
+import Button from "../components/Button.astro";
 ---
-<Base title="¡Gracias! · Reymen" description="Recibimos tus datos." path="/gracias" noindex chat={false}>
-  <section class="hero"><div class="wrap" style="max-width:640px">
-    <h1>¡Gracias!</h1>
-    <p class="lead">Recibimos tus datos. Te contactaremos pronto por WhatsApp o correo.</p>
-    <a class="btn primary" href="/">Volver al inicio</a>
-  </div></section>
+<Base title="Recibimos tus datos · Reymen" description="Recibimos tus datos." path="/gracias" noindex chat={false}>
+  <section class="done tone-paper">
+    <div class="container">
+      <h1>Recibimos tus datos<span class="dot">.</span></h1>
+      <p class="lede">Te escribiremos pronto por WhatsApp o correo.</p>
+      <Button href="/" variant="ghost" size="lg">Volver al inicio</Button>
+    </div>
+  </section>
 </Base>
+<style>
+  .done { padding-block: var(--section); min-height: 60vh; }
+  .done .container { display: grid; gap: var(--s-5); justify-items: start; }
+</style>

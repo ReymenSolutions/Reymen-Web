@@ -1,0 +1,20 @@
+---
+// Ventana de producto: captura real de la plataforma. La etiqueta dice qué pantalla es; los datos son de demostración.
+interface Props { name: string; alt: string; label: string; width: number; height: number; eager?: boolean; class?: string }
+const { name, alt, label, width, height, eager = false, class: extra = "" } = Astro.props;
+---
+<figure class:list={["window", extra]}>
+  <div class="frame">
+    <div class="bar" aria-hidden="true"><span>{label}</span></div>
+    <img src={`/capturas/${name}.webp`} alt={alt} width={width} height={height} loading={eager ? "eager" : "lazy"} fetchpriority={eager ? "high" : "auto"} decoding="async" />
+  </div>
+  <figcaption>Datos de demostración de un negocio ficticio.</figcaption>
+</figure>
+
+<style>
+  .frame { border-radius: var(--r-lg); overflow: hidden; background: var(--white); border: 1px solid var(--mist); box-shadow: var(--lift); }
+  .bar { padding: 0.55rem 0.9rem; font-size: var(--step--1); font-weight: 600; font-stretch: 106%; color: var(--ink-soft); background: #eef2fb; border-bottom: 1px solid var(--mist); }
+  img { width: 100%; height: auto; }
+  figcaption { margin-top: var(--s-3); font-size: var(--step--1); color: var(--ink-soft); }
+  :global(.tone-night) figcaption { color: var(--on-night-soft); }
+</style>
