@@ -28,5 +28,10 @@ const Tag = href ? "a" : "button";
   .btn-ghost:hover { border-color: currentColor; background: color-mix(in srgb, currentColor 6%, transparent); }
   .btn-ember { background: var(--ember); color: var(--ink); }
   .btn-ember:hover { background: #ff7d33; transform: translateY(-1px); }
+  .btn:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+  :global(.tone-night) .btn:focus-visible { outline-color: #8ea6ff; }
   .btn:disabled { opacity: 0.6; cursor: progress; transform: none; }
+  /* Cargando: un anillo de luz junto al texto, sin mover el botón */
+  .btn[aria-busy="true"]::before { content: ""; width: 0.95em; height: 0.95em; border-radius: 50%; border: 2px solid currentColor; border-right-color: transparent; animation: spin 700ms linear infinite; flex: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
 </style>

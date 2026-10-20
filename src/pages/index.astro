@@ -3,6 +3,8 @@ import Base from "../layouts/Base.astro";
 import Section from "../components/Section.astro";
 import Button from "../components/Button.astro";
 import HeroStage from "../components/HeroStage.astro";
+import Traces from "../components/Traces.astro";
+import Glyph from "../components/Glyph.astro";
 import EcosystemShowcase from "../components/EcosystemShowcase.astro";
 import ServicesCanvas from "../components/ServicesCanvas.astro";
 import Timeline from "../components/Timeline.astro";
@@ -15,9 +17,9 @@ import { SITE } from "../config";
 const demo = SITE.calendlyUrl || "#contacto";
 
 const solutions = [
-  { name: "Restaurantes y cafeterías", text: "Punto de venta, cocina, inventario con recetas y lealtad. Es donde más hemos trabajado.", href: "/restaurantes", cta: "Ver la solución para restaurantes" },
-  { name: "Clínicas y servicios", text: "Citas, recordatorios y seguimiento por WhatsApp para reducir ausencias.", href: "/?giro=servicios#contacto", cta: "Platicar sobre mi clínica" },
-  { name: "Inmobiliarias", text: "Fichas públicas de cada propiedad y captura de prospectos en un solo lugar.", href: "/?giro=inmobiliaria#contacto", cta: "Platicar sobre mi inmobiliaria" },
+  { glyph: "restaurant", name: "Restaurantes y cafeterías", text: "Punto de venta, cocina, inventario con recetas y lealtad. Es donde más hemos trabajado.", href: "/restaurantes", cta: "Ver la solución para restaurantes" },
+  { glyph: "clinic", name: "Clínicas y servicios", text: "Citas, recordatorios y seguimiento por WhatsApp para reducir ausencias.", href: "/?giro=servicios#contacto", cta: "Platicar sobre mi clínica" },
+  { glyph: "property", name: "Inmobiliarias", text: "Fichas públicas de cada propiedad y captura de prospectos en un solo lugar.", href: "/?giro=inmobiliaria#contacto", cta: "Platicar sobre mi inmobiliaria" },
 ];
 const process = [
   { h: "Conversamos", p: "Entendemos tu operación y qué te quita más tiempo o dinero hoy." },
@@ -51,14 +53,15 @@ const faq = [
 ---
 <Base darkHero title="Reymen Solutions · Software, automatización y agentes de IA a la medida" description="Reymen Solutions diseña software, automatizaciones y agentes de IA para negocios en México, y tiene un ecosistema propio de punto de venta, inventario, lealtad y mensajes para restaurantes." path="">
   <section class="hero tone-night" aria-labelledby="hero-title">
+    <Traces />
     <div class="container hero-grid">
       <div class="hero-copy">
         <h1 id="hero-title">Construimos el software, la automatización y los agentes de IA que tu negocio necesita<span class="dot">.</span></h1>
         <p class="lede">Reymen Solutions diseña tecnología a la medida y productos propios para negocios en México. Nuestro primer ecosistema ya opera en restaurantes y cafeterías.</p>
-        <div class="cta-row">
+        <div class="cta-wrap"><div class="cta-row">
           <Button href={demo} size="lg" event="CTA Demo" external={!!SITE.calendlyUrl}>Agendar demo</Button>
-          <Button href="/restaurantes" variant="ghost" size="lg" event="Ver Restaurantes">Ver Reymen para restaurantes</Button>
-        </div>
+          <Button href="/restaurantes" variant="ghost" size="lg" event="Ver Restaurantes"><span class="l-full">Ver Reymen para restaurantes</span><span class="l-short">Ver restaurantes</span></Button>
+        </div></div>
         <dl class="facts">
           <div><dt>Productos propios y a la medida</dt><dd>Un ecosistema que ya funciona, y desarrollo para lo que no existe.</dd></div>
           <div><dt>Pensado para México</dt><dd>IVA desglosado, propinas, efectivo y WhatsApp.</dd></div>
@@ -69,7 +72,7 @@ const faq = [
     </div>
   </section>
 
-  <Section id="ecosistema" tone="white" labelledby="eco-title">
+  <Section id="ecosistema" tone="white" after="night" labelledby="eco-title">
     <EcosystemShowcase />
   </Section>
 
@@ -81,13 +84,13 @@ const faq = [
     <ServicesCanvas />
   </Section>
 
-  <Section id="soluciones" labelledby="soluciones-title">
+  <Section id="soluciones" after="night" labelledby="soluciones-title">
     <div class="head"><h2 id="soluciones-title">Una plataforma, varios giros<span class="dot">.</span></h2></div>
     <ul class="solutions">
       {solutions.map((s) => (
         <li>
           <a class="solution" href={s.href}>
-            <span class="s-name">{s.name}</span>
+            <span class="s-name"><Glyph name={s.glyph as "restaurant"} size={30} class="s-glyph" />{s.name}</span>
             <span class="s-text">{s.text}</span>
             <span class="s-cta">{s.cta}</span>
           </a>
@@ -137,38 +140,40 @@ const faq = [
 
 <style>
   /* Hero: noche con la luz del logo detrás del producto y un plano de líneas muy tenue (el «plano de operación») */
-  .hero { position: relative; overflow: clip; padding-block: calc(4.25rem + clamp(2rem, 1rem + 5vw, 5.5rem)) clamp(3rem, 2rem + 4vw, 6rem); background: var(--night); color: var(--on-night); }
+  .hero { position: relative; overflow: clip; padding-block: calc(4.25rem + clamp(1.5rem, 0.5rem + 3.4vw, 3.5rem)) clamp(3rem, 2rem + 3.5vw, 5.5rem); background: var(--night); color: var(--on-night); }
   .hero::before { content: ""; position: absolute; inset: -10% -5% 0 38%; background: radial-gradient(closest-side at 55% 45%, var(--bloom), transparent 72%); pointer-events: none; }
   .hero::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0.55;
     background-image: linear-gradient(rgb(255 255 255 / 0.045) 1px, transparent 1px), linear-gradient(90deg, rgb(255 255 255 / 0.045) 1px, transparent 1px); background-size: 72px 72px;
     mask-image: radial-gradient(ellipse 70% 60% at 65% 40%, #000 20%, transparent 75%); -webkit-mask-image: radial-gradient(ellipse 70% 60% at 65% 40%, #000 20%, transparent 75%); }
   .hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(2rem, 4vw, 4.5rem); align-items: center; }
   .hero-copy { display: grid; gap: var(--s-6); justify-items: start; }
-  .hero h1 { color: var(--white); font-size: clamp(2rem, 1.3rem + 2vw, 3.15rem); font-stretch: 106%; letter-spacing: -0.032em; }
+  .hero h1 { color: var(--white); font-size: clamp(1.65rem, 1rem + 2.1vw, 3rem); font-stretch: 106%; letter-spacing: -0.032em; }
   .cta-row { display: flex; flex-wrap: wrap; gap: var(--s-3); }
   .facts { display: grid; gap: var(--s-4); padding-top: var(--s-5); border-top: 1px solid var(--night-line); width: 100%; }
   .facts div { display: grid; gap: 0.1rem; }
   .facts dt { font-weight: 650; font-stretch: 104%; color: var(--on-night); }
   .facts dd { margin: 0; color: var(--on-night-soft); font-size: 0.95rem; }
-  .head { display: grid; gap: var(--s-4); margin-bottom: var(--s-7); max-width: 52rem; }
+  .head { display: grid; gap: var(--s-4); margin-bottom: var(--head-gap); max-width: 52rem; }
   .solutions { border-top: 1px solid var(--mist); }
   .solutions li { border-bottom: 1px solid var(--mist); }
   .solution { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 4fr); gap: var(--s-2) var(--s-7); padding: var(--s-6) 0; text-decoration: none; position: relative; }
   .solution::before { content: ""; position: absolute; inset: 0 calc(-1 * var(--s-4)); background: color-mix(in srgb, var(--blue) 6%, transparent); opacity: 0; transition: opacity var(--t-base) var(--ease); pointer-events: none; }
   .solution:hover::before, .solution:focus-visible::before { opacity: 1; }
-  .s-name { grid-row: span 2; font-size: var(--step-3); font-weight: 700; font-stretch: 112%; letter-spacing: -0.022em; line-height: 1.1; transition: color var(--t-base) var(--ease), transform var(--t-base) var(--ease); }
+  .s-name { display: flex; align-items: center; gap: var(--s-4); grid-row: span 2; font-size: var(--step-3); font-weight: 700; font-stretch: 112%; letter-spacing: -0.022em; line-height: 1.1; transition: color var(--t-base) var(--ease), transform var(--t-base) var(--ease); }
   .solution:hover .s-name { color: var(--blue-ink); transform: translateX(6px); }
+  .s-name :global(.s-glyph) { flex: none; color: var(--blue-ink); --glyph-node: var(--blue); }
+  .solution:first-child .s-name :global(.s-glyph) { --glyph-node: var(--ember); }
   .s-text { color: var(--ink-soft); max-width: 46ch; }
   .s-cta { font-weight: 650; color: var(--blue-ink); text-decoration: underline; text-underline-offset: 0.25em; text-decoration-thickness: 0.08em; align-self: start; }
   .other { margin-top: var(--s-5); color: var(--ink-soft); }
   .other a { color: var(--blue-ink); font-weight: 600; }
-  .split { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: var(--s-8); align-items: start; }
+  .split { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: clamp(1.5rem, 4vw, 4rem); align-items: start; }
   .split h2 { position: sticky; top: 6rem; }
   .trust { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-7); }
   .ico { color: var(--blue); margin-bottom: var(--s-3); }
   .trust h3 { margin-bottom: var(--s-2); }
   .trust p { color: var(--ink-soft); }
-  .faq-grid { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: var(--s-8); align-items: start; }
+  .faq-grid { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: clamp(1.5rem, 4vw, 4rem); align-items: start; }
   .faq-grid h2 { position: sticky; top: 6rem; }
   @media (max-width: 62rem) {
     .hero-grid, .faq-grid, .split { grid-template-columns: 1fr; }
@@ -183,11 +188,29 @@ const faq = [
     .hero-copy > * { grid-column: 1; }
     .hero-stage { order: 4; }
     .facts { order: 5; }
-    .hero-grid { gap: var(--s-6); }
+    .hero-grid { gap: var(--s-5); }
   }
+  .l-short { display: none; }
+  /* Botones: en una fila siempre que quepan; la medida la da el espacio de la columna, no la pantalla */
+  .cta-wrap { container-type: inline-size; width: 100%; }
+  @container (max-width: 31rem) {
+    .cta-row { flex-wrap: nowrap; }
+    .l-full { display: none; } .l-short { display: inline; }
+  }
+  @container (max-width: 24rem) {
+    .cta-row { gap: var(--s-2); }
+    .cta-row :global(.btn) { flex: 1 1 0; min-width: 0; padding: 0.8rem 0.6rem; font-size: 0.95rem; white-space: normal; text-align: center; }
+  }
+  @container (max-width: 17.5rem) { .cta-row { flex-direction: column; } }
   @media (max-width: 36rem) {
-    .cta-row { flex-direction: column; align-items: stretch; width: 100%; }
-    .cta-row :global(.btn) { white-space: normal; }
-    .hero { padding-top: calc(4.25rem + 1.5rem); }
+    .hero { padding-top: calc(4.25rem + 1.25rem); padding-bottom: 2.5rem; }
+    .hero-grid { gap: var(--s-5); }
+    .hero h1 { letter-spacing: -0.03em; line-height: 1.06; }
+    .hero .lede { font-size: 1rem; line-height: 1.5; }
+    /* Datos de apoyo: solo los títulos, en una lista compacta */
+    .facts { gap: var(--s-2); padding-top: var(--s-4); }
+    .facts dd { display: none; }
+    .facts dt { display: flex; align-items: center; gap: 0.6rem; font-size: 0.92rem; }
+    .facts dt::before { content: ""; width: 0.4rem; height: 0.4rem; border-radius: 50%; background: var(--electric); flex: none; }
   }
 </style>

@@ -90,7 +90,7 @@ const { vertical = "" } = Astro.props;
       const fd = new FormData(form);
       const btn = form.querySelector<HTMLButtonElement>("button[type=submit]")!;
       const label = btn.textContent;
-      btn.disabled = true; btn.textContent = "Enviando…";
+      btn.disabled = true; btn.setAttribute("aria-busy", "true"); btn.textContent = "Enviando…";
       try {
         const res = await fetch(form.dataset.api!, {
           method: "POST",
@@ -107,7 +107,7 @@ const { vertical = "" } = Astro.props;
         else show("No pudimos enviar tus datos. Escribe a contact@reymen.mx y te respondemos.");
       } catch {
         show("Sin conexión. Intenta de nuevo o escribe a contact@reymen.mx.");
-      } finally { btn.disabled = false; btn.textContent = label; }
+      } finally { btn.disabled = false; btn.removeAttribute("aria-busy"); btn.textContent = label; }
     });
   }
 </script>

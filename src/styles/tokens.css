@@ -44,7 +44,8 @@
   /* Espacio (base 4 px) y ritmo de sección */
   --s-1: 0.25rem; --s-2: 0.5rem; --s-3: 0.75rem; --s-4: 1rem; --s-5: 1.5rem;
   --s-6: 2rem; --s-7: 3rem; --s-8: 4rem; --s-9: 6rem;
-  --section: clamp(4rem, 3rem + 5vw, 8rem);
+  --section: clamp(3.25rem, 2rem + 5vw, 7rem);
+  --head-gap: clamp(1.75rem, 1rem + 2.6vw, 3rem); /* aire entre el título de una sección y su contenido */
   --gutter: clamp(1.25rem, 0.8rem + 2vw, 2.5rem);
   --max: 76rem;
   --measure: 62ch;

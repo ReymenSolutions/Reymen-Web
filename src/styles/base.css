@@ -48,3 +48,13 @@
 }
 @media (pointer: coarse) { :where(a, button) { touch-action: manipulation; } }
 @media (pointer: fine) { :where(html) { overscroll-behavior: none; } }
+
+/* Revelado al hacer scroll: discreto (opacidad y 14 px), solo para lo que aún no se ve al cargar. Sin JS o con movimiento reducido, todo se ve. */
+.js [data-reveal] { opacity: 0; transform: translateY(14px); transition: opacity 700ms var(--ease), transform 700ms var(--ease); transition-delay: calc(var(--i, 0) * 70ms); }
+.js [data-reveal].is-in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .js [data-reveal] { opacity: 1; transform: none; transition: none; } }
+
+/* Acordeones: la respuesta se abre con altura animada donde el navegador lo permite (si no, se abre sin animar) */
+:root { interpolate-size: allow-keywords; }
+details::details-content { block-size: 0; overflow: clip; transition: block-size var(--t-base) var(--ease), content-visibility var(--t-base) allow-discrete; }
+details[open]::details-content { block-size: auto; }

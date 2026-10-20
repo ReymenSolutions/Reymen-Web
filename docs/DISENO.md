@@ -66,3 +66,26 @@ Las de Reymen App y Reymen POS son reales, con datos de demostración (negocio f
 
 ## Calidad (revisada)
 axe: 0 violaciones en escritorio, tableta y móvil, y con movimiento reducido. Lighthouse: rendimiento 99 a 100, accesibilidad 100, SEO 100, mejores prácticas 96 (solo el error de consola de la analítica externa, que no carga en el entorno de prueba), CLS 0 y TBT 0 ms.
+
+## Iteración 3 · refinamiento
+
+Sin cambiar la dirección (noche azul, azul eléctrico, Archivo, copy y demos). Se corrigió composición, móvil y legibilidad del producto.
+
+**Problemas concretos encontrados en el código**
+- `StorySteps`: el dispositivo fijo quedaba arriba (`top: 6rem`) y el texto centrado en pasos de `62vh`; texto y producto no compartían eje y había huecos de más de media pantalla.
+- Hero móvil: escena de `4 / 4.2`, botones apilados, `h1` de 32 px (5 líneas), descripciones de apoyo largas; la demo ocupaba más de una pantalla.
+- Capturas completas en pantallas chicas: texto del producto ilegible (la imagen completa en 330 px).
+- Secciones: `--section` de hasta 8 rem, `gap: var(--s-8)` en móvil, títulos con 3 rem de aire antes del contenido.
+- Paso noche → claro: corte seco, sin relación visual entre bandas.
+- Botones: sin estado de carga ni foco sobre noche; sin recursos gráficos propios (solo iconos genéricos).
+
+**Qué cambió**
+- Composición: `--section` 3.25–7 rem y `--head-gap` fluido; en «El turno» la franja del dispositivo mide lo mismo que un paso (`--H`) y se centra en la ventana, así texto y pantalla comparten eje desde el primer paso.
+- Móvil: botones en fila con contenedor (`cta-wrap`: etiqueta corta cuando la columna es angosta, apilados solo bajo 17.5 rem), `h1` 26–48 px, hero con escena baja, teléfono solo mientras se habla de WhatsApp, datos de apoyo en lista compacta, encabezado sin desbordar a 320 px.
+- Producto: cada paso tiene un punto de foco `[x, y, zoom]`; la pantalla entra completa y se acerca despacio a la zona que explica el paso (móvil: recorte estático que se acerca al verse). Las capturas del POS se exportaron a su resolución nativa (2000 px) para alta densidad. «Servicios» muestra una captura real recortada de Reymen App por capacidad.
+- Microinteracciones: estado `aria-busy` con anillo en botones, foco visible sobre noche, acordeón con altura animada, revelado discreto (opacidad y 14 px) solo para bloques que aún no se ven al cargar.
+- Transiciones: `Section after="night"` y el pie disuelven la noche hacia el papel con un degradado corto y un hilo de luz eléctrica en el borde.
+- Identidad: `Glyph` (6 glifos con nodo relleno, el punto de la marca) y `Traces` (trazas ortogonales con esquinas a 45° y pulsos de luz que se encienden con la página ya tranquila y solo mientras se ven; quietas con movimiento reducido).
+
+**Límites conocidos**
+- Las capturas de Reymen App (Inbox, CRM, Inventario, Lealtad) siguen en 1500 px; conviene volver a capturarlas a doble resolución cuando haya un entorno con datos de demostración.

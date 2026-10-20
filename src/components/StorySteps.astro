@@ -1,19 +1,23 @@
 ---
 // «El turno»: una narrativa que sigue el día de un restaurante. A la izquierda avanza el texto; a la derecha, un dispositivo fijo
 // cambia de pantalla real según el paso que se lee. En móvil cada paso trae su propia imagen y nada queda fijo.
-interface Item { when: string; h: string; p: string; img: string; alt: string; w: number; h2: number; pos?: string }
+// `focus` = [x, y, zoom]: centro (en %) de la zona que se acerca y cuánto. Sirve para que el texto del producto se lea.
+interface Item { when: string; h: string; p: string; img: string; alt: string; w: number; h2: number; pos?: string; focus?: [number, number, number] }
 interface Props { items: Item[] }
 const { items } = Astro.props;
+// Origen de la transformación para que la ventana visible quede centrada en el punto de foco (sin salirse de la imagen)
+const origin = (c: number, z: number) => { const w = 1 / z; const a = Math.min(Math.max(c / 100 - w / 2, 0), 1 - w); return z === 1 ? 0 : (a / (1 - w)) * 100; };
+const fv = (it: Item) => { const [x, y, z] = it.focus ?? [50, 50, 1]; return `--z:${z};--ox:${origin(x, z).toFixed(1)}%;--oy:${origin(y, z).toFixed(1)}%;`; };
 ---
 <div class="story" data-story>
   <ol class="steps">
     {items.map((it, i) => (
-      <li class:list={["step", { "is-active": i === 0 }]} data-i={i}>
+      <li class:list={["step", { "is-active": i === 0 }]} data-i={i} style={fv(it)}>
         <p class="when">{it.when}</p>
         <h3>{it.h}</h3>
         <p class="body">{it.p}</p>
         <div class="inline">
-          <div class="bezel"><img src={`/capturas/${it.img}.webp`} alt={it.alt} width={it.w} height={it.h2} loading="lazy" decoding="async" style={`object-position:${it.pos ?? "top left"}`} /></div>
+          <div class="bezel"><div class="frame"><img src={`/capturas/${it.img}.webp`} alt={it.alt} width={it.w} height={it.h2} loading="lazy" decoding="async" style={`object-position:${it.pos ?? "top left"}`} /></div></div>
         </div>
       </li>
     ))}
@@ -24,7 +28,7 @@ const { items } = Astro.props;
       <span class="cam"></span>
       <div class="screen">
         {items.map((it, i) => (
-          <img class:list={["shot", { "is-active": i === 0 }]} data-i={i} src={`/capturas/${it.img}.webp`} alt="" width={it.w} height={it.h2} loading="lazy" decoding="async" style={`object-position:${it.pos ?? "top left"}`} />
+          <img class:list={["shot", { "is-active": i === 0 }]} data-i={i} src={`/capturas/${it.img}.webp`} alt="" width={it.w} height={it.h2} loading="lazy" decoding="async" style={`object-position:${it.pos ?? "top left"};${fv(it)}`} />
         ))}
       </div>
     </div>
@@ -34,9 +38,9 @@ const { items } = Astro.props;
 </div>
 
 <style>
-  .story { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(2rem, 5vw, 6rem); align-items: start; }
+  .story { --H: max(28rem, 62svh); display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(2rem, 5vw, 6rem); align-items: start; }
   .steps { display: grid; }
-  .step { min-height: 62vh; display: grid; align-content: center; gap: var(--s-3); padding-block: var(--s-6); border-left: 2px solid var(--mist); padding-left: var(--s-6); position: relative; }
+  .step { min-height: var(--H); display: grid; align-content: center; gap: var(--s-3); padding-block: var(--s-5); border-left: 2px solid var(--mist); padding-left: var(--s-6); position: relative; }
   .step::before { content: ""; position: absolute; left: -2px; top: 50%; width: 2px; height: 0; background: var(--blue); transform: translateY(-50%); transition: height var(--t-slow) var(--ease); }
   .step h3 { color: var(--ink-soft); transition: color var(--t-slow) var(--ease); }
   .step.is-active h3 { color: var(--ink); }
@@ -49,12 +53,14 @@ const { items } = Astro.props;
   .step h3 { font-size: var(--step-3); font-stretch: 112%; letter-spacing: -0.022em; line-height: 1.1; }
   .body { color: var(--ink-soft); font-size: var(--step-0); max-width: 40ch; }
   .inline { display: none; }
-  .sticky { position: sticky; top: 6rem; display: grid; gap: var(--s-4); container-type: inline-size; }
+  /* El dispositivo ocupa la misma franja que un paso y se queda centrado en la ventana: el texto activo y la pantalla comparten eje */
+  .sticky { position: sticky; top: calc((100svh - var(--H)) / 2 + 2rem); height: var(--H); display: grid; align-content: center; gap: var(--s-4); container-type: inline-size; }
   .device { position: relative; padding: clamp(0.5rem, 1.5cqi, 0.9rem); background: #0a1233; border-radius: clamp(16px, 3cqi, 28px); box-shadow: 0 0 0 1.5px #2a3877, 0 40px 80px -30px rgb(10 22 51 / 0.55), 0 0 120px -40px rgb(27 71 245 / 0.5); }
   .cam { position: absolute; top: 50%; left: clamp(0.2rem, 0.6cqi, 0.4rem); width: 0.35rem; height: 0.35rem; border-radius: 50%; background: #1b2757; transform: translateY(-50%); }
   .screen { position: relative; aspect-ratio: 16 / 9.4; border-radius: clamp(6px, 1.2cqi, 12px); overflow: hidden; background: #e9eefb; }
-  .shot { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.02); transition: opacity 600ms var(--ease), transform 900ms var(--ease); }
-  .shot.is-active { opacity: 1; transform: none; }
+  .shot { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1); transform-origin: var(--ox, 0%) var(--oy, 0%); transition: opacity 500ms var(--ease), transform 0s linear 500ms; }
+  /* Enfoque: la pantalla entra completa y se acerca despacio a la zona que explica el paso */
+  .shot.is-active { opacity: 1; transform: scale(var(--z, 1)); transition: opacity 500ms var(--ease), transform 1500ms var(--ease) 250ms; }
   .dots { display: flex; gap: 0.5rem; justify-content: center; }
   .dots li { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--mist); transition: background-color var(--t-base) var(--ease), transform var(--t-base) var(--ease); }
   .dots li.is-active { background: var(--blue); transform: scale(1.4); }
@@ -68,9 +74,13 @@ const { items } = Astro.props;
     .step h3 { font-size: var(--step-2); }
     .inline { display: block; margin-top: var(--s-3); }
     .bezel { padding: 0.45rem; background: #0a1233; border-radius: 16px; box-shadow: 0 0 0 1.5px #2a3877, 0 24px 50px -24px rgb(10 22 51 / 0.6); }
-    .inline img { width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 9px; }
+    .inline { overflow: hidden; border-radius: 16px; }
+    .inline .bezel { overflow: hidden; }
+    .inline .frame { overflow: hidden; border-radius: 9px; }
+    .inline img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; transform-origin: var(--ox, 0%) var(--oy, 0%); transform: scale(var(--z, 1)); transition: transform 1300ms var(--ease) 150ms; }
+    [data-armed="true"] .inline:not(.seen) img { transform: scale(1); }
   }
-  @media (prefers-reduced-motion: reduce) { .shot { transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .shot, .shot.is-active, .inline img { transition: opacity 200ms linear; } [data-armed="true"] .inline:not(.seen) img { transform: scale(var(--z, 1)); } }
 </style>
 
 <script>
@@ -88,5 +98,7 @@ const { items } = Astro.props;
       entries.forEach((e) => { if (e.isIntersecting) set(Number((e.target as HTMLElement).dataset.i)); });
     }, { rootMargin: "-42% 0px -42% 0px", threshold: 0 });
     steps.forEach((s) => io.observe(s));
+    const seen = new IntersectionObserver((entries) => entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("seen"); seen.unobserve(e.target); } }), { threshold: 0.6 });
+    root.querySelectorAll(".inline").forEach((n) => seen.observe(n));
   });
 </script>

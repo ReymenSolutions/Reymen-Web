@@ -1,16 +1,24 @@
 ---
 // Sección con ritmo vertical y tono. El tono «night» invierte colores y los componentes hijos lo heredan por .tone-night.
-interface Props { id?: string; tone?: "paper" | "white" | "night"; labelledby?: string; class?: string; flush?: boolean }
-const { id, tone = "paper", labelledby, class: extra = "", flush = false } = Astro.props;
+// `after="night"` marca una sección clara que sigue a una oscura: la noche se disuelve hacia el papel y una línea de luz marca el borde.
+interface Props { id?: string; tone?: "paper" | "white" | "night"; labelledby?: string; class?: string; flush?: boolean; after?: "night" }
+const { id, tone = "paper", labelledby, class: extra = "", flush = false, after } = Astro.props;
 ---
-<section id={id} class:list={["section", `tone-${tone}`, { flush }, extra]} aria-labelledby={labelledby}>
+<section id={id} class:list={["section", `tone-${tone}`, { flush, "after-night": after === "night" }, extra]} aria-labelledby={labelledby}>
   <div class="container"><slot /></div>
 </section>
 
 <style>
-  .section { padding-block: var(--section); }
+  .section { padding-block: var(--section); position: relative; }
   .section.flush { padding-block: 0; }
   .tone-paper { background: var(--paper); }
   .tone-white { background: var(--white); border-block: 1px solid var(--mist); }
   .tone-night { background: var(--night); color: var(--on-night); }
+  /* Paso de noche a claro: degradado corto que apaga la oscuridad y un hilo de luz eléctrica en el borde */
+  .after-night { border-top-color: transparent; }
+  .after-night::before { content: ""; position: absolute; inset: 0 0 auto; height: clamp(4rem, 8vw, 7rem); pointer-events: none;
+    background: linear-gradient(to bottom, var(--night) 0%, rgb(6 14 43 / 0.55) 32%, rgb(6 14 43 / 0.16) 68%, transparent 100%); }
+  .after-night::after { content: ""; position: absolute; top: 0; left: 50%; width: min(46rem, 80%); height: 1px; transform: translateX(-50%); pointer-events: none;
+    background: linear-gradient(90deg, transparent, var(--electric) 30%, var(--electric-soft) 50%, var(--electric) 70%, transparent); box-shadow: 0 0 22px 2px rgb(61 99 255 / 0.55); }
+  .after-night > :global(.container) { position: relative; z-index: 1; }
 </style>

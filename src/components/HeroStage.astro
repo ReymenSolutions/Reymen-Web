@@ -3,13 +3,16 @@
 // Pantallas reales (datos de demostración), un teléfono con la conversación y un hilo de luz entre etapas.
 // Funciona sola, se puede pausar y cada etapa se puede abrir a mano. Con movimiento reducido no se reproduce sola.
 const steps = [
-  { id: "whatsapp", label: "WhatsApp", screen: "inbox", bar: "Inbox", alt: "Bandeja de mensajes de Reymen App con la conversación de un cliente", toast: "Mensaje nuevo de Fernanda", cap: "Un cliente escribe por WhatsApp y el mensaje llega a tu bandeja." },
-  { id: "ia", label: "Agente IA", screen: "inbox", bar: "Inbox", alt: "Conversación respondida por el Agente IA dentro de la bandeja", toast: "El Agente IA respondió", cap: "El agente contesta con tus reglas y pasa a una persona lo que no debe resolver solo." },
-  { id: "crm", label: "CRM", screen: "pipeline", bar: "Seguimiento", alt: "Tablero de seguimiento del CRM con oportunidades por etapa", toast: "Contacto nuevo en seguimiento", cap: "El contacto entra al CRM con su conversación, listo para darle seguimiento." },
-  { id: "pos", label: "POS", screen: "pos-cobro", bar: "Reymen POS", alt: "Cobro en efectivo del punto de venta con propina y cambio", toast: "Cuenta cobrada: $191.00", cap: "Cuando llega, su cuenta se cobra en el POS: propina, cambio y cuentas divididas." },
-  { id: "inventario", label: "Inventario", screen: "inventario", bar: "Inventario", alt: "Inventario con alertas de stock bajo y costos por insumo", toast: "Leche entera: stock bajo", cap: "Cada venta descuenta sus insumos y el sistema avisa lo que baja del mínimo." },
-  { id: "lealtad", label: "Lealtad", screen: "lealtad", bar: "Lealtad", alt: "Panel de lealtad con clientes inscritos, visitas y recompensas", toast: "Sello 9 de 10 registrado", cap: "La visita suma sellos en su tarjeta y tú ves quién regresa y cuánto gasta." },
+  { id: "whatsapp", label: "WhatsApp", screen: "inbox", bar: "Inbox", alt: "Bandeja de mensajes de Reymen App con la conversación de un cliente", toast: "Mensaje nuevo de Fernanda", focus: [30, 50, 1.8], cap: "Un cliente escribe por WhatsApp y el mensaje llega a tu bandeja." },
+  { id: "ia", label: "Agente IA", screen: "inbox", bar: "Inbox", alt: "Conversación respondida por el Agente IA dentro de la bandeja", toast: "El Agente IA respondió", focus: [38, 55, 1.7], cap: "El agente contesta con tus reglas y pasa a una persona lo que no debe resolver solo." },
+  { id: "crm", label: "CRM", screen: "pipeline", bar: "Seguimiento", alt: "Tablero de seguimiento del CRM con oportunidades por etapa", toast: "Contacto nuevo en seguimiento", focus: [50, 50, 1], cap: "El contacto entra al CRM con su conversación, listo para darle seguimiento." },
+  { id: "pos", label: "POS", screen: "pos-cobro", bar: "Reymen POS", alt: "Cobro en efectivo del punto de venta con propina y cambio", toast: "Cuenta cobrada: $191.00", focus: [50, 50, 1], cap: "Cuando llega, su cuenta se cobra en el POS: propina, cambio y cuentas divididas." },
+  { id: "inventario", label: "Inventario", screen: "inventario", bar: "Inventario", alt: "Inventario con alertas de stock bajo y costos por insumo", toast: "Leche entera: stock bajo", focus: [40, 56, 1.5], cap: "Cada venta descuenta sus insumos y el sistema avisa lo que baja del mínimo." },
+  { id: "lealtad", label: "Lealtad", screen: "lealtad", bar: "Lealtad", alt: "Panel de lealtad con clientes inscritos, visitas y recompensas", toast: "Sello 9 de 10 registrado", focus: [50, 65, 1.4], cap: "La visita suma sellos en su tarjeta y tú ves quién regresa y cuánto gasta." },
 ];
+// Origen de la transformación para que la ventana visible quede centrada en el punto de foco
+const origin = (c: number, z: number) => { const w = 1 / z; const a = Math.min(Math.max(c / 100 - w / 2, 0), 1 - w); return z === 1 ? 0 : (a / (1 - w)) * 100; };
+const fv = (f: number[]) => `--z:${f[2]};--ox:${origin(f[0], f[2]).toFixed(1)}%;--oy:${origin(f[1], f[2]).toFixed(1)}%;`;
 const dims: Record<string, [number, number, string, string?]> = { inbox: [1500, 900, "top left"], pipeline: [1500, 570, "top left"], "pos-cobro": [1300, 1182, "50% 50%", "#616690"], inventario: [1500, 900, "top left"], lealtad: [1500, 900, "top left"] };
 ---
 <div class="stage" data-stage data-step="0" role="group" aria-roledescription="demostración" aria-label="Recorrido de un cliente por el ecosistema Reymen">
@@ -19,7 +22,7 @@ const dims: Record<string, [number, number, string, string?]> = { inbox: [1500, 
         <div class:list={["screen", { "is-active": i === 0 }]} data-i={i} aria-hidden={i === 0 ? "false" : "true"}>
           <div class="frame" style={dims[s.screen][3] ? `background:${dims[s.screen][3]}` : undefined}>
             <div class="bar" aria-hidden="true"><span class="lights"></span><span class="bar-label">{s.bar}</span></div>
-            <img src={i === 0 ? `/capturas/${s.screen}.webp` : undefined} data-src={`/capturas/${s.screen}.webp`} alt={s.alt} width={dims[s.screen][0]} height={dims[s.screen][1]} style={`object-position:${dims[s.screen][2]};${dims[s.screen][3] ? "object-fit:contain" : ""}`} loading={i === 0 ? "eager" : "lazy"} fetchpriority={i === 0 ? "high" : "auto"} decoding="async" />
+            <img src={i === 0 ? `/capturas/${s.screen}.webp` : undefined} data-src={`/capturas/${s.screen}.webp`} alt={s.alt} width={dims[s.screen][0]} height={dims[s.screen][1]} style={`object-position:${dims[s.screen][2]};${dims[s.screen][3] ? "object-fit:contain;" : ""}${fv(s.focus)}`} loading={i === 0 ? "eager" : "lazy"} fetchpriority={i === 0 ? "high" : "auto"} decoding="async" />
           </div>
         </div>
       ))}
@@ -66,7 +69,8 @@ const dims: Record<string, [number, number, string, string?]> = { inbox: [1500, 
   .frame { height: 100%; border-radius: 14px; overflow: hidden; background: var(--white); border: 1px solid var(--glass-line); box-shadow: var(--lift-night); display: flex; flex-direction: column; }
   .bar { flex: none; display: flex; align-items: center; gap: 0.7rem; padding: 0.45rem 0.8rem; background: #0e1b48; color: var(--on-night-soft); font-size: clamp(0.62rem, 1.7cqw, 0.8rem); font-weight: 600; font-stretch: 106%; }
   .lights { width: 2.6em; height: 0.62em; background: radial-gradient(circle at 0.31em 50%, #3a4a85 0.28em, transparent 0.3em), radial-gradient(circle at 1.3em 50%, #3a4a85 0.28em, transparent 0.3em), radial-gradient(circle at 2.3em 50%, #3a4a85 0.28em, transparent 0.3em); }
-  .frame img { flex: 1; min-height: 0; width: 100%; object-fit: cover; object-position: top left; }
+  .frame img { flex: 1; min-height: 0; width: 100%; object-fit: cover; object-position: top left; transform-origin: var(--ox, 0%) var(--oy, 0%); transform: scale(calc(1 + (var(--z, 1) - 1) * 0.5)); transition: transform 1500ms var(--ease) 200ms; }
+  .screen:not(.is-active) .frame img { transform: scale(1); transition: none; }
   .glare { position: absolute; inset: 0; border-radius: 14px; pointer-events: none; opacity: 0; transition: opacity var(--t-base) var(--ease);
     background: radial-gradient(22rem circle at var(--mx) var(--my), rgb(255 255 255 / 0.14), transparent 60%); mix-blend-mode: soft-light; }
   .stage:hover .glare { opacity: 1; }
@@ -118,14 +122,25 @@ const dims: Record<string, [number, number, string, string?]> = { inbox: [1500, 
 
   @media (max-width: 62rem) { .scene { margin-right: 0; } }
   @media (max-width: 36rem) {
-    .scene { aspect-ratio: 4 / 4.2; }
-    .screens { inset: 0 0 24% 0; perspective: none; }
+    /* Móvil: la escena es baja (el producto no domina la pantalla), la imagen se acerca a lo que importa y el teléfono solo aparece mientras se habla de WhatsApp */
+    .stage { gap: var(--s-3); }
+    .scene { aspect-ratio: 4 / 3.15; }
+    .screens { inset: 0; perspective: none; }
     .screen, .screen.is-active { transform: none; }
-    .screen:not(.is-active) { transform: translate3d(0, 10px, 0); }
-    .phone { width: 40%; left: 4%; bottom: -1%; font-size: 0.56rem; }
-    .toast { top: auto; bottom: 30%; right: 4%; max-width: 70%; }
+    .screen:not(.is-active) { transform: translate3d(0, 8px, 0); }
+    .frame img { transform: scale(var(--z, 1)); }
+    .frame { border-radius: 12px; }
+    .glare { display: none; }
+    .phone { width: 33%; left: auto; right: 3%; bottom: 0; aspect-ratio: 9 / 16; font-size: 0.5rem; }
+    .stage:not([data-step="0"]):not([data-step="1"]) .phone { opacity: 0; transform: translate3d(0, 14px, 0); pointer-events: none; }
+    .stage:is([data-step="3"], [data-step="4"], [data-step="5"]) .phone { transform: translate3d(0, 14px, 0); }
+    .phone { transition: transform 600ms var(--ease), opacity 400ms var(--ease); }
+    .toast { top: 0.55rem; bottom: auto; right: auto; left: 0.55rem; max-width: 82%; padding: 0.4rem 0.7rem; font-size: 0.72rem; }
     .lbl { font-size: 0.6rem; }
-    .foot { flex-direction: column; }
+    .foot { gap: var(--s-3); align-items: flex-start; min-height: 4.4em; }
+    .cap { font-size: 0.9rem; line-height: 1.45; }
+    .pause { padding: 0.35rem 0.7rem; min-height: 2.25rem; }
+    .note { font-size: 0.75rem; }
   }
 </style>
 

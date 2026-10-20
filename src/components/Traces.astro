@@ -1,0 +1,49 @@
+---
+// «Plano de conexión»: trazas ortogonales con esquinas a 45° que terminan en nodos, como las rutas de un circuito.
+// Son el hilo gráfico de Reymen (conectar, automatizar). Unas pocas pulsaciones de luz viajan por ellas; con movimiento reducido quedan quietas.
+interface Props { tone?: "blue" | "ember"; class?: string }
+const { tone = "blue", class: extra = "" } = Astro.props;
+const paths = [
+  "M0 96H240l32 32H520l32-32H780",
+  "M1200 150H1040l-30 30V330l-30 30H900",
+  "M0 560H250l30-30H460",
+  "M1200 470H1070l-26 26V600",
+];
+// Solo hay nodos donde no pisan texto: sobre el producto (arriba) y en el borde derecho
+const nodes = [[780, 96], [900, 360], [1044, 496]];
+---
+<svg class:list={["traces", `t-${tone}`, extra]} viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+  <g class="lines">{paths.map((d) => <path d={d} />)}</g>
+  <g class="pulses">{paths.slice(0, 3).map((d, i) => <path d={d} pathLength="100" style={`--d:${9 + i * 3}s;--delay:${-i * 4}s`} />)}</g>
+  <g class="nodes">{nodes.map(([x, y]) => <><circle cx={x} cy={y} r="9" class="ring" /><circle cx={x} cy={y} r="3.5" class="core" /></>)}</g>
+</svg>
+
+<style>
+  .traces { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0.9; z-index: 0;
+    mask-image: radial-gradient(ellipse 85% 80% at 62% 45%, #000 25%, transparent 78%); -webkit-mask-image: radial-gradient(ellipse 85% 80% at 62% 45%, #000 25%, transparent 78%); }
+  .lines path, .pulses path { fill: none; stroke-width: 1.5; stroke-linejoin: round; }
+  .lines path { stroke: rgb(142 166 255 / 0.2); }
+  .pulses path { stroke: var(--electric-soft); stroke-width: 2.4; stroke-linecap: round; stroke-dasharray: 3 97; stroke-dashoffset: 0; animation: travel var(--d, 10s) linear var(--delay, 0s) infinite paused; opacity: 0; transition: opacity var(--t-slow) var(--ease); }
+  .live .pulses path { animation-play-state: running; opacity: 1; }
+  .ring { fill: none; stroke: rgb(142 166 255 / 0.3); stroke-width: 1.2; }
+  .core { fill: var(--electric-soft); }
+  .t-ember .pulses path { stroke: #ffb27d; }
+  .t-ember .core { fill: #ffb27d; } .t-ember .ring { stroke: rgb(255 178 125 / 0.3); }
+  @keyframes travel { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -100; } }
+  @media (max-width: 62rem) { .nodes { display: none; } }
+  @media (max-width: 36rem) { .traces { opacity: 0.5; mask-image: linear-gradient(to bottom, #000 0%, transparent 38%); -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 38%); } }
+  @media (prefers-reduced-motion: reduce) { .pulses { display: none; } }
+</style>
+
+<script>
+  // Las pulsaciones se encienden cuando la página ya está tranquila y solo mientras el hero se ve (no compiten con el primer pintado)
+  const traces = [...document.querySelectorAll<SVGElement>(".traces")];
+  if (traces.length && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const start = () => {
+      const io = new IntersectionObserver((es) => es.forEach((e) => e.target.classList.toggle("live", e.isIntersecting)));
+      traces.forEach((t) => io.observe(t));
+    };
+    const arm = () => ("requestIdleCallback" in window ? (window as unknown as { requestIdleCallback: (f: () => void, o?: object) => void }).requestIdleCallback(start, { timeout: 3000 }) : setTimeout(start, 2000));
+    if (document.readyState === "complete") arm(); else window.addEventListener("load", arm, { once: true });
+  }
+</script>
