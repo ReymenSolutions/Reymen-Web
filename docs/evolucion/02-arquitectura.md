@@ -225,7 +225,7 @@ CTA         Agendar demo · Cuéntanos tu proceso
 Aclaración honesta en la página: **no hay constructor visual de flujos para clientes**; los flujos se configuran por Reymen. No se promete «arma tus propios flujos».
 
 ### 4.3 `/smart-cards`
-**Bloqueo:** el producto vive en `reymen-smartcard` (sin acceso). Verificado desde Reymen App: tarjetas con URL pública (`link.reymen.mx/q/<código>`) y **QR**, panel de estadísticas (escaneos, clics a WhatsApp, eventos por destino), equipo con invitaciones, edición de perfil, SSO desde Reymen App, **receptor** de contactos capturados en tarjeta hacia el CRM (el **emisor está pendiente**), y uso en Realty (enlace de propiedad con QR).
+**Bloqueo:** el panel vive en Reymen App (las rutas públicas `/n` y `/q` en `reymen-smartcard`). Verificado desde Reymen App: tarjetas con URL pública (`link.reymen.mx/q/<código>`) y **QR**, panel de estadísticas (escaneos, clics a WhatsApp, eventos por destino), equipo con invitaciones, edición de perfil, SSO desde Reymen App, **receptor** de contactos capturados en tarjeta hacia el CRM (el **emisor está pendiente**), y uso en Realty (enlace de propiedad con QR).
 Hasta recibir material, la página se limita a eso (y se marca `unlisted` si queda corta). Necesito: capturas autorizadas (datos ficticios), tipos de tarjeta, qué se personaliza, si hay NFC físico, planes y límites. **No** se describirán como «tarjetas de presentación» ni se prometerá analítica o integraciones no vistas.
 
 ### 4.4 `/realty`

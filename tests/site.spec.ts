@@ -186,7 +186,7 @@ test.describe("navegación e interacciones", () => {
 
   test("/smart-cards, /seguridad y /servicios muestran su contenido y su estado", async ({ page }) => {
     await page.goto("/smart-cards");
-    await expect(page.locator("#incluye")).toContainText("Enlace público y código QR");
+    await expect(page.locator("#incluye")).toContainText("Se abre con NFC o con QR");
     await expect(page.locator("h1 ~ *, body").first()).toBeVisible();
     await page.goto("/seguridad");
     await expect(page.locator("body")).toContainText("No declaramos certificaciones");

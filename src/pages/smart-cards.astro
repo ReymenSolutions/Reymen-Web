@@ -10,13 +10,13 @@ import { SITE } from "../config";
 import { getProduct, assertCatalogIntegrity } from "../lib/catalog";
 
 await assertCatalogIntegrity();
-// Contenido en src/content/products/smart-cards.json. El producto vive en su propio repositorio; aquí solo se publica lo verificado.
+// Contenido en src/content/products/smart-cards.json. Solo se publica lo verificado en el código de Reymen App.
 const p = await getProduct("smart-cards");
 const live = p.features.filter((f) => f.status === "live").map((f) => ({ h: f.title, p: f.text, status: f.status }));
 const pending = p.features.filter((f) => f.status !== "live").map((f) => ({ h: f.title, p: f.text, status: f.status }));
 const journey = [
-  { t: "Alguien escanea el QR de la tarjeta", s: "live" as const },
-  { t: "Se abre la página pública de la tarjeta", s: "live" as const },
+  { t: "Alguien acerca el teléfono o escanea el QR", s: "live" as const },
+  { t: "Se abre tu perfil digital con tus enlaces", s: "live" as const },
   { t: "Se registran los escaneos y los clics", s: "live" as const },
   { t: "Ves las estadísticas en Reymen App", s: "live" as const },
   { t: "Lo que deja la persona llega como contacto al CRM", s: "planned" as const },
@@ -36,9 +36,9 @@ const ld = [{ "@context": "https://schema.org", "@type": "SoftwareApplication", 
   </Section>
 
   <Section id="conexion" labelledby="con-title">
-    <SectionHead id="con-title" title="Cómo se conecta con Reymen App" lede="Smart Cards tiene su propio panel. Desde Reymen App entras con un acceso único y ves las estadísticas de tus tarjetas y a tu equipo." />
+    <SectionHead id="con-title" title="Cómo se conecta con Reymen App" lede="Entras al panel de Smart Cards desde Reymen App con un acceso único; ahí editas perfiles, ves estadísticas y administras a tu equipo." />
     {pending.length > 0 && <FeatureList items={pending} cols={2} />}
-    <p class="note">Smart Cards vive aparte de Reymen App para que cada uno evolucione a su ritmo; por eso lo que conecta ambos se publica con su estado.</p>
+    <p class="note">Lo que conecta Smart Cards con el CRM se publica con su estado: hoy el receptor está listo y el envío desde la tarjeta está pendiente.</p>
   </Section>
 
   <ContactSection vertical="smart-cards" title="Conoce Smart Cards" lede="Cuéntanos cuántas tarjetas necesitas y para qué equipo. Te mostramos cómo funcionan y te respondemos con una propuesta clara." />

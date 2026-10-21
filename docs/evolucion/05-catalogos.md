@@ -40,6 +40,13 @@ Cada función lleva `status` y `evidence { code[], tests, production }`:
 ## P2
 - **Páginas nuevas:** `/ai-agents` y `/smart-cards` (productos), `/automatizaciones`, `/servicios` y `/seguridad` (landings). El menú, el sitemap y los enlaces de la home las toman de los datos.
 - **Realty** sigue en `draft`: `/realty` no existe hasta que se cambie su `publication`. La plantilla `[slug].astro` ya soporta capturas y funciones para cuando se active.
-- **Smart Cards** pasó a `LIVE` por confirmación del equipo (2026-10-20); AI Agents sigue en `BETA`. La página de Smart Cards publica solo lo verificado desde Reymen App; faltan tipos de tarjeta, personalización y capturas (el producto está en otro repositorio).
+- **Smart Cards** pasó a `LIVE` por confirmación del equipo (2026-10-20); AI Agents sigue en `BETA`. La página de Smart Cards publica solo lo verificado desde Reymen App; el panel, SSO, estadísticas, tema y enlaces viven en Reymen App y se publican; faltan capturas (requieren Supabase de Smart Cards).
 - **Agentes:** solo «Atención de prospectos», «Seguimiento comercial», «Consulta de conocimiento» y «Escalamiento» son `beta`; el resto del catálogo es `concept`. Los equipos de agentes se muestran como concepto, sin orquestación real.
 - **Automatizaciones:** los 9 flujos son `beta` (verificados en código); parten de eventos del POS, inventario y lealtad. Se dice expresamente que no hay constructor visual y que WhatsApp está en desarrollo.
+
+## P3.1 · Capturas con datos de demostración (2026-10-20)
+- Las capturas de Reymen App (bandeja con respuesta sugerida, seguimiento, inventario con stock bajo, lealtad) se recapturaron a 2× y se añadieron Automatizaciones, Agente IA (modo por canal) y Mi consumo de IA.
+- Origen: base local desechable con un negocio ficticio («Café Norte», teléfonos +52 81 00xx, correos .test). No se usó producción y los scripts de siembra no se versionan.
+- La clave de IA del entorno local era un valor ficticio; no se generó ningún borrador real. El borrador de la bandeja es texto sembrado.
+- Smart Cards no tiene capturas: su panel depende de Supabase, que no se levantó.
+- El hero ahora tiene dos actos: «Conversa y vende» (Mensaje, Agente IA, CRM) y «Opera» (POS, Inventario, Lealtad, Avisos).
