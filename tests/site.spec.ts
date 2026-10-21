@@ -335,6 +335,23 @@ test("las afirmaciones retiradas no reaparecen", async ({ page }) => {
   }
 });
 
+test.describe("imágenes para compartir", () => {
+  for (const route of ["/restaurantes", "/ai-agents", "/smart-cards", "/automatizaciones", "/productos"]) {
+    test(`${route} tiene su propia imagen Open Graph`, async ({ page, request }) => {
+      await page.goto(route);
+      const url = await page.locator('meta[property="og:image"]').getAttribute("content");
+      expect(url).toContain(`/og${route}.png`);
+      const res = await request.get(new URL(url!).pathname);
+      expect(res.status()).toBe(200);
+      expect(res.headers()["content-type"]).toContain("image/png");
+    });
+  }
+  test("la portada conserva la imagen de la marca", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", /\/og-image\.png$/);
+  });
+});
+
 test.describe("catálogos: la regla de evidencia", () => {
   const ev = (o: object = {}) => ({ code: [], tests: false, production: false, ...o });
   const f = (status: string, evidence: object) => feature.safeParse({ id: "x", title: "Algo", text: "Algo", status, evidence: ev(evidence) });

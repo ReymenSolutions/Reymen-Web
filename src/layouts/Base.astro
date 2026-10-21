@@ -2,6 +2,8 @@
 import "@fontsource-variable/archivo/wdth.css";
 import "../styles/base.css";
 import fontLatin from "@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2?url";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import { SITE } from "../config";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
@@ -10,6 +12,9 @@ import ChatWidget from "../components/ChatWidget.astro";
 interface Props { title: string; description: string; path?: string; noindex?: boolean; chat?: boolean; darkHero?: boolean; crumbs?: { name: string; path: string }[]; ld?: Record<string, unknown>[] }
 const { title, description, path = "", noindex = false, chat = true, darkHero = false, crumbs = [], ld: extraLd = [] } = Astro.props;
 const canonical = `${SITE.url}${path}`;
+// Imagen para compartir: la de la página si existe (npm run og), si no la de la marca.
+const ogSlug = path.replace(/^\/|\/$/g, "");
+const ogImage = `${SITE.url}${ogSlug && existsSync(join(process.cwd(), "public", "og", `${ogSlug}.png`)) ? `/og/${ogSlug}.png` : "/og-image.png"}`;
 const ld = {
   "@context": "https://schema.org",
   "@type": "Organization",
@@ -48,14 +53,14 @@ const graph = [ld, ...(breadcrumbs ? [breadcrumbs] : []), ...extraLd];
     <meta name="apple-mobile-web-app-title" content="Reymen Solutions" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta property="og:site_name" content="Reymen Solutions" />
-    <meta property="og:image" content={`${SITE.url}/og-image.png`} />
+    <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Reymen Solutions" />
+    <meta property="og:image:alt" content={title} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={`${SITE.url}/og-image.png`} />
+    <meta name="twitter:image" content={ogImage} />
     {SITE.googleSiteVerification && <meta name="google-site-verification" content={SITE.googleSiteVerification} />}
     <script is:inline>document.documentElement.classList.add("js");</script>
     {graph.map((g) => <script type="application/ld+json" set:html={JSON.stringify(g)} />)}
