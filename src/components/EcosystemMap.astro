@@ -16,6 +16,8 @@ const segs = JOURNEYS.flatMap((j) => j.steps.slice(0, -1).map((s, i) => ({ j: j.
 const first = JOURNEYS[0];
 ---
 <div class="map" data-map data-journey={first.id}>
+  <div class="left">
+  {JOURNEYS.length > 1 && <button type="button" class="tour" data-tour aria-pressed="false">Recorrer todos</button>}
   <div class="picker" role="group" aria-label="Recorridos de ejemplo">
     {JOURNEYS.map((j, k) => (
       <div class="j">
@@ -30,6 +32,7 @@ const first = JOURNEYS[0];
       </div>
       </div>
     ))}
+  </div>
   </div>
 
   <div class="panel">
@@ -62,6 +65,10 @@ const first = JOURNEYS[0];
 
 <style>
   .map { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(1.5rem, 4vw, 3.5rem); align-items: start; }
+  .left { display: grid; gap: var(--s-3); }
+  .tour { justify-self: start; padding: 0.4rem 0.95rem; min-height: 2.5rem; border: 1px solid var(--glass-line); border-radius: 999px; background: none; color: var(--on-night); font: inherit; font-weight: 600; cursor: pointer; transition: border-color var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease); }
+  .tour:hover { border-color: var(--electric-soft); background: var(--glass); }
+  .tour[aria-pressed="true"] { border-color: var(--electric-soft); background: var(--glass); }
   .picker { display: grid; border-top: 1px solid var(--night-line); }
   .j { border-bottom: 1px solid var(--night-line); }
   .pick { display: grid; gap: 0.35rem; justify-items: start; text-align: left; background: none; border: 0; padding: var(--s-4) 0 var(--s-4) var(--s-5); width: 100%; cursor: pointer; color: var(--on-night-soft); position: relative; transition: color var(--t-base) var(--ease); min-height: 3rem; }
@@ -114,7 +121,22 @@ const first = JOURNEYS[0];
       root.querySelectorAll<SVGElement>(".e").forEach((e) => e.classList.toggle("on", e.dataset.j === id));
       root.querySelectorAll<SVGElement>(".n").forEach((n) => n.classList.toggle("on", data[id].includes(n.dataset.n!)));
     };
-    picks.forEach((b) => b.addEventListener("click", () => set(b.dataset.j!)));
+    // Recorrido automático: pasa por cada recorrido cada pocos segundos hasta que lo detienes o eliges uno a mano.
+    const tour = root.querySelector<HTMLButtonElement>("[data-tour]");
+    const ids = picks.map((b) => b.dataset.j!);
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let timer = 0;
+    const stopTour = () => { clearInterval(timer); timer = 0; if (tour) { tour.setAttribute("aria-pressed", "false"); tour.textContent = "Recorrer todos"; } };
+    picks.forEach((b) => b.addEventListener("click", () => { stopTour(); set(b.dataset.j!); }));
+    if (tour) {
+      if (reduce) tour.hidden = true;
+      tour.addEventListener("click", () => {
+        if (timer) { stopTour(); return; }
+        tour.setAttribute("aria-pressed", "true"); tour.textContent = "Detener recorrido";
+        const next = () => set(ids[(ids.indexOf(root.dataset.journey!) + 1) % ids.length]);
+        next(); timer = window.setInterval(next, 4500);
+      });
+    }
     set(root.dataset.journey!);
   });
 </script>
