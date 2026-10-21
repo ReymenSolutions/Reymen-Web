@@ -1,7 +1,7 @@
 // Acceso tipado a los catálogos y reglas derivadas (qué se publica, a dónde enlaza cada cosa, cómo se llama cada estado).
 import { getCollection } from "astro:content";
 import type { z } from "astro/zod";
-import type { product as productSchema, vertical as verticalSchema, capability as capabilitySchema, service as serviceSchema, home as homeSchema, agentCategory as agentSchema, automationFlow as flowSchema, landing as landingSchema } from "./schemas";
+import type { product as productSchema, vertical as verticalSchema, capability as capabilitySchema, service as serviceSchema, home as homeSchema, agentCategory as agentSchema, automationFlow as flowSchema, landing as landingSchema, persona as personaSchema } from "./schemas";
 
 export type Product = z.infer<typeof productSchema>;
 export type Vertical = z.infer<typeof verticalSchema>;
@@ -11,6 +11,7 @@ export type Home = z.infer<typeof homeSchema>;
 export type AgentCategory = z.infer<typeof agentSchema>;
 export type AutomationFlow = z.infer<typeof flowSchema>;
 export type Landing = z.infer<typeof landingSchema>;
+export type Persona = z.infer<typeof personaSchema>;
 export type Feature = Product["features"][number];
 
 export const AVAILABILITY_LABEL = { LIVE: "Disponible", BETA: "Beta", COMING_SOON: "Próximamente", DRAFT: "Borrador" } as const;
@@ -101,4 +102,26 @@ export async function navGroups() {
 /** Enlaces de primer nivel (Servicios, Seguridad…) que salen de las páginas publicadas. */
 export async function navLinks() {
   return (await landings()).filter((l) => l.publication === "published" && l.nav?.placement === "top").sort((a, b) => a.nav!.order - b.nav!.order).map((l) => ({ label: l.nav!.label, href: l.route }));
+}
+
+/** Personaje ya resuelto: capacidades e integraciones reales y estado derivado (el mejor de sus capacidades). */
+export type PersonaView = Persona & { status?: Feature["status"]; capabilities: Feature[]; integrations: Feature[] };
+const RANK = { live: 3, beta: 2, planned: 1, concept: 0 } as const;
+
+/** Equipo de agentes publicado, con su estado calculado. Falla el build si una referencia no existe. */
+export async function personas(): Promise<PersonaView[]> {
+  const items = new Map<string, Feature>();
+  for (const c of await agentCategories()) for (const it of c.items) items.set(`${c.id}:${it.id}`, it as Feature);
+  const feats = new Map<string, Feature>();
+  for (const p of await data("products")) for (const f of p.features) feats.set(`${p.id}:${f.id}`, f);
+  const cats = new Set((await agentCategories()).map((c) => c.id));
+  const pick = (m: Map<string, Feature>, ids: string[], who: string, kind: string) => ids.map((id) => { const f = m.get(id); if (!f) throw new Error(`Personaje «${who}»: ${kind} «${id}» no existe`); return f; });
+  const all = (await getCollection("personas")).map((e) => e.data as Persona).filter((p) => p.publication === "published").sort(byOrder);
+  return all.map((p) => {
+    if (!cats.has(p.categoryId)) throw new Error(`Personaje «${p.id}»: categoría «${p.categoryId}» no existe`);
+    const capabilities = pick(items, p.capabilityIds, p.id, "capacidad");
+    const integrations = pick(feats, p.integrationIds, p.id, "integración");
+    const status = p.kind === "custom" || capabilities.length === 0 ? undefined : capabilities.reduce((best, f) => (RANK[f.status] > RANK[best] ? f.status : best), "concept" as Feature["status"]);
+    return { ...p, status, capabilities, integrations };
+  });
 }

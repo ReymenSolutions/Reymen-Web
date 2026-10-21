@@ -145,3 +145,28 @@ export const landing = z
   .superRefine((l, ctx) => {
     if (l.publication === "published" && l.availability === "DRAFT") ctx.addIssue({ code: "custom", message: `«${l.id}» está publicada pero su disponibilidad es DRAFT` });
   });
+
+/**
+ * Personaje del catálogo de agentes: solo identidad comercial y referencias visuales.
+ * Capacidades e integraciones son referencias («categoría:agente», «producto:función») a lo que ya está en los catálogos;
+ * su estado NO se escribe aquí: se deriva de esas referencias (un personaje nunca promete más de lo que existe).
+ */
+export const persona = z.object({
+  id: z.string(),
+  order: z.number(),
+  publication: z.enum(["draft", "published"]).default("published"),
+  kind: z.enum(["persona", "custom"]).default("persona"),
+  name: z.string().min(2),
+  role: z.string().min(2),
+  categoryId: z.string(),
+  tagline: z.string(),
+  pitch: z.string().min(20),
+  accent: z.enum(["electric", "ember"]).default("electric"),
+  glyph: z.enum(["agent", "automation", "software", "app", "pos", "card", "crm", "inbox", "loyalty"]).default("agent"),
+  art: z.object({ alt: z.string().min(20), focus: z.array(z.number()).default([50, 32, 1]) }),
+  capabilityIds: z.array(z.string()).default([]),
+  integrationIds: z.array(z.string()).default([]),
+  useCases: z.array(z.object({ title: z.string(), text: z.string() })).default([]),
+  /** Dónde se administra de verdad (Reymen App). Solo informativo: la web no guarda configuración. */
+  admin: z.object({ module: z.string(), screen: z.string() }).optional(),
+});

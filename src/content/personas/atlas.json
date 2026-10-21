@@ -1,0 +1,36 @@
+{
+  "id": "atlas",
+  "order": 4,
+  "name": "Atlas",
+  "role": "Análisis e investigación",
+  "categoryId": "analisis",
+  "glyph": "crm",
+  "accent": "electric",
+  "tagline": "Convierte datos en decisiones.",
+  "pitch": "Una idea en desarrollo: un agente que revisa los datos de tu negocio, prepara informes y señala oportunidades para que decidas con más información.",
+  "art": {
+    "alt": "Atlas, agente de análisis e investigación de Reymen: personaje 3D con abrigo largo azul marino con detalles plateados que sostiene una tableta con una gráfica.",
+    "focus": [
+      50,
+      32,
+      1
+    ]
+  },
+  "capabilityIds": [
+    "analisis:datos",
+    "analisis:investigacion",
+    "analisis:informes",
+    "analisis:oportunidades"
+  ],
+  "integrationIds": [],
+  "useCases": [
+    {
+      "title": "Informes periódicos",
+      "text": "Resumir cómo van tus ventas y tus clientes en un informe claro."
+    },
+    {
+      "title": "Oportunidades",
+      "text": "Señalar patrones en tus datos que valga la pena revisar."
+    }
+  ]
+}

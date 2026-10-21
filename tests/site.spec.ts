@@ -378,6 +378,84 @@ test.describe("demos interactivas", () => {
   });
 });
 
+test.describe("equipo de agentes (carrusel)", () => {
+  test("muestra a Lía como protagonista, con su estado y CTA", async ({ page }) => {
+    await page.goto("/ai-agents");
+    const cast = page.locator("[data-cast]");
+    await expect(cast.locator('[role="tab"]')).toHaveCount(6);
+    await expect(cast.locator('[role="tab"][aria-selected="true"]')).toContainText("Lía");
+    await expect(cast.locator('[role="tabpanel"].is-active')).toContainText("Solicitar acceso a Lía");
+    await expect(cast.locator('[role="tab"]').first()).toContainText("Beta");
+  });
+
+  test("los conceptos llevan su etiqueta y un CTA que no promete acceso", async ({ page }) => {
+    await page.goto("/ai-agents");
+    const cast = page.locator("[data-cast]");
+    for (const [i, name] of [[2, "Nodo"], [3, "Atlas"], [4, "Nova"]] as const) {
+      const tab = cast.locator('[role="tab"]').nth(i);
+      await expect(tab).toContainText(name);
+      await expect(tab).toContainText("Concepto");
+      await tab.click();
+      const panel = cast.locator('[role="tabpanel"].is-active');
+      await expect(panel).toContainText("Es un concepto");
+      await expect(panel).toContainText("Cuéntanos tu caso");
+      await expect(panel).not.toContainText("Solicitar acceso");
+    }
+  });
+
+  test("se navega con flechas, botones y enlace profundo", async ({ page }) => {
+    await page.goto("/ai-agents");
+    const cast = page.locator("[data-cast]");
+    const first = cast.locator('[role="tab"]').first();
+    await first.focus();
+    await page.keyboard.press("ArrowRight");
+    await expect(cast.locator('[role="tab"][aria-selected="true"]')).toContainText("Sol");
+    await expect(cast.locator("[data-say]")).toContainText("Sol, 2 de 6");
+    await cast.locator("[data-next]").click();
+    await expect(cast.locator('[role="tab"][aria-selected="true"]')).toContainText("Nodo");
+    await cast.locator('[role="tab"][aria-selected="true"]').focus();
+    await page.keyboard.press("End");
+    await expect(cast.locator('[role="tab"][aria-selected="true"]')).toContainText("A tu medida");
+    await expect(cast.locator("[data-next]")).toBeDisabled();
+    await page.goto("/ai-agents#agente-atlas");
+    await expect(page.locator('[data-cast] [role="tab"][aria-selected="true"]')).toContainText("Atlas");
+  });
+
+  test("el CTA lleva el agente al formulario y al origen del contacto", async ({ page }) => {
+    await page.goto("/ai-agents");
+    const href = await page.locator('[data-cast] [role="tabpanel"].is-active a.btn').getAttribute("href");
+    expect(href).toBe("/contacto?interes=ai-agents&agente=lia");
+  });
+
+  test("sin JavaScript se ven todas las fichas", async ({ browser }) => {
+    const ctx = await browser.newContext({ javaScriptEnabled: false });
+    const page = await ctx.newPage();
+    await page.goto("/ai-agents");
+    await expect(page.locator("[data-cast] [role='tabpanel']")).toHaveCount(6);
+    for (const n of ["Lía", "Sol", "Nodo", "Atlas", "Nova", "A tu medida"]) await expect(page.locator("[data-cast]")).toContainText(n);
+    await expect(page.locator("[data-cast] [role='tabpanel']").last()).toBeVisible();
+    await ctx.close();
+  });
+
+  test("con movimiento reducido no hay animación de cambio", async ({ browser }) => {
+    const ctx = await browser.newContext({ reducedMotion: "reduce" });
+    const page = await ctx.newPage();
+    await page.goto("/ai-agents");
+    await page.locator('[data-cast] [role="tab"]').nth(1).click();
+    const anim = await page.locator('[data-cast] [role="tabpanel"].is-active').evaluate((el) => getComputedStyle(el).animationName);
+    expect(anim).toBe("none");
+    await ctx.close();
+  });
+
+  test("no desborda a ningún ancho", async ({ page }) => {
+    for (const w of [320, 390, 768, 1280]) {
+      await page.setViewportSize({ width: w, height: 800 });
+      await page.goto("/ai-agents");
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    }
+  });
+});
+
 test.describe("imágenes para compartir", () => {
   for (const route of ["/restaurantes", "/ai-agents", "/smart-cards", "/automatizaciones", "/productos"]) {
     test(`${route} tiene su propia imagen Open Graph`, async ({ page, request }) => {

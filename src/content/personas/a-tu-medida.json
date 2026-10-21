@@ -1,0 +1,36 @@
+{
+  "id": "a-tu-medida",
+  "order": 6,
+  "kind": "custom",
+  "name": "A tu medida",
+  "role": "Agentes por industria",
+  "categoryId": "industria",
+  "glyph": "software",
+  "accent": "electric",
+  "tagline": "Un agente para tu proceso.",
+  "pitch": "No todos los negocios trabajan igual. Diseñamos agentes para un proceso concreto de tu operación, con tus reglas, tu información y un límite de consumo.",
+  "art": {
+    "alt": "Espacio reservado para un agente a la medida: un anillo luminoso vacío que representa el agente que construiríamos para tu proceso.",
+    "focus": [
+      50,
+      50,
+      1
+    ]
+  },
+  "capabilityIds": [
+    "industria:restaurantes",
+    "industria:servicios",
+    "industria:nuevas"
+  ],
+  "integrationIds": [],
+  "useCases": [
+    {
+      "title": "Restaurantes y cafeterías",
+      "text": "Un agente que conoce tu menú, tus horarios y tu forma de atender."
+    },
+    {
+      "title": "Negocios de servicios",
+      "text": "Un agente que ayuda a agendar y dar seguimiento a tus clientes."
+    }
+  ]
+}

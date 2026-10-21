@@ -1,0 +1,38 @@
+{
+  "id": "nodo",
+  "order": 3,
+  "name": "Nodo",
+  "role": "Operaciones",
+  "categoryId": "operaciones",
+  "glyph": "automation",
+  "accent": "ember",
+  "tagline": "Mantiene tu operación en movimiento.",
+  "pitch": "Una idea en desarrollo: un agente que sigue tareas, procesa información y avisa al equipo cuando algo de la operación necesita atención.",
+  "art": {
+    "alt": "Nodo, agente de operaciones de Reymen: androide amable con detalles ámbar, cinturón de herramientas y fichas de tareas flotantes.",
+    "focus": [
+      50,
+      32,
+      1
+    ]
+  },
+  "capabilityIds": [
+    "operaciones:tareas",
+    "operaciones:procesamiento",
+    "operaciones:alertas",
+    "operaciones:coordinacion"
+  ],
+  "integrationIds": [
+    "reymen-app:automatizaciones"
+  ],
+  "useCases": [
+    {
+      "title": "Alertas operativas",
+      "text": "Avisar al equipo cuando una tarea o un insumo necesita atención."
+    },
+    {
+      "title": "Coordinación de flujos",
+      "text": "Conectar los pasos de un proceso para que no se pierda ninguno."
+    }
+  ]
+}
