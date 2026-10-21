@@ -29,7 +29,7 @@ const ld = list
     <Section id={p.id} tone={i % 2 === 0 ? "white" : "paper"} labelledby={`${p.id}-title`}>
       <div class="product">
         <div class="head">
-          <Glyph name={p.glyph === "app" || p.glyph === "pos" || p.glyph === "card" ? "software" : p.glyph} size={34} class="g" />
+          <Glyph name={p.glyph} size={34} class="g" />
           <h2 id={`${p.id}-title`}>{p.name} <StatusBadge status={p.availability} /></h2>
           <p class="model">{MODEL_LABEL[p.model]}</p>
           <p class="lede">{p.tagline}</p>

@@ -2,11 +2,14 @@
 // Mapa del ecosistema: elige un recorrido y se ilumina por dónde pasa. Cada recorrido lleva su estado (Disponible, Beta, En desarrollo o
 // Concepto) para no presentar como funcionando lo que no lo está. En pantallas angostas el diagrama se sustituye por los pasos del recorrido.
 import { NODES, JOURNEYS as ALL } from "../data/ecosystem";
+import { GLYPHS } from "../lib/glyphs";
 import StatusBadge from "./StatusBadge.astro";
 interface Props { only?: string[] }
 const { only } = Astro.props;
 // Con `only` se muestran solo esos recorridos (por ejemplo, los que aplican a una vertical).
 const JOURNEYS = only ? ALL.filter((j) => only.includes(j.id)) : ALL;
+// Glifo de cada nodo (los de formulario y chat no tienen glifo propio).
+const GLYPH: Record<string, string> = { pos: "pos", card: "card", crm: "crm", inbox: "inbox", agent: "agent", auto: "automation", loyalty: "loyalty" };
 const byId = Object.fromEntries(NODES.map((n) => [n.id, n]));
 const center = (id: string) => ({ x: byId[id].x + byId[id].w / 2, y: byId[id].y + byId[id].h / 2 });
 const segs = JOURNEYS.flatMap((j) => j.steps.slice(0, -1).map((s, i) => ({ j: j.id, d: `M${center(s.node).x} ${center(s.node).y} L${center(j.steps[i + 1].node).x} ${center(j.steps[i + 1].node).y}`, status: j.status })));
@@ -38,7 +41,8 @@ const first = JOURNEYS[0];
         {NODES.map((n) => (
           <g class:list={["n", { on: first.steps.some((st) => st.node === n.id) }]} data-n={n.id} transform={`translate(${n.x} ${n.y})`}>
             <rect width={n.w} height={n.h} rx="10" />
-            <text x={n.w / 2} y={n.h / 2 + 5} text-anchor="middle">{n.label}</text>
+            {GLYPH[n.id] && <g class="ng" transform={`translate(11 ${n.h / 2 - 10.8}) scale(0.9)`} set:html={GLYPHS[GLYPH[n.id]]} />}
+            <text x={GLYPH[n.id] ? (n.w + 28) / 2 : n.w / 2} y={n.h / 2 + 5} text-anchor="middle">{n.label}</text>
           </g>
         ))}
       </g>
@@ -75,6 +79,8 @@ const first = JOURNEYS[0];
   .e { fill: none; stroke: #4660d8; stroke-width: 2; opacity: 0.18; transition: opacity var(--t-base) var(--ease); }
   .n rect { fill: #101e55; stroke: #2c3d86; stroke-width: 1.5; transition: fill var(--t-base) var(--ease), stroke var(--t-base) var(--ease); }
   .n { opacity: 0.4; transition: opacity var(--t-base) var(--ease); }
+  .ng { fill: none; stroke: #eaf0ff; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .ng :global(.n) { fill: var(--electric-soft); stroke: none; }
   .n text { fill: #eaf0ff; font: 650 13.5px var(--font); font-stretch: 106%; }
   .e.on { opacity: 1; stroke: #8ea6ff; stroke-dasharray: 5 7; animation: flow 1.1s linear infinite; }
   .e.on.s-concept { stroke-dasharray: 2 8; }
