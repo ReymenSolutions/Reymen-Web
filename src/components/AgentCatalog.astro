@@ -4,12 +4,22 @@ import StatusBadge from "./StatusBadge.astro";
 import type { AgentCategory } from "../lib/catalog";
 interface Props { categories: AgentCategory[] }
 const { categories } = Astro.props;
+const STATUS_LABEL: Record<string, string> = { beta: "Beta", planned: "En desarrollo", concept: "Concepto", live: "Disponible" };
+const present = ["live", "beta", "planned", "concept"].filter((s) => categories.some((c) => c.items.some((it) => it.status === s)));
+const total = categories.reduce((n, c) => n + c.items.length, 0);
 ---
 <div class="catalog" data-catalog>
   <div class="filters" role="group" aria-label="Categorías de agentes">
     <button type="button" class="chip" data-cat="all" aria-pressed="true">Todas</button>
     {categories.map((c) => <button type="button" class="chip" data-cat={c.id} aria-pressed="false">{c.title}</button>)}
   </div>
+  {present.length > 1 && (
+    <div class="filters" role="group" aria-label="Estado de los agentes">
+      <button type="button" class="chip chip-s" data-st="all" aria-pressed="true">Cualquier estado</button>
+      {present.map((st) => <button type="button" class="chip chip-s" data-st={st} aria-pressed="false">{STATUS_LABEL[st]}</button>)}
+    </div>
+  )}
+  <p class="count" role="status" aria-live="polite" data-count data-total={total}>Mostrando {total} agentes.</p>
   <div class="cats">
     {categories.map((c) => (
       <section class="cat" data-cat-id={c.id} aria-labelledby={`cat-${c.id}`}>
@@ -17,7 +27,7 @@ const { categories } = Astro.props;
         <p class="cat-text">{c.text}</p>
         <ul>
           {c.items.map((it) => (
-            <li>
+            <li data-status={it.status}>
               <p class="name">{it.title} <StatusBadge status={it.status} /></p>
               <p class="text">{it.text}</p>
             </li>
@@ -36,7 +46,8 @@ const { categories } = Astro.props;
   .chip:active { transform: translateY(1px); }
   .chip[aria-pressed="true"] { background: var(--ink); color: var(--white); border-color: var(--ink); }
   .cats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-7) var(--s-8); }
-  .cat[hidden] { display: none; }
+  .cat[hidden], li[hidden] { display: none; }
+  .count { margin: 0; color: var(--ink-soft); font-size: var(--step--1); }
   .cat h3 { font-size: var(--step-1); }
   .cat-text { color: var(--ink-soft); margin: var(--s-1) 0 var(--s-3); }
   ul { border-top: 1px solid var(--mist); }
@@ -48,12 +59,26 @@ const { categories } = Astro.props;
 
 <script>
   document.querySelectorAll<HTMLElement>("[data-catalog]").forEach((root) => {
-    const chips = [...root.querySelectorAll<HTMLButtonElement>(".chip")];
+    const catChips = [...root.querySelectorAll<HTMLButtonElement>(".chip[data-cat]")];
+    const stChips = [...root.querySelectorAll<HTMLButtonElement>(".chip[data-st]")];
     const cats = [...root.querySelectorAll<HTMLElement>(".cat")];
-    chips.forEach((c) => c.addEventListener("click", () => {
-      const id = c.dataset.cat!;
+    const count = root.querySelector<HTMLElement>("[data-count]")!;
+    let cat = "all", st = "all";
+    const apply = () => {
+      let shown = 0;
+      cats.forEach((k) => {
+        const inCat = cat === "all" || k.dataset.catId === cat;
+        let any = 0;
+        k.querySelectorAll<HTMLElement>("li").forEach((li) => { const ok = inCat && (st === "all" || li.dataset.status === st); li.hidden = !ok; if (ok) any++; });
+        k.hidden = any === 0; shown += any;
+      });
+      count.textContent = shown === 0 ? "No hay agentes con ese filtro." : `Mostrando ${shown} de ${count.dataset.total} agentes.`;
+    };
+    const bind = (chips: HTMLButtonElement[], key: "cat" | "st") => chips.forEach((c) => c.addEventListener("click", () => {
       chips.forEach((x) => x.setAttribute("aria-pressed", String(x === c)));
-      cats.forEach((k) => { k.hidden = id !== "all" && k.dataset.catId !== id; });
+      if (key === "cat") cat = c.dataset.cat!; else st = c.dataset.st!;
+      apply();
     }));
+    bind(catChips, "cat"); bind(stChips, "st");
   });
 </script>

@@ -335,6 +335,49 @@ test("las afirmaciones retiradas no reaparecen", async ({ page }) => {
   }
 });
 
+test.describe("demos interactivas", () => {
+  test("el catálogo de agentes combina categoría y estado y avisa cuántos muestra", async ({ page }) => {
+    await page.goto("/ai-agents");
+    const root = page.locator("[data-catalog]");
+    const count = root.locator("[data-count]");
+    await expect(count).toContainText("Mostrando");
+    await root.locator('.chip[data-st="beta"]').click();
+    await expect(root.locator("li:not([hidden]) >> nth=0")).toBeVisible();
+    for (const li of await root.locator("li:not([hidden])").all()) await expect(li).toContainText("Beta");
+    await root.locator('.chip[data-st="concept"]').click();
+    for (const li of await root.locator("li:not([hidden])").all()) await expect(li).toContainText("Concepto");
+    await root.locator('.chip[data-st="all"]').click();
+    await expect(root.locator('.chip[data-st="all"]')).toHaveAttribute("aria-pressed", "true");
+  });
+
+  test("la simulación de un flujo ilumina los cuatro pasos y se puede repetir", async ({ page }) => {
+    await page.goto("/automatizaciones");
+    const flow = page.locator("[data-flow]");
+    await flow.scrollIntoViewIfNeeded();
+    await flow.locator("[data-sim]").click();
+    await expect(flow.locator(".chain")).toHaveClass(/running/);
+    await expect(flow.locator(".step.lit")).toHaveCount(1);
+    await expect(flow.locator("[data-sim-say]")).toContainText("Paso 1 de 4");
+    await expect(flow.locator("[data-sim-say]")).toContainText("Paso 3 de 4", { timeout: 6000 });
+    await expect(flow.locator(".chain")).not.toHaveClass(/running/, { timeout: 8000 });
+    await expect(flow.locator("[data-sim]")).toBeEnabled();
+  });
+
+  test("el recorrido del ecosistema avanza solo y se detiene al elegir uno a mano", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto("/productos");
+    const map = page.locator("[data-map]");
+    const tour = map.locator("[data-tour]");
+    await map.scrollIntoViewIfNeeded();
+    const before = await map.getAttribute("data-journey");
+    await tour.click();
+    await expect(tour).toHaveAttribute("aria-pressed", "true");
+    await expect(map).not.toHaveAttribute("data-journey", before!);
+    await map.locator(".pick").nth(1).click();
+    await expect(tour).toHaveAttribute("aria-pressed", "false");
+  });
+});
+
 test.describe("imágenes para compartir", () => {
   for (const route of ["/restaurantes", "/ai-agents", "/smart-cards", "/automatizaciones", "/productos"]) {
     test(`${route} tiene su propia imagen Open Graph`, async ({ page, request }) => {

@@ -35,7 +35,7 @@ const model = [
 
   <Section id="modelo" tone="white" after="night" labelledby="modelo-title">
     <SectionHead id="modelo-title" title="Cómo funciona" lede="Cada automatización sigue los mismos cuatro pasos." />
-    <FeatureList items={model} cols={2} />
+    <FeatureList items={model} cols={2} inherit="beta" />
     <div class="shot-wrap">
       <CropShot name="automatizaciones" alt="Pantalla de automatizaciones de Reymen App con la actividad reciente de cada flujo" width={1500} height={900} focus={[58, 48, 1.2]} aspect="16 / 8" label="Reymen App · Automatizaciones" caption="Cada flujo deja registro de lo que hizo o de por qué no actuó. Datos de demostración." />
     </div>
@@ -50,7 +50,7 @@ const model = [
   {l.groups.map((g, i) => (
     <Section id={g.id} tone={i % 2 === 0 ? "white" : "paper"} after={i === 0 ? "night" : undefined} labelledby={`${g.id}-title`}>
       <SectionHead id={`${g.id}-title`} title={g.title} lede={g.text} />
-      <FeatureList items={byGroup(g.id)} cols={2} />
+      <FeatureList items={byGroup(g.id)} cols={2} inherit="beta" />
     </Section>
   ))}
 

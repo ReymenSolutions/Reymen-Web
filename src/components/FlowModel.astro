@@ -27,7 +27,7 @@ const groups = [{ k: "clientes", t: "Con tus clientes (con su consentimiento)" }
   <div class="stage" aria-live="polite">
     <div class="head">
       <p class="what" data-what>{first.text}</p>
-      <p class="meta"><StatusBadge status={first.status} /> <span data-req>Requiere {first.requires}</span></p>
+      <p class="meta"><StatusBadge status={first.status} /> <span data-req>Requiere {first.requires}</span> <button type="button" class="sim" data-sim>Ver paso a paso</button></p>
     </div>
     <ol class="chain">
       {steps.map(([k, label]) => (
@@ -37,7 +37,8 @@ const groups = [{ k: "clientes", t: "Con tus clientes (con su consentimiento)" }
         </li>
       ))}
     </ol>
-    <p class="note">Flujo real de Reymen App, en beta. La entrega por WhatsApp o correo depende del conector de cada negocio.</p>
+    <p class="sr" role="status" aria-live="polite" data-sim-say></p>
+    <p class="note">Flujo real de Reymen App, en beta. «Ver paso a paso» es una simulación ilustrativa: no envía nada. La entrega por WhatsApp o correo depende del conector de cada negocio.</p>
   </div>
 </div>
 
@@ -62,6 +63,12 @@ const groups = [{ k: "clientes", t: "Con tus clientes (con su consentimiento)" }
   .step:not(:last-child)::after { content: ""; position: absolute; top: 2rem; right: calc(-1 * var(--s-3) - 1px); width: var(--s-3); border-top: 2px solid var(--electric-soft); }
   .lab { font-size: 0.78rem; font-weight: 700; color: var(--electric-soft); }
   .val { color: var(--on-night); font-size: 0.95rem; line-height: 1.45; animation: in var(--t-base) var(--ease); }
+  .sim { margin-left: auto; padding: 0.35rem 0.85rem; min-height: 2.25rem; border: 1px solid var(--glass-line); border-radius: 999px; background: none; color: var(--on-night); font: inherit; font-weight: 600; cursor: pointer; transition: border-color var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease); }
+  .sim:hover { border-color: var(--electric-soft); background: var(--glass); }
+  .sim:disabled { opacity: 0.6; cursor: default; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); margin: 0; }
+  .chain.running .step { opacity: 0.35; transition: opacity var(--t-base) var(--ease), border-color var(--t-base) var(--ease), box-shadow var(--t-base) var(--ease); }
+  .chain.running .step.lit { opacity: 1; border-color: var(--electric-soft); box-shadow: 0 0 0 1px var(--electric-soft), 0 0 22px rgb(61 99 255 / 0.35); }
   .note { margin: 0; color: var(--on-night-soft); font-size: var(--step--1); max-width: none; }
   @keyframes in { from { opacity: 0.2; transform: translateY(4px); } to { opacity: 1; transform: none; } }
   @media (max-width: 62rem) { .flow { grid-template-columns: 1fr; } .chain { grid-template-columns: repeat(2, minmax(0, 1fr)); } .step::after { display: none; } }
@@ -80,5 +87,25 @@ const groups = [{ k: "clientes", t: "Con tus clientes (con su consentimiento)" }
       root.querySelector("[data-req]")!.textContent = `Requiere ${d.requires}`;
       root.querySelectorAll<HTMLElement>("[data-k]").forEach((el) => { el.textContent = d[el.dataset.k!]; el.style.animation = "none"; void el.offsetWidth; el.style.animation = ""; });
     }));
+
+    // Simulación: ilumina cada paso en orden. Con movimiento reducido muestra todos a la vez.
+    const sim = root.querySelector<HTMLButtonElement>("[data-sim]")!;
+    const chain = root.querySelector<HTMLElement>(".chain")!;
+    const say = root.querySelector<HTMLElement>("[data-sim-say]")!;
+    const steps = [...chain.querySelectorAll<HTMLElement>(".step")];
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let timers: number[] = [];
+    const reset = () => { timers.forEach(clearTimeout); timers = []; chain.classList.remove("running"); steps.forEach((s) => s.classList.remove("lit")); sim.disabled = false; };
+    picks.forEach((b) => b.addEventListener("click", reset));
+    sim.addEventListener("click", () => {
+      reset();
+      if (reduce) { say.textContent = steps.map((s) => `${s.querySelector(".lab")!.textContent}: ${s.querySelector(".val")!.textContent}`).join(". "); return; }
+      sim.disabled = true; chain.classList.add("running");
+      steps.forEach((s, i) => timers.push(window.setTimeout(() => {
+        steps.forEach((x) => x.classList.toggle("lit", x === s));
+        say.textContent = `Paso ${i + 1} de 4, ${s.querySelector(".lab")!.textContent}: ${s.querySelector(".val")!.textContent}`;
+      }, i * 1400)));
+      timers.push(window.setTimeout(reset, steps.length * 1400 + 900));
+    });
   });
 </script>

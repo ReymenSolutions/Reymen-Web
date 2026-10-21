@@ -2,17 +2,22 @@
 // Mapa del ecosistema: elige un recorrido y se ilumina por dónde pasa. Cada recorrido lleva su estado (Disponible, Beta, En desarrollo o
 // Concepto) para no presentar como funcionando lo que no lo está. En pantallas angostas el diagrama se sustituye por los pasos del recorrido.
 import { NODES, JOURNEYS as ALL } from "../data/ecosystem";
+import { GLYPHS } from "../lib/glyphs";
 import StatusBadge from "./StatusBadge.astro";
 interface Props { only?: string[] }
 const { only } = Astro.props;
 // Con `only` se muestran solo esos recorridos (por ejemplo, los que aplican a una vertical).
 const JOURNEYS = only ? ALL.filter((j) => only.includes(j.id)) : ALL;
+// Glifo de cada nodo (los de formulario y chat no tienen glifo propio).
+const GLYPH: Record<string, string> = { pos: "pos", card: "card", crm: "crm", inbox: "inbox", agent: "agent", auto: "automation", loyalty: "loyalty" };
 const byId = Object.fromEntries(NODES.map((n) => [n.id, n]));
 const center = (id: string) => ({ x: byId[id].x + byId[id].w / 2, y: byId[id].y + byId[id].h / 2 });
 const segs = JOURNEYS.flatMap((j) => j.steps.slice(0, -1).map((s, i) => ({ j: j.id, d: `M${center(s.node).x} ${center(s.node).y} L${center(j.steps[i + 1].node).x} ${center(j.steps[i + 1].node).y}`, status: j.status })));
 const first = JOURNEYS[0];
 ---
 <div class="map" data-map data-journey={first.id}>
+  <div class="left">
+  {JOURNEYS.length > 1 && <button type="button" class="tour" data-tour aria-pressed="false">Recorrer todos</button>}
   <div class="picker" role="group" aria-label="Recorridos de ejemplo">
     {JOURNEYS.map((j, k) => (
       <div class="j">
@@ -21,12 +26,13 @@ const first = JOURNEYS[0];
           <span class="meta"><StatusBadge status={j.status} /></span>
         </button>
         <div class="detail inline" data-detail={j.id} hidden={k !== 0}>
-        <p class="status"><StatusBadge status={j.status} /> {j.status === "concept" && <span>Ejemplo conceptual, no es parte del producto.</span>}{j.status === "planned" && <span>En desarrollo, todavía no disponible.</span>}</p>
+        {(j.status === "concept" || j.status === "planned") && <p class="status">{j.status === "concept" ? "Ejemplo conceptual, no es parte del producto." : "En desarrollo, todavía no disponible."}</p>}
         <ol class="steps">{j.steps.map((s) => <li>{s.text}</li>)}</ol>
         <p class="note">{j.note}</p>
       </div>
       </div>
     ))}
+  </div>
   </div>
 
   <div class="panel">
@@ -38,7 +44,8 @@ const first = JOURNEYS[0];
         {NODES.map((n) => (
           <g class:list={["n", { on: first.steps.some((st) => st.node === n.id) }]} data-n={n.id} transform={`translate(${n.x} ${n.y})`}>
             <rect width={n.w} height={n.h} rx="10" />
-            <text x={n.w / 2} y={n.h / 2 + 5} text-anchor="middle">{n.label}</text>
+            {GLYPH[n.id] && <g class="ng" transform={`translate(11 ${n.h / 2 - 10.8}) scale(0.9)`} set:html={GLYPHS[GLYPH[n.id]]} />}
+            <text x={GLYPH[n.id] ? (n.w + 28) / 2 : n.w / 2} y={n.h / 2 + 5} text-anchor="middle">{n.label}</text>
           </g>
         ))}
       </g>
@@ -46,7 +53,7 @@ const first = JOURNEYS[0];
 
     {JOURNEYS.map((j, k) => (
       <div class="detail side" data-detail={j.id} hidden={k !== 0}>
-        <p class="status"><StatusBadge status={j.status} /> {j.status === "concept" && <span>Ejemplo conceptual, no es parte del producto.</span>}{j.status === "planned" && <span>En desarrollo, todavía no disponible.</span>}</p>
+        {(j.status === "concept" || j.status === "planned") && <p class="status">{j.status === "concept" ? "Ejemplo conceptual, no es parte del producto." : "En desarrollo, todavía no disponible."}</p>}
         <ol class="steps">{j.steps.map((s) => <li>{s.text}</li>)}</ol>
         <p class="note">{j.note}</p>
       </div>
@@ -58,6 +65,10 @@ const first = JOURNEYS[0];
 
 <style>
   .map { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(1.5rem, 4vw, 3.5rem); align-items: start; }
+  .left { display: grid; gap: var(--s-3); }
+  .tour { justify-self: start; padding: 0.4rem 0.95rem; min-height: 2.5rem; border: 1px solid var(--glass-line); border-radius: 999px; background: none; color: var(--on-night); font: inherit; font-weight: 600; cursor: pointer; transition: border-color var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease); }
+  .tour:hover { border-color: var(--electric-soft); background: var(--glass); }
+  .tour[aria-pressed="true"] { border-color: var(--electric-soft); background: var(--glass); }
   .picker { display: grid; border-top: 1px solid var(--night-line); }
   .j { border-bottom: 1px solid var(--night-line); }
   .pick { display: grid; gap: 0.35rem; justify-items: start; text-align: left; background: none; border: 0; padding: var(--s-4) 0 var(--s-4) var(--s-5); width: 100%; cursor: pointer; color: var(--on-night-soft); position: relative; transition: color var(--t-base) var(--ease); min-height: 3rem; }
@@ -75,6 +86,8 @@ const first = JOURNEYS[0];
   .e { fill: none; stroke: #4660d8; stroke-width: 2; opacity: 0.18; transition: opacity var(--t-base) var(--ease); }
   .n rect { fill: #101e55; stroke: #2c3d86; stroke-width: 1.5; transition: fill var(--t-base) var(--ease), stroke var(--t-base) var(--ease); }
   .n { opacity: 0.4; transition: opacity var(--t-base) var(--ease); }
+  .ng { fill: none; stroke: #eaf0ff; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .ng :global(.n) { fill: var(--electric-soft); stroke: none; }
   .n text { fill: #eaf0ff; font: 650 13.5px var(--font); font-stretch: 106%; }
   .e.on { opacity: 1; stroke: #8ea6ff; stroke-dasharray: 5 7; animation: flow 1.1s linear infinite; }
   .e.on.s-concept { stroke-dasharray: 2 8; }
@@ -108,7 +121,22 @@ const first = JOURNEYS[0];
       root.querySelectorAll<SVGElement>(".e").forEach((e) => e.classList.toggle("on", e.dataset.j === id));
       root.querySelectorAll<SVGElement>(".n").forEach((n) => n.classList.toggle("on", data[id].includes(n.dataset.n!)));
     };
-    picks.forEach((b) => b.addEventListener("click", () => set(b.dataset.j!)));
+    // Recorrido automático: pasa por cada recorrido cada pocos segundos hasta que lo detienes o eliges uno a mano.
+    const tour = root.querySelector<HTMLButtonElement>("[data-tour]");
+    const ids = picks.map((b) => b.dataset.j!);
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let timer = 0;
+    const stopTour = () => { clearInterval(timer); timer = 0; if (tour) { tour.setAttribute("aria-pressed", "false"); tour.textContent = "Recorrer todos"; } };
+    picks.forEach((b) => b.addEventListener("click", () => { stopTour(); set(b.dataset.j!); }));
+    if (tour) {
+      if (reduce) tour.hidden = true;
+      tour.addEventListener("click", () => {
+        if (timer) { stopTour(); return; }
+        tour.setAttribute("aria-pressed", "true"); tour.textContent = "Detener recorrido";
+        const next = () => set(ids[(ids.indexOf(root.dataset.journey!) + 1) % ids.length]);
+        next(); timer = window.setInterval(next, 4500);
+      });
+    }
     set(root.dataset.journey!);
   });
 </script>

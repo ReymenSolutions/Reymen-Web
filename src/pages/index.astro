@@ -28,7 +28,7 @@ const icons: Record<string, string> = {
   archive: '<path d="M4 8h16v11H4z"/><path d="m4 8 2-4h12l2 4"/><path d="M10 13h4"/>',
   shield: '<path d="M12 3 5 6v5c0 4.5 3 8 7 10 4-2 7-5.5 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-4"/>',
 };
-const glyphOf = (g: string) => (g === "app" || g === "pos" || g === "card" ? "software" : g) as "software";
+const glyphOf = (g: string) => g as "software";
 ---
 <Base darkHero title="Reymen Solutions · Software, agentes de IA y automatización" description="Reymen Solutions diseña software, agentes de IA y automatizaciones para negocios en México, y tiene un ecosistema propio de punto de venta, inventario, lealtad y mensajes para restaurantes.">
   <section class="hero tone-night" aria-labelledby="hero-title">

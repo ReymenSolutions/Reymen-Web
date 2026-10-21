@@ -15,6 +15,8 @@ const ctaLabel = (a: string) => (a === "LIVE" ? "Agendar demo" : a === "BETA" ? 
 const ld = list
   .filter((p) => p.availability === "LIVE")
   .map((p) => ({ "@context": "https://schema.org", "@type": "SoftwareApplication", name: p.name, description: p.description, applicationCategory: "BusinessApplication", url: `${SITE.url}/productos#${p.id}`, publisher: { "@type": "Organization", name: SITE.name } }));
+// El estado del producto ya va en su título: una función con el mismo estado no lo repite.
+const OWN: Record<string, string> = { LIVE: "live", BETA: "beta", COMING_SOON: "planned" };
 ---
 <Base title="Productos · Reymen Solutions" description="Reymen App, Reymen POS, Reymen AI Agents y Smart Cards: productos propios que se conectan entre sí, con su estado de disponibilidad." path="/productos" crumbs={[{ name: "Productos", path: "/productos" }]} ld={ld}>
   <Section labelledby="p-title">
@@ -29,7 +31,7 @@ const ld = list
     <Section id={p.id} tone={i % 2 === 0 ? "white" : "paper"} labelledby={`${p.id}-title`}>
       <div class="product">
         <div class="head">
-          <Glyph name={p.glyph === "app" || p.glyph === "pos" || p.glyph === "card" ? "software" : p.glyph} size={34} class="g" />
+          <Glyph name={p.glyph} size={34} class="g" />
           <h2 id={`${p.id}-title`}>{p.name} <StatusBadge status={p.availability} /></h2>
           <p class="model">{MODEL_LABEL[p.model]}</p>
           <p class="lede">{p.tagline}</p>
@@ -42,7 +44,7 @@ const ld = list
         <ul class="features">
           {p.features.map((f) => (
             <li>
-              <h3>{f.title} {f.status !== "live" && <StatusBadge status={f.status} />}</h3>
+              <h3>{f.title} {f.status !== "live" && f.status !== OWN[p.availability] && <StatusBadge status={f.status} />}</h3>
               <p>{f.text}</p>
             </li>
           ))}
