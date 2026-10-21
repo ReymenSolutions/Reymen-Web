@@ -1,11 +1,12 @@
 ---
 // Lista de puntos con filete superior: encabezado en negrita y una frase. Sin tarjetas.
 import StatusBadge from "./StatusBadge.astro";
-interface Props { items: { h: string; p: string; status?: "live" | "beta" | "planned" | "concept" }[]; cols?: 2 | 3 }
-const { items, cols = 2 } = Astro.props;
+// `inherit`: el estado que ya declara la página (por ejemplo, la etiqueta del encabezado); no se repite en cada punto.
+interface Props { items: { h: string; p: string; status?: "live" | "beta" | "planned" | "concept" }[]; cols?: 2 | 3; inherit?: "live" | "beta" | "planned" | "concept" }
+const { items, cols = 2, inherit } = Astro.props;
 ---
 <div class="features" data-cols={cols}>
-  {items.map((it) => <div><h3>{it.h}{it.status && it.status !== "live" && <> <StatusBadge status={it.status} /></>}</h3><p>{it.p}</p></div>)}
+  {items.map((it) => <div><h3>{it.h}{it.status && it.status !== "live" && it.status !== inherit && <> <StatusBadge status={it.status} /></>}</h3><p>{it.p}</p></div>)}
 </div>
 
 <style>

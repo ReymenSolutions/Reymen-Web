@@ -26,7 +26,7 @@ const first = JOURNEYS[0];
           <span class="meta"><StatusBadge status={j.status} /></span>
         </button>
         <div class="detail inline" data-detail={j.id} hidden={k !== 0}>
-        <p class="status"><StatusBadge status={j.status} /> {j.status === "concept" && <span>Ejemplo conceptual, no es parte del producto.</span>}{j.status === "planned" && <span>En desarrollo, todavía no disponible.</span>}</p>
+        {(j.status === "concept" || j.status === "planned") && <p class="status">{j.status === "concept" ? "Ejemplo conceptual, no es parte del producto." : "En desarrollo, todavía no disponible."}</p>}
         <ol class="steps">{j.steps.map((s) => <li>{s.text}</li>)}</ol>
         <p class="note">{j.note}</p>
       </div>
@@ -53,7 +53,7 @@ const first = JOURNEYS[0];
 
     {JOURNEYS.map((j, k) => (
       <div class="detail side" data-detail={j.id} hidden={k !== 0}>
-        <p class="status"><StatusBadge status={j.status} /> {j.status === "concept" && <span>Ejemplo conceptual, no es parte del producto.</span>}{j.status === "planned" && <span>En desarrollo, todavía no disponible.</span>}</p>
+        {(j.status === "concept" || j.status === "planned") && <p class="status">{j.status === "concept" ? "Ejemplo conceptual, no es parte del producto." : "En desarrollo, todavía no disponible."}</p>}
         <ol class="steps">{j.steps.map((s) => <li>{s.text}</li>)}</ol>
         <p class="note">{j.note}</p>
       </div>

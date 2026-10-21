@@ -20,6 +20,8 @@ const v = (await allVerticals()).find((x) => x.id === id)!;
 const prods = await Promise.all(v.products.map((p) => getProduct(p)));
 const noindex = v.seo.noindex || v.publication === "unlisted";
 const glyph = (v.interest?.glyph ?? "software") as "software";
+// El estado de la vertical ya va en el título: una función con el mismo estado no lo repite.
+const OWN: Record<string, string> = { LIVE: "live", BETA: "beta", COMING_SOON: "planned" };
 ---
 <Base title={v.seo.title} description={v.seo.description} path={v.route} noindex={noindex} crumbs={[{ name: v.name, path: v.route }]}>
   <Section labelledby="v-title">
@@ -47,7 +49,7 @@ const glyph = (v.interest?.glyph ?? "software") as "software";
       <h2 id="f-title">Lo que estamos preparando<span class="dot">.</span></h2>
       <p class="note">Todavía no está disponible. Estas son las funciones previstas; su estado puede cambiar.</p>
       <ul class="features">
-        {v.features.map((f) => <li><h3>{f.title} <StatusBadge status={f.status} /></h3><p>{f.text}</p></li>)}
+        {v.features.map((f) => <li><h3>{f.title} {f.status !== OWN[v.availability] && <StatusBadge status={f.status} />}</h3><p>{f.text}</p></li>)}
       </ul>
       {prods.length > 0 && <p class="note">Se administra desde {prods.map((p) => p.name).join(", ")}.</p>}
     </Section>
