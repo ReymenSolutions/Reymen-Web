@@ -1,0 +1,44 @@
+{
+  "id": "sol",
+  "order": 2,
+  "name": "Sol",
+  "role": "Soporte",
+  "categoryId": "soporte",
+  "glyph": "inbox",
+  "accent": "electric",
+  "tagline": "Resuelve con tu base de conocimiento y escala lo delicado.",
+  "pitch": "Responde dudas frecuentes con el Rulebook y los artículos de tu negocio, sin inventar precios ni datos, y pasa la conversación a una persona cuando el tema lo pide.",
+  "art": {
+    "alt": "Sol, agente de soporte de Reymen: personaje 3D con barba corta y abrigo largo azul marino con detalles plateados, que sostiene sobre la mano un libro holográfico de conocimiento.",
+    "focus": [
+      50,
+      30,
+      1
+    ]
+  },
+  "capabilityIds": [
+    "soporte:conocimiento",
+    "soporte:escalamiento",
+    "soporte:clasificacion",
+    "soporte:tecnica"
+  ],
+  "integrationIds": [
+    "reymen-app:inbox",
+    "ai-agents:rulebook",
+    "ai-agents:revision"
+  ],
+  "useCases": [
+    {
+      "title": "Responder dudas frecuentes",
+      "text": "Usa tu base de conocimiento y tu Rulebook; si no sabe, no inventa."
+    },
+    {
+      "title": "Escalar a una persona",
+      "text": "Pasa la conversación con el motivo a la vista cuando el cliente lo pide o el tema es delicado."
+    }
+  ],
+  "admin": {
+    "module": "Agente IA",
+    "screen": "Base de conocimiento y Rulebook"
+  }
+}

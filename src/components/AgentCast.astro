@@ -1,0 +1,214 @@
+---
+// Equipo de agentes: carrusel con un protagonista y su ficha. Todo sale de los datos (src/content/personas); el estado se deriva de lo que existe.
+// Sin JavaScript se ven todas las fichas apiladas; con él, un carrusel de tarjetas con vistas parciales (scroll-snap nativo).
+import type { PersonaView } from "../lib/catalog";
+import StatusBadge from "./StatusBadge.astro";
+import Portrait from "./Portrait.astro";
+import Button from "./Button.astro";
+interface Props { team: PersonaView[] }
+const { team } = Astro.props;
+const live = (p: PersonaView) => p.status === "live" || p.status === "beta";
+const ctaLabel = (p: PersonaView) => (p.kind === "custom" ? "Cuéntanos tu proceso" : live(p) ? `Solicitar acceso a ${p.name}` : "Cuéntanos tu caso");
+const note = (p: PersonaView) => (p.status === "concept" ? "Es un concepto: todavía no está disponible. Cuéntanos si te serviría." : p.status === "planned" ? "En desarrollo: todavía no está disponible." : "");
+---
+<div class="cast" data-cast aria-roledescription="carrusel" aria-label="Equipo de agentes de Reymen">
+  <script is:inline>document.currentScript.parentElement.setAttribute("data-ready", "")</script>
+  <div class="viewport" data-viewport>
+    <ul class="track" role="tablist" aria-label="Agentes" data-track>
+      {team.map((p, i) => (
+        <li class="slide" role="presentation">
+          <button type="button" role="tab" id={`tab-${p.id}`} aria-controls={`panel-${p.id}`} aria-selected={i === 0 ? "true" : "false"} tabindex={i === 0 ? 0 : -1} aria-describedby={`art-${p.id}`} data-i={i} data-id={p.id} class:list={["card", `acc-${p.accent}`, `st-${p.status ?? "custom"}`]}>
+            <Portrait id={p.id} glyph={p.glyph} accent={p.accent} position={`${p.art.focus[0]}% ${p.art.focus[1]}%`} eager={i === 0} />
+            <span class="tag">{p.status ? <StatusBadge status={p.status} /> : <span class="custom">A la medida</span>}</span>
+            <span class="meta"><span class="nm">{p.name}</span><span class="rl">{p.role}</span></span>
+          </button>
+          <span class="sr" id={`art-${p.id}`}>{p.art.alt}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <div class="controls">
+    <button type="button" class="nav" data-prev aria-label="Agente anterior"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="m14.5 6-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg></button>
+    <p class="pos" aria-hidden="true"><span data-pos>1</span> de {team.length}</p>
+    <button type="button" class="nav" data-next aria-label="Agente siguiente"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="m9.5 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg></button>
+  </div>
+  <p class="sr" role="status" aria-live="polite" data-say></p>
+
+  <div class="panels">
+    {team.map((p, i) => (
+      <section class:list={["panel", { "is-active": i === 0 }]} role="tabpanel" id={`panel-${p.id}`} aria-labelledby={`tab-${p.id}`} tabindex="0" data-i={i}>
+        <header class="p-head">
+          <h3>{p.name}<span class="p-role"> · {p.role}</span></h3>
+          {p.status && <span class="p-badge"><StatusBadge status={p.status} /></span>}
+        </header>
+        <p class="tagline">{p.tagline}</p>
+        {note(p) && <p class="note">{note(p)}</p>}
+        <div class="p-grid">
+          <div class="col">
+            <p class="pitch">{p.pitch}</p>
+            <h4>Qué hace</h4>
+            <ul class="list">
+              {p.capabilities.map((c) => <li><span class="t">{c.title}{c.status !== p.status && c.status !== "live" && <> <StatusBadge status={c.status} /></>}</span><span class="d">{c.text}</span></li>)}
+            </ul>
+          </div>
+          <div class="col">
+            {p.integrations.length > 0 && (
+              <>
+                <h4>Funciona con</h4>
+                <ul class="chips">
+                  {p.integrations.map((f) => <li>{f.title}{f.status !== p.status && f.status !== "live" && <> <StatusBadge status={f.status} /></>}</li>)}
+                </ul>
+              </>
+            )}
+            {p.useCases.length > 0 && (
+              <>
+                <h4>Ejemplos de uso</h4>
+                <ul class="list">
+                  {p.useCases.map((u) => <li><span class="t">{u.title}</span><span class="d">{u.text}</span></li>)}
+                </ul>
+              </>
+            )}
+          </div>
+        </div>
+        <div class="p-foot">
+          <Button href={`/contacto?interes=ai-agents&agente=${p.id}`} variant={live(p) ? "primary" : "ghost"} event={`Agente ${p.id}`}>{ctaLabel(p)}</Button>
+          <p class="fine">
+            {p.admin ? <>Se administra desde Reymen App: {p.admin.module} → {p.admin.screen}. </> : null}
+            {p.kind === "persona" ? "Ilustración de un agente de IA; no es una persona." : ""}
+          </p>
+        </div>
+      </section>
+    ))}
+  </div>
+</div>
+
+<style>
+  .cast { --cw: min(76vw, 300px); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s-5); }
+  @media (min-width: 48rem) { .cast { --cw: 340px; } }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); margin: 0; white-space: nowrap; }
+
+  /* Sin JavaScript: solo las fichas, apiladas */
+  .cast:not([data-ready]) .viewport, .cast:not([data-ready]) .controls { display: none; }
+  .cast:not([data-ready]) .panel { margin-bottom: var(--s-5); }
+  .cast[data-ready] .p-badge { display: none; }
+  .cast[data-ready] .panel:not(.is-active) { display: none; }
+
+  /* Desvanecido en los bordes con degradados superpuestos (una máscara sobre el carrusel impedía pintar los retratos a 2× en algunos motores) */
+  .viewport { position: relative; margin-inline: calc(-1 * var(--gutter)); }
+  .viewport::before, .viewport::after { content: ""; position: absolute; inset-block: 0; width: 9%; z-index: 2; pointer-events: none; }
+  .viewport::before { left: 0; background: linear-gradient(90deg, var(--night), transparent); }
+  .viewport::after { right: 0; background: linear-gradient(270deg, var(--night), transparent); }
+  .track { display: flex; gap: var(--s-4); margin: 0; padding: var(--s-4) calc(50% - var(--cw) / 2); list-style: none; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .track::-webkit-scrollbar { display: none; }
+  .slide { position: relative; flex: 0 0 var(--cw); scroll-snap-align: center; }
+
+  .card { position: relative; display: block; width: 100%; aspect-ratio: 4 / 5; padding: 0; overflow: hidden; text-align: left; cursor: pointer; color: var(--on-night); font: inherit;
+    border: 1px solid var(--night-line); border-radius: var(--r-lg);
+    background: radial-gradient(120% 80% at 50% 0%, #14266b, var(--night-2) 60%, var(--night));
+    transform: scale(0.86); opacity: 0.55; transition: transform 420ms var(--ease), opacity 420ms var(--ease), border-color var(--t-base) var(--ease), box-shadow var(--t-base) var(--ease); }
+  .card:hover { opacity: 0.8; }
+  .card[aria-selected="true"] { transform: none; opacity: 1; border-color: var(--electric-soft); box-shadow: var(--lift-night); }
+  .acc-ember[aria-selected="true"] { border-color: var(--ember); }
+  .st-concept :global(.portrait) { filter: saturate(0.75); opacity: 0.88; }
+  .meta { position: absolute; inset: auto 0 0 0; display: grid; gap: 0.1rem; padding: var(--s-6) var(--s-4) var(--s-4); background: linear-gradient(transparent, rgb(6 14 43 / 0.92) 62%); }
+  .nm { font-size: var(--step-2); font-weight: 760; font-stretch: 108%; line-height: 1.1; }
+  .rl { color: var(--on-night-soft); font-size: var(--step--1); }
+  .tag { position: absolute; top: var(--s-3); left: var(--s-3); z-index: 1; padding: 2px; border-radius: 999px; background: rgb(6 14 43 / 0.82); backdrop-filter: blur(6px); }
+  .custom { display: inline-flex; padding: 0.1rem 0.55rem; border: 1px dashed var(--on-night-soft); border-radius: 999px; color: var(--on-night-soft); font-size: 0.75rem; font-weight: 650; line-height: 1.5; }
+
+  .controls { display: flex; align-items: center; justify-content: center; gap: var(--s-4); }
+  .nav { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 50%; border: 1px solid var(--glass-line); background: none; color: var(--on-night); cursor: pointer; transition: border-color var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease); }
+  .nav:hover:not(:disabled) { border-color: var(--electric-soft); background: var(--glass); }
+  .nav:disabled { opacity: 0.35; cursor: default; }
+  .pos { margin: 0; min-width: 4.5rem; text-align: center; color: var(--on-night-soft); font-size: var(--step--1); font-variant-numeric: tabular-nums; }
+
+  .panel { padding: var(--s-5); border: 1px solid var(--night-line); border-radius: var(--r-lg); background: rgb(255 255 255 / 0.03); color: var(--on-night); }
+  .cast[data-ready] .panel.is-active { animation: swap 240ms var(--ease) both; }
+  @keyframes swap { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .p-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2) var(--s-3); }
+  h3 { margin: 0; font-size: var(--step-2); color: var(--white); }
+  .p-role { color: var(--on-night-soft); font-weight: 500; }
+  .tagline { margin: var(--s-2) 0 0; color: var(--electric-soft); font-weight: 600; font-stretch: 106%; max-width: none; }
+  .note { margin: var(--s-3) 0 0; padding: var(--s-3) var(--s-4); border: 1px dashed var(--on-night-soft); border-radius: var(--r-md); color: var(--on-night); font-size: var(--step--1); max-width: none; }
+  .p-grid { display: grid; gap: var(--s-5) var(--s-7); margin-top: var(--s-5); }
+  @media (min-width: 56rem) { .p-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+  .pitch { margin: 0 0 var(--s-5); color: var(--on-night); max-width: none; }
+  h4 { margin: 0 0 var(--s-3); font-size: var(--step--1); letter-spacing: 0.04em; text-transform: uppercase; color: var(--on-night-soft); }
+  .col > h4:not(:first-child) { margin-top: var(--s-5); }
+  .list { display: grid; margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--night-line); }
+  .list li { display: grid; gap: 0.15rem; padding: var(--s-3) 0; border-bottom: 1px solid var(--night-line); }
+  .t { font-weight: 650; display: inline-flex; flex-wrap: wrap; align-items: center; gap: 0.3rem 0.6rem; }
+  .d { color: var(--on-night-soft); font-size: 0.95rem; }
+  .chips { display: flex; flex-wrap: wrap; gap: var(--s-2); margin: 0; padding: 0; list-style: none; }
+  .chips li { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.8rem; border: 1px solid var(--night-line); border-radius: 999px; background: var(--night-2); font-size: 0.9rem; }
+  .p-foot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3) var(--s-5); margin-top: var(--s-5); padding-top: var(--s-5); border-top: 1px solid var(--night-line); }
+  .fine { margin: 0; flex: 1 1 18rem; color: var(--on-night-soft); font-size: var(--step--1); max-width: none; }
+  @media (max-width: 36rem) { .panel { padding: var(--s-4); } .p-foot :global(.btn) { width: 100%; } }
+  @media (prefers-reduced-motion: reduce) { .card, .cast[data-ready] .panel.is-active { transition: none; animation: none; } }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-cast]").forEach((root) => {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+    const panels = [...root.querySelectorAll<HTMLElement>('[role="tabpanel"]')];
+    const viewport = root.querySelector<HTMLElement>("[data-viewport]")!;
+    const track = root.querySelector<HTMLElement>("[data-track]")!;
+    const prev = root.querySelector<HTMLButtonElement>("[data-prev]")!;
+    const next = root.querySelector<HTMLButtonElement>("[data-next]")!;
+    const pos = root.querySelector<HTMLElement>("[data-pos]")!;
+    const say = root.querySelector<HTMLElement>("[data-say]")!;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let cur = 0, settle = 0;
+
+    const apply = (i: number, announce: boolean) => {
+      cur = i;
+      tabs.forEach((t, k) => { t.setAttribute("aria-selected", String(k === i)); t.tabIndex = k === i ? 0 : -1; });
+      panels.forEach((p, k) => p.classList.toggle("is-active", k === i));
+      pos.textContent = String(i + 1);
+      prev.disabled = i === 0; next.disabled = i === tabs.length - 1;
+      if (announce) { const badge = tabs[i].querySelector(".tag")?.textContent?.trim(); say.textContent = `${tabs[i].querySelector(".nm")!.textContent}, ${i + 1} de ${tabs.length}${badge ? `, ${badge}` : ""}`; }
+    };
+    const center = (i: number) => tabs[i].parentElement!.scrollIntoView({ inline: "center", block: "nearest", behavior: reduce ? "auto" : "smooth" });
+    const select = (i: number, o: { focus?: boolean; hash?: boolean } = {}) => {
+      i = Math.max(0, Math.min(tabs.length - 1, i));
+      apply(i, true); center(i);
+      if (o.focus) tabs[i].focus({ preventScroll: true });
+      if (o.hash) history.replaceState(null, "", `#agente-${tabs[i].dataset.id}`);
+    };
+
+    tabs.forEach((t, i) => {
+      t.addEventListener("click", () => select(i, { hash: true }));
+      t.addEventListener("keydown", (e) => {
+        const k = e.key;
+        const to = k === "ArrowRight" ? i + 1 : k === "ArrowLeft" ? i - 1 : k === "Home" ? 0 : k === "End" ? tabs.length - 1 : -1;
+        if (to < 0) return;
+        e.preventDefault(); select(to, { focus: true, hash: true });
+      });
+    });
+    prev.addEventListener("click", () => select(cur - 1, { hash: true }));
+    next.addEventListener("click", () => select(cur + 1, { hash: true }));
+
+    // Al deslizar con el dedo o la rueda, el protagonista es la tarjeta más cercana al centro cuando el movimiento se detiene.
+    viewport.addEventListener("scroll", () => {
+      clearTimeout(settle);
+      settle = window.setTimeout(() => {
+        const mid = track.getBoundingClientRect().left + track.clientWidth / 2;
+        let best = cur, dist = Infinity;
+        tabs.forEach((t, k) => { const r = t.getBoundingClientRect(); const d = Math.abs(r.left + r.width / 2 - mid); if (d < dist) { dist = d; best = k; } });
+        if (best !== cur) apply(best, true);
+      }, 140);
+    }, { passive: true, capture: true });
+
+    // Enlace profundo: #agente-lia (al cargar y cuando cambia el hash)
+    const fromHash = (first: boolean) => {
+      const i = location.hash.startsWith("#agente-") ? tabs.findIndex((t) => `#agente-${t.dataset.id}` === location.hash) : -1;
+      if (first) apply(Math.max(i, 0), false);
+      if (i < 0) return;
+      if (!first) apply(i, true);
+      requestAnimationFrame(() => { tabs[i].parentElement!.scrollIntoView({ inline: "center", block: "nearest", behavior: "auto" }); root.scrollIntoView({ block: "start" }); });
+    };
+    window.addEventListener("hashchange", () => fromHash(false));
+    fromHash(true);
+  });
+</script>

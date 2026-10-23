@@ -6,17 +6,19 @@ import PageHero from "../components/PageHero.astro";
 import CropShot from "../components/CropShot.astro";
 import FeatureList from "../components/FeatureList.astro";
 import AgentCatalog from "../components/AgentCatalog.astro";
+import AgentCast from "../components/AgentCast.astro";
 import TeamDiagram from "../components/TeamDiagram.astro";
 import Faq from "../components/Faq.astro";
 import Button from "../components/Button.astro";
 import ContactSection from "../components/ContactSection.astro";
 import { SITE } from "../config";
-import { getProduct, agentCategories, assertCatalogIntegrity } from "../lib/catalog";
+import { getProduct, agentCategories, personas, assertCatalogIntegrity } from "../lib/catalog";
 
 await assertCatalogIntegrity();
 // Contenido en src/content/products/ai-agents.json y src/content/agents/*.json. Esta página solo compone.
 const p = await getProduct("ai-agents");
 const cats = await agentCategories();
+const team = await personas();
 const pick = (ids: string[]) => p.features.filter((f) => ids.includes(f.id)).map((f) => ({ h: f.title, p: f.text, status: f.status }));
 const channels = pick(["webchat", "whatsapp", "otros-canales"]);
 const control = pick(["rulebook", "modos", "revision", "probador", "control"]);
@@ -42,8 +44,13 @@ const ld = [{ "@context": "https://schema.org", "@type": "SoftwareApplication", 
     <FeatureList items={channels} cols={3} />
   </Section>
 
+  <Section id="equipo" tone="night" labelledby="eq-title">
+    <SectionHead id="eq-title" title="Conoce al equipo" lede="Cada agente tiene una especialidad. Solo lo marcado como Beta existe hoy; lo demás está en desarrollo o es un concepto, y se muestra así." />
+    <AgentCast team={team} />
+  </Section>
+
   <Section id="especializados" tone="white" labelledby="esp-title">
-    <SectionHead id="esp-title" title="Agentes especializados" lede="La línea de agentes que queremos construir. Solo lo marcado como Beta existe hoy; lo demás está en desarrollo o es un concepto." />
+    <SectionHead id="esp-title" title="Catálogo completo" lede="Todos los agentes que contemplamos, por categoría y con su estado real." />
     <AgentCatalog categories={cats} />
   </Section>
 

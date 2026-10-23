@@ -1,0 +1,30 @@
+---
+// Retrato de un personaje. Si existe src/assets/agentes/<id>.(png|webp|avif|jpg) se optimiza en el build (AVIF + WebP, dos anchos);
+// si no, se dibuja una silueta provisional con el anillo y el nodo de la marca. La imagen es decorativa: el nombre y la descripción los lleva el texto.
+import { Picture } from "astro:assets";
+import { GLYPHS } from "../lib/glyphs";
+interface Props { id: string; glyph?: string; accent?: "electric" | "ember"; position?: string; eager?: boolean; sizes?: string }
+const { id, glyph = "agent", accent = "electric", position = "50% 30%", eager = false, sizes = "(min-width: 48rem) 340px, 76vw" } = Astro.props;
+const files = import.meta.glob<{ default: ImageMetadata }>("/src/assets/agentes/*.{png,webp,avif,jpg}", { eager: true });
+const hit = Object.entries(files).find(([path]) => path.split("/").pop()!.replace(/\.[a-z]+$/, "") === id)?.[1].default;
+const tint = accent === "ember" ? "#ff6a13" : "#3d63ff";
+---
+{hit ? (
+  <Picture src={hit} alt="" formats={["avif", "webp"]} fallbackFormat="webp" widths={[480, 960]} sizes={sizes} width={960} loading={eager ? "eager" : "lazy"} fetchpriority={eager ? "high" : "auto"} decoding="async" class="portrait" style={`object-position:${position}`} />
+) : (
+  <svg class="portrait ph" viewBox="0 0 400 500" aria-hidden="true" focusable="false" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <radialGradient id={`ph-g-${id}`} cx="50%" cy="42%" r="60%"><stop offset="0" stop-color={tint} stop-opacity="0.35" /><stop offset="1" stop-color={tint} stop-opacity="0" /></radialGradient>
+    </defs>
+    <rect width="400" height="500" fill={`url(#ph-g-${id})`} />
+    <circle cx="200" cy="230" r="150" fill="none" stroke={tint} stroke-opacity="0.55" stroke-width="2" />
+    <circle cx="332" cy="146" r="9" fill={tint} />
+    <circle cx="200" cy="170" r="44" fill="#0b1646" stroke={tint} stroke-opacity="0.7" stroke-width="2" />
+    <path d="M110 420c0-70 40-118 90-118s90 48 90 118Z" fill="#0b1646" stroke={tint} stroke-opacity="0.7" stroke-width="2" />
+    <g transform="translate(164 318) scale(3)" fill="none" stroke="#e9eefc" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" set:html={GLYPHS[glyph] ?? GLYPHS.agent} />
+  </svg>
+)}
+<style>
+  .portrait { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .ph :global(.n) { fill: #8ea6ff; stroke: none; }
+</style>

@@ -1,0 +1,36 @@
+{
+  "id": "nova",
+  "order": 5,
+  "name": "Nova",
+  "role": "Marketing y contenido",
+  "categoryId": "marketing",
+  "glyph": "loyalty",
+  "accent": "ember",
+  "tagline": "Ideas y contenido que conectan.",
+  "pitch": "Una idea en desarrollo: un agente que investiga tendencias, propone contenido y apoya el trabajo de tus campañas, siempre con tu aprobación.",
+  "art": {
+    "alt": "Nova, agente de marketing y contenido de Reymen: personaje 3D con coleta y chamarra azul marino con detalles naranjas, un lápiz luminoso, un dron en órbita y paneles flotantes de ideas, imagen y video.",
+    "focus": [
+      50,
+      30,
+      1
+    ]
+  },
+  "capabilityIds": [
+    "marketing:tendencias",
+    "marketing:competitivo",
+    "marketing:contenido",
+    "marketing:campanas"
+  ],
+  "integrationIds": [],
+  "useCases": [
+    {
+      "title": "Ideas de contenido",
+      "text": "Proponer temas a partir de lo que tus clientes preguntan."
+    },
+    {
+      "title": "Apoyo a campañas",
+      "text": "Ayudar a preparar el calendario y los mensajes de una campaña."
+    }
+  ]
+}

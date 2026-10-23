@@ -81,6 +81,8 @@ const { vertical = "", interests = [], sourceBase } = Astro.props;
     // Interés preseleccionado desde un enlace (?interes=ai-agents): llega al CRM en el campo `source` (la API no cambia).
     const interestSelect = form.elements.namedItem("interest") as HTMLSelectElement | null;
     const wanted = new URLSearchParams(location.search).get("interes");
+    // Agente que despertó el interés (?agente=lia): solo letras, números y guiones; se suma al origen.
+    const agent = (new URLSearchParams(location.search).get("agente") ?? "").toLowerCase().replace(/[^a-z0-9-]/g, "").slice(0, 16);
     if (wanted && interestSelect && [...interestSelect.options].some((o) => o.value === wanted)) interestSelect.value = wanted;
 
     const box = document.getElementById("lead-msg")!;
@@ -111,7 +113,7 @@ const { vertical = "", interests = [], sourceBase } = Astro.props;
           body: JSON.stringify({
             name: fd.get("name"), contact: fd.get("contact"), business: fd.get("business") || undefined,
             vertical: fd.get("vertical") || undefined, message: fd.get("message") || undefined,
-            consent: fd.get("consent") === "on", website: fd.get("website") || undefined, source: (interestSelect?.value ? `${form.dataset.source}-${interestSelect.value}` : form.dataset.source)!.slice(0, 60),
+            consent: fd.get("consent") === "on", website: fd.get("website") || undefined, source: ((interestSelect?.value ? `${form.dataset.source}-${interestSelect.value}` : form.dataset.source) + (agent ? `-${agent}` : ""))!.slice(0, 60),
           }),
         });
         if (res.ok) { track("Lead Enviado", { vertical: String(fd.get("vertical") ?? "") }, () => { window.location.href = "/gracias"; }); return; }

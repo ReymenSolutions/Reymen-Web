@@ -1,0 +1,45 @@
+{
+  "id": "lia",
+  "order": 1,
+  "name": "Lía",
+  "role": "Atención y ventas",
+  "categoryId": "atencion-ventas",
+  "glyph": "agent",
+  "accent": "electric",
+  "tagline": "Responde, califica y da seguimiento.",
+  "pitch": "Atiende los mensajes de tus clientes con tu información y tu tono, prepara la respuesta para que tu equipo la revise y registra cada conversación como oportunidad en el seguimiento.",
+  "art": {
+    "alt": "Lía, agente de atención y ventas de Reymen: personaje 3D con cabello largo ondulado y chamarra corta azul marino con líneas luminosas azules, mano abierta junto a una burbuja de mensaje luminosa.",
+    "focus": [
+      50,
+      30,
+      1
+    ]
+  },
+  "capabilityIds": [
+    "atencion-ventas:prospectos",
+    "atencion-ventas:seguimiento",
+    "atencion-ventas:calificacion"
+  ],
+  "integrationIds": [
+    "reymen-app:inbox",
+    "reymen-app:crm",
+    "ai-agents:rulebook",
+    "ai-agents:webchat",
+    "ai-agents:whatsapp"
+  ],
+  "useCases": [
+    {
+      "title": "Responder fuera de horario",
+      "text": "Contesta horarios y reservaciones con tu Rulebook y deja la respuesta lista para que tu equipo la revise."
+    },
+    {
+      "title": "Dar seguimiento a prospectos",
+      "text": "Clasifica la intención de cada mensaje y crea la oportunidad en tu pipeline."
+    }
+  ],
+  "admin": {
+    "module": "Agente IA",
+    "screen": "Modo por canal y Rulebook"
+  }
+}
