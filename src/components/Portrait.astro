@@ -10,7 +10,7 @@ const hit = Object.entries(files).find(([path]) => path.split("/").pop()!.replac
 const tint = accent === "ember" ? "#ff6a13" : "#3d63ff";
 ---
 {hit ? (
-  <Picture src={hit} alt="" formats={["avif", "webp"]} widths={[480, 960]} sizes={sizes} width={960} loading={eager ? "eager" : "lazy"} fetchpriority={eager ? "high" : "auto"} decoding="async" class="portrait" style={`object-position:${position}`} />
+  <Picture src={hit} alt="" formats={["avif", "webp"]} fallbackFormat="webp" widths={[480, 960]} sizes={sizes} width={960} loading={eager ? "eager" : "lazy"} fetchpriority={eager ? "high" : "auto"} decoding="async" class="portrait" style={`object-position:${position}`} />
 ) : (
   <svg class="portrait ph" viewBox="0 0 400 500" aria-hidden="true" focusable="false" preserveAspectRatio="xMidYMid slice">
     <defs>

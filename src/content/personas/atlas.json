@@ -9,10 +9,10 @@
   "tagline": "Convierte datos en decisiones.",
   "pitch": "Una idea en desarrollo: un agente que revisa los datos de tu negocio, prepara informes y señala oportunidades para que decidas con más información.",
   "art": {
-    "alt": "Atlas, agente de análisis e investigación de Reymen: personaje 3D con abrigo largo azul marino con detalles plateados que sostiene una tableta con una gráfica.",
+    "alt": "Atlas, agente de análisis e investigación de Reymen: personaje 3D con lentes y abrigo largo azul marino con detalles plateados, una tableta en la mano y gráficas holográficas a su lado.",
     "focus": [
       50,
-      32,
+      30,
       1
     ]
   },
