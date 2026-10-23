@@ -22,7 +22,6 @@ const caps = await capabilities();
 const prods = await products();
 const svcs = await services();
 const soon = await interestVerticals();
-const demo = SITE.calendlyUrl || "/contacto";
 const icons: Record<string, string> = {
   layers: '<path d="M12 3 3 8l9 5 9-5-9-5Z"/><path d="m3 13 9 5 9-5"/>',
   archive: '<path d="M4 8h16v11H4z"/><path d="m4 8 2-4h12l2 4"/><path d="M10 13h4"/>',
@@ -35,18 +34,18 @@ const glyphOf = (g: string) => g as "software";
     <Traces />
     <div class="container hero-grid">
       <div class="hero-copy">
-        <h1 id="hero-title">{home.hero.title}<span class="dot">.</span></h1>
+        <p class="eyebrow">{home.hero.eyebrow}</p>
+        <h1 id="hero-title">{home.hero.title.split("\n").map((l, i, all) => <span class="h-line">{l}<span class={i === all.length - 1 ? "dot" : undefined}>.</span></span>)}</h1>
         <p class="lede">{home.hero.lede}</p>
         <div class="cta-wrap"><div class="cta-row">
-          <Button href={demo} size="lg" event="CTA Demo" external={!!SITE.calendlyUrl}>Agendar demo</Button>
-          <Button href="/productos" variant="ghost" size="lg" event="Ver Ecosistema"><span class="l-full">Ver productos y soluciones</span><span class="l-short">Ver productos</span></Button>
+          <Button href="/productos" size="lg" event="Explorar soluciones">Explorar soluciones <svg class="btn-ico" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg></Button>
+          <Button href="#demo" variant="ghost" size="lg" event="Ver demo">Ver demo <svg class="btn-ico" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2" /><path d="m10.5 8.8 4.2 3.2-4.2 3.2Z" fill="currentColor" /></svg></Button>
         </div></div>
-        <p class="tagline">{home.hero.tagline}</p>
         <dl class="facts">
           {home.facts.map((f) => <div><dt>{f.title}</dt><dd>{f.text}</dd></div>)}
         </dl>
       </div>
-      <div class="hero-stage"><HeroStage /></div>
+      <div class="hero-stage" id="demo"><HeroStage /></div>
     </div>
   </section>
 
@@ -155,13 +154,15 @@ const glyphOf = (g: string) => g as "software";
     mask-image: radial-gradient(ellipse 70% 60% at 65% 40%, #000 20%, transparent 75%); -webkit-mask-image: radial-gradient(ellipse 70% 60% at 65% 40%, #000 20%, transparent 75%); }
   .hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(2rem, 4vw, 4.5rem); align-items: center; }
   .hero-copy { display: grid; gap: var(--s-6); justify-items: start; }
+  .eyebrow { margin: 0; color: var(--electric-soft); font-size: var(--step--1); font-weight: 600; font-stretch: 106%; letter-spacing: 0.06em; text-transform: uppercase; }
+  .h-line { display: block; }
+  .btn-ico { flex: none; }
   .hero h1 { color: var(--white); font-size: clamp(1.65rem, 1rem + 2.1vw, 3rem); font-stretch: 106%; letter-spacing: -0.032em; }
   .cta-row { display: flex; flex-wrap: wrap; gap: var(--s-3); }
   .facts { display: grid; gap: var(--s-4); padding-top: var(--s-5); border-top: 1px solid var(--night-line); width: 100%; }
   .facts div { display: grid; gap: 0.1rem; }
   .facts dt { font-weight: 650; font-stretch: 104%; color: var(--on-night); }
   .facts dd { margin: 0; color: var(--on-night-soft); font-size: 0.95rem; }
-  .tagline { margin: 0; color: var(--on-night-soft); font-weight: 600; font-stretch: 108%; letter-spacing: 0.01em; }
   .triad { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-7); }
   .cap { display: grid; gap: var(--s-3); align-content: start; padding-top: var(--s-5); border-top: 2px solid var(--mist); text-decoration: none; transition: border-color var(--t-base) var(--ease); }
   .cap:hover { border-top-color: var(--blue); }
@@ -212,16 +213,13 @@ const glyphOf = (g: string) => g as "software";
     .facts { order: 5; }
     .hero-grid { gap: var(--s-5); }
   }
-  .l-short { display: none; }
   /* Botones: en una fila siempre que quepan; la medida la da el espacio de la columna, no la pantalla */
   .cta-wrap { container-type: inline-size; width: 100%; }
   @container (max-width: 31rem) {
-    .cta-row { flex-wrap: nowrap; }
-    .l-full { display: none; } .l-short { display: inline; }
-  }
-  @container (max-width: 24rem) {
-    .cta-row { gap: var(--s-2); }
-    .cta-row :global(.btn) { flex: 1 1 0; min-width: 0; padding: 0.8rem 0.6rem; font-size: 0.95rem; white-space: normal; text-align: center; }
+    .cta-row { flex-wrap: nowrap; gap: var(--s-2); }
+    .cta-row :global(.btn) { white-space: nowrap; padding: 0.8rem 0.9rem; font-size: 0.95rem; }
+    .cta-row :global(.btn-primary) { flex: 1 1 auto; }
+    .cta-row :global(.btn-ghost) { flex: 0 0 auto; }
   }
   @container (max-width: 17.5rem) { .cta-row { flex-direction: column; } }
   @media (max-width: 36rem) {

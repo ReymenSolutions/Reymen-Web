@@ -111,7 +111,7 @@ export const capability = z.object({ id: z.string(), order: z.number(), title: z
 export const service = z.object({ id: z.string(), order: z.number(), title: z.string(), text: z.string(), when: z.string().optional() });
 
 export const home = z.object({
-  hero: z.object({ title: z.string(), lede: z.string(), tagline: z.string() }),
+  hero: z.object({ eyebrow: z.string(), title: z.string(), lede: z.string() }),
   facts: z.array(z.object({ title: z.string(), text: z.string() })),
   trust: z.array(z.object({ h: z.string(), p: z.string(), icon: z.enum(["layers", "archive", "shield"]) })),
   faq: z.array(z.object({ q: z.string(), a: z.string() })),
