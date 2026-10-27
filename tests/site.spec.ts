@@ -3,7 +3,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { STATIC_ROUTES } from "../src/routes";
 import { product, vertical, feature } from "../src/lib/schemas";
 
-const pages = ["/", "/restaurantes", "/productos", "/contacto", "/ai-agents", "/smart-cards", "/automatizaciones", "/servicios", "/seguridad", "/privacidad", "/gracias"];
+const pages = ["/", "/restaurantes", "/realty", "/productos", "/contacto", "/ai-agents", "/smart-cards", "/automatizaciones", "/servicios", "/seguridad", "/privacidad", "/gracias"];
 
 // Las pruebas no dependen de internet: la analítica externa se simula vacía.
 test.beforeEach(async ({ page }) => { await page.route("https://plausible.io/**", (r) => r.fulfill({ status: 200, contentType: "text/javascript", body: "" })); });
@@ -34,8 +34,8 @@ test.describe("rutas, SEO y encabezados", () => {
   test("el sitemap lista exactamente las rutas públicas", async ({ request }) => {
     const xml = await (await request.get("/sitemap.xml")).text();
     const locs = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
-    // Estáticas + verticales, productos y páginas publicados. Las páginas en borrador (Realty, clínicas) o sin listar no entran.
-    expect([...locs].sort()).toEqual([...STATIC_ROUTES, "/restaurantes", "/ai-agents", "/smart-cards", "/automatizaciones", "/servicios", "/seguridad"].map((p) => `https://reymen.mx${p}`).sort());
+    // Estáticas + verticales, productos y páginas publicados. Las páginas en borrador (clínicas) o sin listar no entran.
+    expect([...locs].sort()).toEqual([...STATIC_ROUTES, "/restaurantes", "/realty", "/ai-agents", "/smart-cards", "/automatizaciones", "/servicios", "/seguridad"].map((p) => `https://reymen.mx${p}`).sort());
   });
 
   test("encabezados de seguridad presentes", async ({ request }) => {
@@ -61,7 +61,7 @@ test.describe("rutas, SEO y encabezados", () => {
 
 test.describe("responsive", () => {
   for (const w of widths) {
-    for (const path of ["/", "/restaurantes", "/productos", "/contacto", "/ai-agents", "/smart-cards", "/automatizaciones", "/servicios", "/seguridad"]) {
+    for (const path of ["/", "/restaurantes", "/realty", "/productos", "/contacto", "/ai-agents", "/smart-cards", "/automatizaciones", "/servicios", "/seguridad"]) {
       test(`${path} a ${w}px: sin desbordes y botones tocables`, async ({ page }) => {
         await page.setViewportSize({ width: w, height: w < 600 ? 800 : 900 });
         await page.goto(path);
@@ -117,10 +117,10 @@ test.describe("navegación e interacciones", () => {
     await page.keyboard.press("Escape");
     await expect(btn).toHaveAttribute("aria-expanded", "false");
     await expect(btn).toBeFocused();
-    // El menú solo enlaza a páginas publicadas: Realty y clínicas siguen en borrador y no aparecen.
+    // El menú solo enlaza a páginas publicadas: Las clínicas siguen en borrador y no aparecen; Realty (beta) sí.
     const hrefs = await page.locator("[data-nav] a").evaluateAll((as) => as.map((a) => (a as HTMLAnchorElement).getAttribute("href")));
-    for (const h of hrefs) expect(h).not.toMatch(/^\/(realty|clinicas-y-servicios)(\/|#|$)/);
-    expect(hrefs).toEqual(expect.arrayContaining(["/ai-agents", "/smart-cards", "/automatizaciones", "/servicios", "/seguridad"]));
+    for (const h of hrefs) expect(h).not.toMatch(/^\/clinicas-y-servicios(\/|#|$)/);
+    expect(hrefs).toEqual(expect.arrayContaining(["/realty", "/ai-agents", "/smart-cards", "/automatizaciones", "/servicios", "/seguridad"]));
   });
 
   test("desplegable abierto sobre el hero oscuro: contraste correcto (axe)", async ({ page }) => {
@@ -134,7 +134,7 @@ test.describe("navegación e interacciones", () => {
   });
 
   test("las páginas en borrador no existen", async ({ request }) => {
-    for (const path of ["/realty", "/clinicas-y-servicios"]) expect((await request.get(path)).status()).toBe(404);
+    for (const path of ["/clinicas-y-servicios"]) expect((await request.get(path)).status()).toBe(404);
   });
 
   test("ningún enlace interno está roto", async ({ page, request }) => {
@@ -457,7 +457,7 @@ test.describe("equipo de agentes (carrusel)", () => {
 });
 
 test.describe("imágenes para compartir", () => {
-  for (const route of ["/restaurantes", "/ai-agents", "/smart-cards", "/automatizaciones", "/productos"]) {
+  for (const route of ["/restaurantes", "/realty", "/ai-agents", "/smart-cards", "/automatizaciones", "/productos"]) {
     test(`${route} tiene su propia imagen Open Graph`, async ({ page, request }) => {
       await page.goto(route);
       const url = await page.locator('meta[property="og:image"]').getAttribute("content");

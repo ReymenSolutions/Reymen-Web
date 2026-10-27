@@ -3,10 +3,10 @@
   "name": "Inmobiliarias",
   "order": 2,
   "route": "/realty",
-  "layout": "coming-soon",
-  "description": "Inventario de propiedades, prospectos y oportunidades para inmobiliarias, sobre Reymen App. En preparación.",
-  "publication": "draft",
-  "availability": "COMING_SOON",
+  "layout": "custom",
+  "description": "Inventario, prospectos, matches con puntaje explicado, demanda observada y rotación para inmobiliarias, sobre Reymen App. En beta.",
+  "publication": "published",
+  "availability": "BETA",
   "stages": {
     "code": true,
     "tests": true,
@@ -20,8 +20,8 @@
     {
       "id": "propiedades",
       "title": "Inventario de propiedades",
-      "text": "Propiedades con fotos, estado e historial, y una ficha pública por propiedad.",
-      "status": "planned",
+      "text": "Propiedades con fotos, estado y recorrido de venta o renta, y una ficha pública por propiedad con tu marca.",
+      "status": "beta",
       "evidence": {
         "code": [
           "ReymenApp docs/realty.md",
@@ -34,11 +34,12 @@
     {
       "id": "prospectos",
       "title": "Prospectos y lo que buscan",
-      "text": "Cada prospecto con operación, tipo, presupuesto y zonas de interés, sobre el CRM de Reymen.",
-      "status": "planned",
+      "text": "Cada prospecto con operación, tipo, presupuesto y zonas, dentro del CRM. La IA puede proponer lo que busca a partir de la conversación; tú confirmas.",
+      "status": "beta",
       "evidence": {
         "code": [
-          "ReymenApp docs/realty.md"
+          "ReymenApp docs/realty.md",
+          "ReymenApp src/lib/realty/profile-suggestion.ts"
         ],
         "tests": true,
         "production": false
@@ -47,8 +48,8 @@
     {
       "id": "matches",
       "title": "Matches con puntaje explicado",
-      "text": "Cruce de prospectos y propiedades con un puntaje que se puede revisar.",
-      "status": "planned",
+      "text": "Cruce de prospectos y propiedades con un puntaje que se puede revisar y una lista de qué hacer hoy.",
+      "status": "beta",
       "evidence": {
         "code": [
           "ReymenApp src/lib/realty/match.ts"
@@ -60,8 +61,8 @@
     {
       "id": "visitas",
       "title": "Visitas ligadas a Citas",
-      "text": "Las visitas se agendan en la misma agenda de Reymen App.",
-      "status": "planned",
+      "text": "Las visitas se agendan en la misma agenda de Reymen App y alimentan el embudo.",
+      "status": "beta",
       "evidence": {
         "code": [
           "ReymenApp docs/realty.md"
@@ -73,8 +74,8 @@
     {
       "id": "mercado",
       "title": "Demanda observada",
-      "text": "Lectura de la demanda de tus propios prospectos frente a tu inventario; no es dato de mercado externo.",
-      "status": "planned",
+      "text": "Mapa de demanda y oferta por zona con tus propios prospectos e inventario. No es dato de mercado externo.",
+      "status": "beta",
       "evidence": {
         "code": [
           "ReymenApp src/lib/realty/market.ts"
@@ -82,30 +83,153 @@
         "tests": true,
         "production": false
       }
+    },
+    {
+      "id": "rotacion",
+      "title": "Rotación de inventario",
+      "text": "Cuántos días tarda en venderse o rentarse cada propiedad, por zona, tipo, asesor y canal, y en qué se parecen las rápidas y las lentas.",
+      "status": "beta",
+      "evidence": {
+        "code": [
+          "ReymenApp src/lib/realty/rotation.ts"
+        ],
+        "tests": true,
+        "production": false
+      }
+    },
+    {
+      "id": "campanas",
+      "title": "Campañas con resultados",
+      "text": "Gasto, leads, visitas y cierres por campaña, con enlace que cuenta solo. No se conecta a plataformas de anuncios.",
+      "status": "beta",
+      "evidence": {
+        "code": [
+          "ReymenApp src/lib/realty/campaign-stats.ts"
+        ],
+        "tests": true,
+        "production": false
+      }
     }
   ],
-  "benefits": [],
-  "captures": [],
-  "demos": [],
+  "benefits": [
+    "Saber qué prospecto atender hoy",
+    "Ver dónde hay demanda sin inventario",
+    "Entender qué propiedades se mueven rápido"
+  ],
+  "captures": [
+    {
+      "file": "realty-resumen",
+      "alt": "Resumen de Reymen Real Estate con prospectos activos, propiedades disponibles, matches altos y qué hacer hoy",
+      "demo": true
+    }
+  ],
+  "demos": [
+    "story-steps"
+  ],
   "cta": {
     "primary": {
-      "label": "Registrar mi interés",
-      "href": "/contacto?interes=realty"
+      "label": "Agendar demo",
+      "href": "#contacto"
+    },
+    "secondary": {
+      "label": "Ver cómo funciona",
+      "href": "#recorrido"
     }
   },
   "seo": {
-    "title": "Reymen para inmobiliarias · Próximamente",
-    "description": "Estamos preparando una solución para inmobiliarias dentro de Reymen App. Registra tu interés.",
-    "noindex": true
+    "title": "Reymen para inmobiliarias · Prospectos, matches y rotación",
+    "description": "Inventario, prospectos, matches con puntaje explicado, demanda por zona y rotación para inmobiliarias en México. En beta, sobre Reymen App.",
+    "noindex": false
   },
   "interest": {
-    "text": "Estamos preparando una solución para inmobiliarias. Cuéntanos qué necesitas y te avisamos.",
-    "cta": "Registrar mi interés",
+    "text": "Inventario, prospectos, matches y rotación para tu inmobiliaria. Está en beta.",
+    "cta": "Ver la solución para inmobiliarias",
     "glyph": "property"
   },
   "related": [
     "restaurantes"
   ],
-  "story": [],
-  "faq": []
+  "story": [
+    {
+      "when": "Cada mañana",
+      "h": "Qué hacer hoy",
+      "p": "Prospectos activos, propiedades disponibles y matches altos sin visita agendada, con las acciones sugeridas por reglas a partir de tus datos.",
+      "img": "realty-resumen",
+      "alt": "Resumen con prospectos activos, propiedades disponibles, matches altos y qué hacer hoy",
+      "w": 2000,
+      "h2": 1200
+    },
+    {
+      "when": "Tu inventario",
+      "h": "Propiedades con su compatibilidad",
+      "p": "Cada propiedad con su estado, días en el mercado, visitas y el mejor match con tus prospectos.",
+      "img": "realty-propiedades",
+      "alt": "Inventario de propiedades en tarjetas con estado, precio, matches y visitas",
+      "w": 2000,
+      "h2": 1200
+    },
+    {
+      "when": "Cuando llega un mensaje",
+      "h": "La IA propone lo que busca; tú decides",
+      "p": "Si el prospecto dice qué busca en la conversación, la IA propone su perfil de búsqueda. Lo revisas y aceptas, editas o descartas.",
+      "img": "realty-contacto",
+      "alt": "Ficha de contacto con el perfil de búsqueda propuesto por la IA para aceptar, editar o descartar",
+      "w": 2000,
+      "h2": 1200
+    },
+    {
+      "when": "Cada semana",
+      "h": "Dónde hay demanda y dónde sobra oferta",
+      "p": "Mapa por zona con los prospectos que piden frente a las propiedades disponibles. Se calcula con tus propios datos.",
+      "img": "realty-mercado",
+      "alt": "Mapa de demanda por zona y tabla de oferta contra demanda",
+      "w": 2000,
+      "h2": 1200
+    },
+    {
+      "when": "Cada mes",
+      "h": "Qué tan rápido rota tu inventario",
+      "p": "Mediana de días, rápidas y lentas, y el porcentaje cerrado, por zona, tipo, rango de precio, asesor y canal.",
+      "img": "realty-rotacion",
+      "alt": "Reporte de rotación con mediana de días, propiedades rápidas, lentas y sell-through",
+      "w": 2000,
+      "h2": 1200
+    },
+    {
+      "when": "Tu publicidad",
+      "h": "Campañas con resultados reales",
+      "p": "Gasto, leads, visitas y cierres por campaña con un enlace que cuenta solo. Sin conectarse a plataformas de anuncios.",
+      "img": "realty-campanas",
+      "alt": "Campañas con gasto, leads, costo por lead y costo por visita",
+      "w": 2000,
+      "h2": 1200
+    }
+  ],
+  "faq": [
+    {
+      "q": "¿Ya está disponible?",
+      "a": "Está en beta: funciona y lo probamos, pero aún no es un producto general. Lo activamos contigo en una demo."
+    },
+    {
+      "q": "¿La IA decide por mí?",
+      "a": "No. La IA propone el perfil de búsqueda a partir de la conversación y tú aceptas, editas o descartas. Los puntajes y reportes salen de reglas y de tus datos."
+    },
+    {
+      "q": "¿Los datos de mercado son externos?",
+      "a": "No. La demanda y la rotación se calculan con tus propios prospectos y propiedades; si hay pocos datos, la pantalla lo dice."
+    },
+    {
+      "q": "¿Se conecta con portales o plataformas de anuncios?",
+      "a": "Hoy no. Las campañas se miden con un enlace propio y tus gastos capturados."
+    },
+    {
+      "q": "¿Mis datos se mezclan con los de otra inmobiliaria?",
+      "a": "No. Cada organización ve solo sus propios datos."
+    }
+  ],
+  "hero": {
+    "title": "Tus prospectos, tus propiedades y lo que se mueve, en un solo lugar",
+    "lede": "Reymen Real Estate cruza lo que buscan tus prospectos con tu inventario, te dice qué atender hoy y cuánto tarda en rotar cada propiedad. En beta, sobre Reymen App.",
+    "dot": "ember"
+  }
 }
