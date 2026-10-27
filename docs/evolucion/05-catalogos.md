@@ -28,7 +28,7 @@ Cada función lleva `status` y `evidence { code[], tests, production }`:
 `evidence.code` apunta al repositorio y archivo o documento que respalda la función. `production` solo lo cambia una persona que lo haya verificado.
 
 ## Cómo
-- **Activar Realty** cuando esté desplegado: en `verticals/realty.json`, `publication: "published"`, `availability: "BETA"` o `"LIVE"`, `stages.deployed: true`, pasar las funciones a `beta`/`live` con su evidencia y quitar `seo.noindex` si corresponde. La ruta `/realty`, el menú, el sitemap y los CTA salen solos.
+- **Pasar Realty de BETA a LIVE** cuando esté desplegado (ya está publicada como BETA): en `verticals/realty.json`, `publication: "published"`, `availability: "BETA"` o `"LIVE"`, `stages.deployed: true`, pasar las funciones a `beta`/`live` con su evidencia y quitar `seo.noindex` si corresponde. La ruta `/realty`, el menú, el sitemap y los CTA salen solos.
 - **Agregar una vertical:** un archivo en `verticals/` (con `layout: "coming-soon"` usa `[slug].astro`; con `custom` se crea su propio `src/pages/<ruta>.astro`).
 - **Agregar un producto:** un archivo en `products/`. Mientras su `page.publication` no sea `published`, el menú y la home enlazan a su sección en `/productos`.
 - **Estado de WhatsApp (Twilio):** `products/ai-agents.json`, función `whatsapp` (hoy `planned`). Sube a `beta` con integración verificada en pruebas y a `live` con pruebas de extremo a extremo y confirmación de producción. Ver `04-whatsapp-twilio.md`.
@@ -39,7 +39,7 @@ Cada función lleva `status` y `evidence { code[], tests, production }`:
 
 ## P2
 - **Páginas nuevas:** `/ai-agents` y `/smart-cards` (productos), `/automatizaciones`, `/servicios` y `/seguridad` (landings). El menú, el sitemap y los enlaces de la home las toman de los datos.
-- **Realty** sigue en `draft`: `/realty` no existe hasta que se cambie su `publication`. La plantilla `[slug].astro` ya soporta capturas y funciones para cuando se active.
+- **Realty** está publicada como **BETA** (2026-10-27): `/realty` con layout `custom` (`src/pages/realty.astro`), capturas reales con datos de demostración (`public/capturas/realty-*.webp`), siete funciones `beta` con evidencia en código y pruebas (`production: false`) y `stages.deployed: false`. No se declara LIVE ni desplegada: pasar a LIVE exige que una persona confirme producción (`production: true`, `stages.deployed: true`, `availability: "LIVE"`).
 - **Smart Cards** pasó a `LIVE` por confirmación del equipo (2026-10-20); AI Agents sigue en `BETA`. La página de Smart Cards publica solo lo verificado desde Reymen App; el panel, SSO, estadísticas, tema y enlaces viven en Reymen App y se publican; faltan capturas (requieren Supabase de Smart Cards).
 - **Agentes:** solo «Atención de prospectos», «Seguimiento comercial», «Consulta de conocimiento» y «Escalamiento» son `beta`; el resto del catálogo es `concept`. Los equipos de agentes se muestran como concepto, sin orquestación real.
 - **Automatizaciones:** los 9 flujos son `beta` (verificados en código); parten de eventos del POS, inventario y lealtad. Se dice expresamente que no hay constructor visual y que WhatsApp está en desarrollo.

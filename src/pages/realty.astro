@@ -1,0 +1,113 @@
+---
+import Base from "../layouts/Base.astro";
+import Section from "../components/Section.astro";
+import Button from "../components/Button.astro";
+import Traces from "../components/Traces.astro";
+import Device from "../components/Device.astro";
+import StorySteps from "../components/StorySteps.astro";
+import FeatureList from "../components/FeatureList.astro";
+import EcosystemMap from "../components/EcosystemMap.astro";
+import SectionHead from "../components/SectionHead.astro";
+import StatusBadge from "../components/StatusBadge.astro";
+import Faq from "../components/Faq.astro";
+import ContactSection from "../components/ContactSection.astro";
+import { SITE } from "../config";
+
+import { getVertical, assertCatalogIntegrity } from "../lib/catalog";
+
+await assertCatalogIntegrity();
+// Textos, funciones, recorrido y preguntas viven en src/content/verticals/realty.json; la composición visual es propia de esta página.
+const v = await getVertical("realty");
+const demo = SITE.calendlyUrl || "#contacto";
+const story = v.story;
+const items = v.features.map((f) => ({ h: f.title, p: f.text, status: f.status }));
+const faq = v.faq;
+
+---
+<Base darkHero title={v.seo.title} description={v.seo.description} path={v.route} crumbs={[{ name: "Inmobiliarias", path: v.route }]}>
+  <section class="hero tone-night" aria-labelledby="r-title">
+    <Traces tone="ember" />
+    <div class="container hero-grid">
+      <div class="copy">
+        <StatusBadge status="BETA" />
+        <h1 id="r-title">{v.hero!.title}<span class="dot-ember">.</span></h1>
+        <p class="lede">{v.hero!.lede}</p>
+        <div class="cta-wrap"><div class="cta-row">
+          <Button href={demo} size="lg" event="CTA Demo" external={!!SITE.calendlyUrl}>Agendar demo</Button>
+          <Button href="#recorrido" variant="ghost" size="lg"><span class="l-full">Ver cómo funciona</span><span class="l-short">Cómo funciona</span></Button>
+        </div></div>
+      </div>
+      <div class="devices">
+        <Device name="realty-resumen" alt="Resumen de Reymen Real Estate con prospectos activos, propiedades disponibles, matches altos y qué hacer hoy" width={2000} height={1200} eager class="d-main" />
+        <Device name="realty-propiedades" alt="Inventario de propiedades en tarjetas con estado, precio y matches" width={2000} height={1200} crop="16 / 8.6" class="d-side" />
+      </div>
+    </div>
+  </section>
+
+  <Section id="recorrido" after="night" labelledby="turno-title">
+    <div class="head">
+      <h2 id="turno-title">Un día en tu inmobiliaria<span class="dot-ember">.</span></h2>
+      <p class="lede">De la mañana al cierre del mes: qué atender, dónde hay demanda y qué tan rápido se mueve tu inventario.</p>
+    </div>
+    <StorySteps items={story} />
+  </Section>
+
+  <Section id="conexion" tone="night" labelledby="r-conexion">
+    <SectionHead id="r-conexion" title="Todo conectado" lede="Realty comparte base con Reymen App: tus prospectos viven en el CRM y las conversaciones en la bandeja con Agente IA. Cada recorrido indica si ya está disponible o está en pruebas." dot="ember" />
+    <EcosystemMap only={["formulario", "agente"]} />
+  </Section>
+
+  <Section tone="white" after="night" labelledby="r-resuelve">
+    <div class="head"><h2 id="r-resuelve">Lo que resuelve en tu inmobiliaria<span class="dot-ember">.</span></h2></div>
+    <FeatureList items={items} />
+  </Section>
+
+  <Section labelledby="r-faq">
+    <div class="faq-grid">
+      <h2 id="r-faq">Preguntas de inmobiliarias<span class="dot">.</span></h2>
+      <Faq items={faq} />
+    </div>
+  </Section>
+
+  <ContactSection vertical="realty" title="Veamos tu inmobiliaria" lede="Cuéntanos cuántos asesores y propiedades manejas. Te mostramos Realty con datos de ejemplo y definimos juntos si encaja." />
+</Base>
+
+<style>
+  .hero { position: relative; overflow: clip; padding-block: calc(4.25rem + clamp(2rem, 1rem + 5vw, 5rem)) clamp(3rem, 2rem + 4vw, 6rem); background: var(--night); color: var(--on-night); }
+  .hero::before { content: ""; position: absolute; inset: -10% -5% 0 35%; background: radial-gradient(closest-side at 55% 50%, rgb(255 106 19 / 0.22), rgb(37 78 255 / 0.28) 45%, transparent 75%); pointer-events: none; }
+  .hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(2rem, 4vw, 4.5rem); align-items: center; }
+  .copy { display: grid; gap: var(--s-6); justify-items: start; }
+  .hero h1 { color: var(--white); font-size: clamp(1.65rem, 1rem + 2.1vw, 3rem); font-stretch: 106%; letter-spacing: -0.032em; }
+  .cta-row { display: flex; flex-wrap: wrap; gap: var(--s-3); }
+  .devices { position: relative; container-type: inline-size; padding-bottom: 14%; margin-right: calc(-1 * var(--gutter)); }
+  .devices :global(.d-main) { width: 100%; transform: perspective(1600px) rotateY(-6deg) rotateX(1.5deg); transform-origin: 0 60%; }
+  .devices :global(.d-side) { position: absolute; left: -6%; bottom: 0; width: 52%; transform: rotate(-2deg); z-index: 2; }
+  .head { display: grid; gap: var(--s-4); margin-bottom: var(--head-gap); max-width: 52rem; }
+  .faq-grid { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: clamp(1.5rem, 4vw, 4rem); align-items: start; }
+  .faq-grid h2 { position: sticky; top: 6rem; }
+  @media (max-width: 62rem) {
+    .hero-grid, .faq-grid { grid-template-columns: 1fr; }
+    .faq-grid h2 { position: static; }
+    .devices { margin-right: 0; }
+    .devices :global(.d-main) { transform: none; }
+  }
+  .l-short { display: none; }
+  /* Botones: en una fila siempre que quepan; la medida la da el espacio de la columna, no la pantalla */
+  .cta-wrap { container-type: inline-size; width: 100%; }
+  @container (max-width: 31rem) {
+    .cta-row { flex-wrap: nowrap; }
+    .l-full { display: none; } .l-short { display: inline; }
+  }
+  @container (max-width: 24rem) {
+    .cta-row { gap: var(--s-2); }
+    .cta-row :global(.btn) { flex: 1 1 0; min-width: 0; padding: 0.8rem 0.6rem; font-size: 0.95rem; white-space: normal; text-align: center; }
+  }
+  @container (max-width: 17.5rem) { .cta-row { flex-direction: column; } }
+  @media (max-width: 36rem) {
+    .hero { padding-top: calc(4.25rem + 1.25rem); padding-bottom: 2.5rem; }
+    .hero-grid { gap: var(--s-5); }
+    .hero h1 { letter-spacing: -0.03em; line-height: 1.06; }
+    .hero .lede { font-size: 1rem; line-height: 1.5; }
+    .devices :global(.d-side) { width: 56%; left: 0; }
+  }
+</style>
